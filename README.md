@@ -1,6 +1,6 @@
 # angular2-slimscroll
 
-***angula2-slimscroll*** is a customizable scrollbar directive for Angular2.
+***angular2-slimscroll*** is a customizable scrollbar directive for Angular2.
 
 ## Installation: 
 
