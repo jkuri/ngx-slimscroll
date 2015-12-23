@@ -1,10 +1,10 @@
 {
-  "name": "angular2-slimscroll",
-  "version": "0.3.0",
+  "name": "ng2-slimscroll",
+  "version": "0.3.1",
   "description": "Angular2 Customizable Scrollbar Implementation",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jkuri/angular2-slimscroll.git"
+    "url": "git+https://github.com/jkuri/ng2-slimscroll.git"
   },
   "scripts": {
     "dev": "tsc --watch",
@@ -18,11 +18,10 @@
     "slimscroll"
   ],
   "author": "Jan Kuri <jkuri88@gmail.com>",
-  "main": "angular2-slimscroll.js",
+  "main": "ng2-slimscroll.js",
   "license": "MIT",
   "dependencies": {
     "angular2": "2.0.0-beta.0",
-    "systemjs": "0.19.6",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.3",
     "reflect-metadata": "0.1.2",
@@ -30,6 +29,7 @@
     "zone.js": "0.5.10"
   },
   "devDependencies": {
-    "typescript": "^1.7.3"
+    "typescript": "^1.7.3",
+    "systemjs": "0.19.6"
   }
 }
