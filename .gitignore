@@ -1,4 +1,5 @@
 node_modules/
 npm-debug.log
-angular2-slimscroll.js
-angular2-slimscroll.js.map
+ng2-slimscroll.d.ts
+ng2-slimscroll.js
+ng2-slimscroll.js.map
