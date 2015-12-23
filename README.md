@@ -2,17 +2,21 @@
 
 ***angular2-slimscroll*** is a customizable scrollbar directive for Angular2.
 
+## Demo
+
+[http://jankuri.com/components/angular2-slimscroll](http://jankuri.com/components/angular2-slimscroll)
+
 ## Installation: 
 
 ```bash
-npm i angular2-slimscroll
+npm i ng2-slimscroll
 ```
 
 ## Use Example:
 
 ```ts
 import {Component} from 'angular2/core';
-import {SlimScroll} from 'angular2-slimscroll';
+import {SlimScroll} from 'ng2-slimscroll';
 
 @Component({
   template: `
