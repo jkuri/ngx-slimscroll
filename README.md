@@ -1,6 +1,6 @@
-# angular2-slimscroll
+# ng2-slimscroll
 
-***angular2-slimscroll*** is a customizable scrollbar directive for Angular2.
+***ng2-slimscroll*** is a customizable scrollbar directive for Angular2.
 
 ## Demo
 
@@ -9,7 +9,20 @@
 ## Installation: 
 
 ```bash
-npm i ng2-slimscroll
+npm install ng2-slimscroll
+```
+
+If you are using SystemJS, you can map to ng2-slimscroll in your configuration.
+
+```html
+<!-- index.html -->
+<script>
+  SystemJS.config({
+    map: {
+      "ng2-slimscroll": "node_modules/ng2-slimscroll/ng2-slimscroll.js"
+    }
+  });
+</script>
 ```
 
 ## Use Example:
@@ -20,14 +33,19 @@ import {SlimScroll} from 'ng2-slimscroll';
 
 @Component({
   template: `
-    <div class="my-div" slimscroll background="#333" opacity="0.6" position="right" width="7px"></div>
+    <div slimscroll 
+         background="#333" 
+         opacity="0.6" 
+         position="right" 
+         width="7px"
+         border-radius="5px">
+      Long scrollable content ...
+    </div>
   `,
   directives: [SlimScroll]
 })
 
-class App {
-   
-}
+class App { }
 ```
 
 ## Author

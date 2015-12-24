@@ -6,72 +6,88 @@ import {BrowserDomAdapter} from 'angular2/platform/browser';
 })
 
 export class SlimScroll {
-  el: any;
-  wrapper: any;
-  bar: any;
-  viewContainer: ViewContainerRef;
-  dom = new BrowserDomAdapter();
-
-  background: string;
-  opacity: string;
-  width: string;
-  position: string;
+  private el: any;
+  private wrapper: any;
+  private bar: any;
+  private viewContainer: ViewContainerRef;
+  private background: string;
+  private opacity: string;
+  private width: string;
+  private position: string;
+  private borderRadius: string;
+  private dom = new BrowserDomAdapter();
 
   constructor(viewContainer: ViewContainerRef) {
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
-    this.background = this.dom.getAttribute(this.el, 'background') || '#000000';
-    this.opacity = this.dom.getAttribute(this.el, 'opacity') || '0.5';
-    this.width = this.dom.getAttribute(this.el, 'width') || '7px';
-    this.position = this.dom.getAttribute(this.el, 'position') || 'right';
-    console.log(this.background);
+    let dom = this.dom;
+    let el = this.el;
+
+    this.background = dom.getAttribute(el, 'background') || '#000';
+    this.opacity = dom.getAttribute(el, 'opacity') || '0.5';
+    this.width = dom.getAttribute(el, 'width') || '7px';
+    this.position = dom.getAttribute(el, 'position') || 'right';
+    this.borderRadius = dom.getAttribute(el, 'border-radius') || '3px';
+
     this.init();
   }
 
-  setElementStyle() {
-    this.dom.setStyle(this.el, 'overflow', 'hidden');
-    this.dom.setStyle(this.el, 'width', this.dom.getStyle(this.el, 'width'));
-    this.dom.setStyle(this.el, 'height', this.dom.getStyle(this.el, 'height'));
+  private setElementStyle(): void {
+    let dom = this.dom;
+    let el = this.el;
+
+    dom.setStyle(el, 'overflow', 'hidden');
   }
 
-  wrapContainer() {
+  private wrapContainer(): void {
     this.wrapper = this.dom.createElement('div');
-    this.dom.addClass(this.wrapper, 'slimscroll-wrapper');
-    this.dom.setStyle(this.wrapper, 'position', 'relative');
-    this.dom.setStyle(this.wrapper, 'overflow', 'hidden');
-    this.dom.setStyle(this.wrapper, 'width', this.dom.getStyle(this.el, 'width'));
-    this.dom.setStyle(this.wrapper, 'height', this.dom.getStyle(this.el, 'height'));
-    this.dom.setStyle(this.wrapper, 'margin', this.dom.getStyle(this.el, 'margin'));
+    let dom = this.dom;
+    let wrapper = this.wrapper;
+    let el = this.el;
 
-    this.el.parentNode.insertBefore(this.wrapper, this.el);
-    this.wrapper.appendChild(this.el);
+    dom.addClass(wrapper, 'slimscroll-wrapper');
+    dom.setStyle(wrapper, 'position', 'relative');
+    dom.setStyle(wrapper, 'overflow', 'hidden');
+    dom.setStyle(wrapper, 'display', 'block');
+    dom.setStyle(wrapper, 'margin', dom.getComputedStyle(el).margin);
+    dom.setStyle(wrapper, 'width', dom.getComputedStyle(el).width);
+    dom.setStyle(wrapper, 'height', dom.getComputedStyle(el).height);
+
+    dom.setStyle(el, 'margin', '0');
+
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
   }
 
-  initBar() {
+  private initBar(): void {
     this.bar = this.dom.createElement('div');
-    this.dom.addClass(this.bar, 'slimscroll-bar');
-    this.dom.setStyle(this.bar, 'position', 'absolute');
-    this.dom.setStyle(this.bar, 'top', '0');
-    this.dom.setStyle(this.bar, this.position, '1px');
-    this.dom.setStyle(this.bar, 'width', this.width);
-    this.dom.setStyle(this.bar, 'background', this.background);
-    this.dom.setStyle(this.bar, 'opacity', this.opacity);
-    this.dom.setStyle(this.bar, 'display', 'block');
-    this.dom.setStyle(this.bar, 'cursor', 'pointer');
-    this.dom.setStyle(this.bar, 'z-index', '99');
-    this.dom.setStyle(this.bar, 'border-radius', '3px');
+    let dom = this.dom;
+    let bar = this.bar;
+    let el = this.el;
 
-    this.el.appendChild(this.bar);
+    dom.addClass(bar, 'slimscroll-bar');
+    dom.setStyle(bar, 'position', 'absolute');
+    dom.setStyle(bar, 'top', '0');
+    dom.setStyle(bar, this.position, this.borderRadius);
+    dom.setStyle(bar, 'width', this.width);
+    dom.setStyle(bar, 'background', this.background);
+    dom.setStyle(bar, 'opacity', this.opacity);
+    dom.setStyle(bar, 'display', 'block');
+    dom.setStyle(bar, 'cursor', 'pointer');
+    dom.setStyle(bar, 'z-index', '99');
+    dom.setStyle(bar, 'border-radius', '3px');
+
+    el.appendChild(bar);
   }
 
-  getBarHeight() {
+  private getBarHeight(): void {
     let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
     let display = barHeight === this.el.offsetHeight ? 'none' : 'block';
     this.dom.setStyle(this.bar, 'height', barHeight);
     this.dom.setStyle(this.bar, 'display', display);
   }
 
-  attachWheel(target) {
+  private attachWheel(target): void {
     target.addEventListener('DOMMouseScroll', this.onWheel, false);
     target.addEventListener('mousewheel', this.onWheel, false);
   }
@@ -88,44 +104,50 @@ export class SlimScroll {
     if (e.preventDefault) { e.preventDefault(); }
   };
 
-  scrollContent(y, isWheel, isJump) {
+  private scrollContent(y: number, isWheel: boolean, isJump: boolean): void {
     let delta = y;
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let percentScroll;
     let barTop;
+    let dom = this.dom;
+    let bar = this.bar;
+    let el = this.el;
 
     if (isWheel) {
-        delta = parseInt(this.dom.getStyle(this.bar, 'top'), 10) + y * 20 / 100 * this.bar.offsetHeight;
+        delta = parseInt(dom.getStyle(bar, 'top'), 10) + y * 20 / 100 * bar.offsetHeight;
         delta = Math.min(Math.max(delta, 0), maxTop);
         delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
-        this.dom.setStyle(this.bar, 'top', delta + 'px');
+        dom.setStyle(bar, 'top', delta + 'px');
     }
 
-    percentScroll = parseInt(this.dom.getStyle(this.bar, 'top'), 10) / (this.el.offsetHeight - this.bar.offsetHeight);
-    delta = percentScroll * (this.el.scrollHeight - this.el.offsetHeight);
+    percentScroll = parseInt(dom.getStyle(bar, 'top'), 10) / (el.offsetHeight - bar.offsetHeight);
+    delta = percentScroll * (el.scrollHeight - el.offsetHeight);
 
-    this.el.scrollTop = delta;
+    el.scrollTop = delta;
   }
 
   private makeBarDraggable = () => {
     let body = document.getElementsByTagName('body')[0];
+    let el = this.el;
+    let bar = this.bar;
+    let dom = this.dom;
 
-    this.bar = this.dom.getElementsByClassName(this.el, 'slimscroll-bar')[0];
+    bar = dom.getElementsByClassName(el, 'slimscroll-bar')[0];
 
-    this.bar.addEventListener('mousedown', (e) => {
-      let top = parseFloat(this.dom.getStyle(this.bar, 'top'));
+    bar.addEventListener('mousedown', (e) => {
+      let top = parseFloat(dom.getStyle(bar, 'top'));
       let pageY = e.pageY;
 
-      this.bar.addEventListener('mousemove', () => { this.barDraggableListener(event, top, pageY); }, false);
+      bar.addEventListener('mousemove', () => { this.barDraggableListener(event, top, pageY); }, false);
     }, false);
 
-    this.bar.addEventListener('mouseup', () => {
-      let newBar = this.bar.cloneNode(true);
-      this.bar.parentNode.replaceChild(newBar, this.bar);
+    bar.addEventListener('mouseup', () => {
+      let newBar = bar.cloneNode(true);
+      bar.parentNode.replaceChild(newBar, bar);
       this.makeBarDraggable();
     }, false);
 
-    this.bar.addEventListener('selectstart', (e) => {
+    bar.addEventListener('selectstart', (e) => {
       e.preventDefault();
       e.stopPropagation();
     }, false);
@@ -136,7 +158,7 @@ export class SlimScroll {
     this.scrollContent(0, this.bar.offsetTop, false);
   };
 
-  destroy() {
+  private destroy(): void {
     if (this.dom.hasClass(this.el.parentElement, 'slimscroll-wrapper')) {
       let wrapper = this.el.parentElement;
       let bar = this.dom.getElementsByClassName(this.el, 'slimscroll-bar')[0];
@@ -145,16 +167,16 @@ export class SlimScroll {
     }
   }
 
-  unwrap(wrapper) {
-    var docFrag = document.createDocumentFragment();
+  private unwrap(wrapper): void {
+    let docFrag = document.createDocumentFragment();
     while (wrapper.firstChild) {
-      var child = wrapper.removeChild(wrapper.firstChild);
+      let child = wrapper.removeChild(wrapper.firstChild);
       docFrag.appendChild(child);
     }
     wrapper.parentNode.replaceChild(docFrag, wrapper);
   }
 
-  init() {
+  private init(): void {
     this.destroy();
     this.setElementStyle();
     this.wrapContainer();
