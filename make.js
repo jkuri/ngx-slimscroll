@@ -1,3 +1,5 @@
+/* jshint node: true */
+
 var pkg     = require('./package.json');
 var path    = require('path');
 var Builder = require('systemjs-builder');

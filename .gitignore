@@ -1,6 +1,6 @@
 node_modules/
 bundles/
 npm-debug.log
-ng2-slimscroll.d.ts
-ng2-slimscroll.js
-ng2-slimscroll.js.map
+src/directives/ng2-slimscroll.d.ts
+src/directives/ng2-slimscroll.js
+src/directives/ng2-slimscroll.js.map
