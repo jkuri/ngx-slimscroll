@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "tsc --watch",
-    "prepublish": "tsc && node make.js"
+    "prepublish": "tsc && tsc -d && node make.js"
   },
   "keywords": [
     "ng2",

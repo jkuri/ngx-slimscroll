@@ -2,6 +2,8 @@
 
 ***ng2-slimscroll*** is a customizable scrollbar directive for Angular2.
 
+Make scrollbar looks identical in any browser and any os.
+
 ## Demo
 
 [http://jankuri.com/components/angular2-slimscroll](http://jankuri.com/components/angular2-slimscroll)
