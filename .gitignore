@@ -1,4 +1,5 @@
 node_modules/
+bundles/
 npm-debug.log
 ng2-slimscroll.d.ts
 ng2-slimscroll.js
