@@ -1,5 +1,5 @@
-import {Directive, ViewContainerRef} from 'angular2/core';
-import {BrowserDomAdapter} from 'angular2/platform/browser';
+import {Directive, ViewContainerRef, ElementRef, Inject} from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Directive({
   selector: '[slimscroll]'
@@ -15,12 +15,11 @@ export class SlimScroll {
   private width: string;
   private position: string;
   private borderRadius: string;
-  private dom = new BrowserDomAdapter();
 
-  constructor(viewContainer: ViewContainerRef) {
+  constructor(viewContainer: ViewContainerRef, @Inject(DOCUMENT) private _dom) {
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
-    let dom = this.dom;
+    let dom = _dom;
     let el = this.el;
 
     this.background = dom.getAttribute(el, 'background') || '#000';
@@ -33,15 +32,15 @@ export class SlimScroll {
   }
 
   private setElementStyle(): void {
-    let dom = this.dom;
+    let dom = this._dom;
     let el = this.el;
 
     dom.setStyle(el, 'overflow', 'hidden');
   }
 
   private wrapContainer(): void {
-    this.wrapper = this.dom.createElement('div');
-    let dom = this.dom;
+    this.wrapper = this._dom.createElement('div');
+    let dom = this._dom;
     let wrapper = this.wrapper;
     let el = this.el;
 
@@ -60,8 +59,8 @@ export class SlimScroll {
   }
 
   private initBar(): void {
-    this.bar = this.dom.createElement('div');
-    let dom = this.dom;
+    this.bar = this._dom.createElement('div');
+    let dom = this._dom;
     let bar = this.bar;
     let el = this.el;
 
@@ -83,8 +82,8 @@ export class SlimScroll {
   private getBarHeight(): void {
     let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
     let display = barHeight === this.el.offsetHeight ? 'none' : 'block';
-    this.dom.setStyle(this.bar, 'height', barHeight);
-    this.dom.setStyle(this.bar, 'display', display);
+    this._dom.setStyle(this.bar, 'height', barHeight);
+    this._dom.setStyle(this.bar, 'display', display);
   }
 
   private attachWheel(target): void {
@@ -109,7 +108,7 @@ export class SlimScroll {
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let percentScroll;
     let barTop;
-    let dom = this.dom;
+    let dom = this._dom;
     let bar = this.bar;
     let el = this.el;
 
@@ -130,7 +129,7 @@ export class SlimScroll {
     let body = document.getElementsByTagName('body')[0];
     let el = this.el;
     let bar = this.bar;
-    let dom = this.dom;
+    let dom = this._dom;
 
     bar = dom.getElementsByClassName(el, 'slimscroll-bar')[0];
 
@@ -154,15 +153,15 @@ export class SlimScroll {
   };
 
   private barDraggableListener = (e, top, pageY) => {
-    this.dom.setStyle(this.bar, 'top', top + e.pageY - pageY + 'px');
+    this._dom.setStyle(this.bar, 'top', top + e.pageY - pageY + 'px');
     this.scrollContent(0, this.bar.offsetTop, false);
   };
 
   private destroy(): void {
-    if (this.dom.hasClass(this.el.parentElement, 'slimscroll-wrapper')) {
+    if (this._dom.hasClass(this.el.parentElement, 'slimscroll-wrapper')) {
       let wrapper = this.el.parentElement;
-      let bar = this.dom.getElementsByClassName(this.el, 'slimscroll-bar')[0];
-      this.dom.removeChild(this.el, bar);
+      let bar = this._dom.getElementsByClassName(this.el, 'slimscroll-bar')[0];
+      this._dom.removeChild(this.el, bar);
       this.unwrap(wrapper);
     }
   }

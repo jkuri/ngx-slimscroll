@@ -8,5 +8,8 @@
     "sourceMap": true,
     "declaration": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "files":    [
+      "typings/modules/es6-promise/index.d.ts"
+  ]
 }
