@@ -1,12 +1,22 @@
 {
   "compilerOptions": {
-    "noImplicitAny": false,
-    "module": "commonjs",
-    "target": "ES5",
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "mapRoot": "",
+    "module": "system",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": false,
+    "rootDir": ".",
     "sourceMap": true,
-    "declaration": true
+    "sourceRoot": "/",
+    "target": "es5"
   },
-  "exclude": ["node_modules"]
+  "files": [
+    "ng2-slimscroll.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

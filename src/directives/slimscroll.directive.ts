@@ -1,3 +1,5 @@
+/// <reference path="../../typings/index.d.ts" />
+
 import {Directive, ViewContainerRef} from '@angular/core';
 import {BrowserDomAdapter} from '@angular/platform-browser/src/browser/browser_adapter';
 

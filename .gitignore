@@ -7,3 +7,4 @@ ng2-slimscroll.js.map
 src/directives/slimscroll.directive.js
 src/directives/slimscroll.directive.js.map
 src/directives/slimscroll.directive.d.ts
+typings/
