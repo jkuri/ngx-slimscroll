@@ -1,12 +1,9 @@
-/// <reference path="../../typings/index.d.ts" />
+import { Directive, ViewContainerRef } from '@angular/core';
+import { getDOM } from '@angular/platform-browser/src/dom/dom_adapter';
 
-import {Directive, ViewContainerRef} from '@angular/core';
-import {BrowserDomAdapter} from '@angular/platform-browser/src/browser/browser_adapter';
-
-@Directive({
-  selector: '[slimscroll]'
+@Directive({ 
+  selector: '[slimScroll]' 
 })
-
 export class SlimScroll {
   private el: any;
   private wrapper: any;
@@ -17,7 +14,7 @@ export class SlimScroll {
   private width: string;
   private position: string;
   private borderRadius: string;
-  private dom = new BrowserDomAdapter();
+  private dom = getDOM();
 
   constructor(viewContainer: ViewContainerRef) {
     this.viewContainer = viewContainer;

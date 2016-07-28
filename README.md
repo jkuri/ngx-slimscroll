@@ -6,25 +6,12 @@ Make scrollbar looks identical in any browser and any os.
 
 ## Demo
 
-[http://jankuri.com/components/angular2-slimscroll](http://jankuri.com/components/angular2-slimscroll)
+[http://demo.jankuri.com/ng2-slimscroll](http://demo.jankuri.com/ng2-slimscroll)
 
 ## Installation: 
 
 ```bash
 npm install ng2-slimscroll
-```
-
-If you are using SystemJS, you can map to ng2-slimscroll in your configuration.
-
-```html
-<!-- index.html -->
-<script>
-  SystemJS.config({
-    map: {
-      "ng2-slimscroll": "node_modules/ng2-slimscroll/ng2-slimscroll.js"
-    }
-  });
-</script>
 ```
 
 ## Use Example:
