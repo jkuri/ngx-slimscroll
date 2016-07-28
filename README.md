@@ -22,7 +22,7 @@ import {SlimScroll} from 'ng2-slimscroll';
 
 @Component({
   template: `
-    <div slimscroll 
+    <div slimScroll 
          background="#333" 
          opacity="0.6" 
          position="right" 

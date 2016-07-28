@@ -19,6 +19,7 @@ export class SlimScroll {
   constructor(viewContainer: ViewContainerRef) {
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
+
     let dom = this.dom;
     let el = this.el;
 
@@ -36,6 +37,8 @@ export class SlimScroll {
     let el = this.el;
 
     dom.setStyle(el, 'overflow', 'hidden');
+    dom.setStyle(el, 'position', 'relative');
+    dom.setStyle(el, 'display', 'block');
   }
 
   private wrapContainer(): void {
@@ -52,8 +55,6 @@ export class SlimScroll {
     dom.setStyle(wrapper, 'width', dom.getComputedStyle(el).width);
     dom.setStyle(wrapper, 'height', dom.getComputedStyle(el).height);
 
-    dom.setStyle(el, 'margin', '0');
-
     el.parentNode.insertBefore(wrapper, el);
     wrapper.appendChild(el);
   }
@@ -67,23 +68,27 @@ export class SlimScroll {
     dom.addClass(bar, 'slimscroll-bar');
     dom.setStyle(bar, 'position', 'absolute');
     dom.setStyle(bar, 'top', '0');
-    dom.setStyle(bar, this.position, this.borderRadius);
+    dom.setStyle(bar, this.position, '0');
     dom.setStyle(bar, 'width', this.width);
     dom.setStyle(bar, 'background', this.background);
     dom.setStyle(bar, 'opacity', this.opacity);
     dom.setStyle(bar, 'display', 'block');
     dom.setStyle(bar, 'cursor', 'pointer');
     dom.setStyle(bar, 'z-index', '99');
-    dom.setStyle(bar, 'border-radius', '3px');
+    dom.setStyle(bar, 'border-radius', this.borderRadius);
+    dom.setStyle(bar, 'margin', '1px 0');
 
-    el.appendChild(bar);
+    this.wrapper.appendChild(bar);
   }
 
   private getBarHeight(): void {
-    let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
-    let display = barHeight === this.el.offsetHeight ? 'none' : 'block';
-    this.dom.setStyle(this.bar, 'height', barHeight);
-    this.dom.setStyle(this.bar, 'display', display);
+    setTimeout(() => {
+      let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
+      let display = barHeight === this.el.offsetHeight ? 'none' : 'block';
+
+      this.dom.setStyle(this.bar, 'height', barHeight);
+      this.dom.setStyle(this.bar, 'display', display);
+    }, 1);
   }
 
   private attachWheel(target): void {
@@ -113,10 +118,10 @@ export class SlimScroll {
     let el = this.el;
 
     if (isWheel) {
-        delta = parseInt(dom.getStyle(bar, 'top'), 10) + y * 20 / 100 * bar.offsetHeight;
-        delta = Math.min(Math.max(delta, 0), maxTop);
-        delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
-        dom.setStyle(bar, 'top', delta + 'px');
+      delta = parseInt(dom.getStyle(bar, 'top'), 10) + y * 20 / 100 * bar.offsetHeight; 
+      delta = Math.min(Math.max(delta, 0), maxTop);
+      delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
+      dom.setStyle(bar, 'top', delta + 'px');
     }
 
     percentScroll = parseInt(dom.getStyle(bar, 'top'), 10) / (el.offsetHeight - bar.offsetHeight);
@@ -130,8 +135,6 @@ export class SlimScroll {
     let el = this.el;
     let bar = this.bar;
     let dom = this.dom;
-
-    bar = dom.getElementsByClassName(el, 'slimscroll-bar')[0];
 
     bar.addEventListener('mousedown', (e) => {
       let top = parseFloat(dom.getStyle(bar, 'top'));
