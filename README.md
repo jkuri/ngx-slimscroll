@@ -6,7 +6,7 @@ Make scrollbar looks identical in any browser and any os.
 
 ## Demo
 
-[http://demo.jankuri.com/ng2-slimscroll](http://demo.jankuri.com/ng2-slimscroll)
+[http://ng2-slimscroll.jankuri.com](http://ng2-slimscroll.jankuri.com)
 
 ## Installation: 
 
