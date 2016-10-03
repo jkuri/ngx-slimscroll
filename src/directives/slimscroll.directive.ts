@@ -1,5 +1,5 @@
 import { Directive, ViewContainerRef } from '@angular/core';
-import { getDOM } from '@angular/platform-browser/src/dom/dom_adapter';
+import { BrowserDomAdapter } from '@angular/platform-browser/src/browser/browser_adapter';
 
 @Directive({ 
   selector: '[slimScroll]' 
@@ -14,9 +14,10 @@ export class SlimScroll {
   private width: string;
   private position: string;
   private borderRadius: string;
-  private dom = getDOM();
+  private dom: BrowserDomAdapter;
 
   constructor(viewContainer: ViewContainerRef) {
+    this.dom = new BrowserDomAdapter();
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
 
