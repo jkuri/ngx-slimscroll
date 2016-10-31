@@ -1,8 +1,8 @@
 import { Directive, ViewContainerRef } from '@angular/core';
 import { BrowserDomAdapter } from '@angular/platform-browser/src/browser/browser_adapter';
 
-@Directive({ 
-  selector: '[slimScroll]' 
+@Directive({
+  selector: '[slimScroll]'
 })
 export class SlimScroll {
   private el: any;
@@ -15,6 +15,8 @@ export class SlimScroll {
   private position: string;
   private borderRadius: string;
   private dom: BrowserDomAdapter;
+  private mutationThrottleTimeout: number;
+  private mutationObserver: MutationObserver;
 
   constructor(viewContainer: ViewContainerRef) {
     this.dom = new BrowserDomAdapter();
@@ -40,6 +42,10 @@ export class SlimScroll {
     dom.setStyle(el, 'overflow', 'hidden');
     dom.setStyle(el, 'position', 'relative');
     dom.setStyle(el, 'display', 'block');
+  }
+
+  private onMutation() {
+    this.getBarHeight();
   }
 
   private wrapContainer(): void {
@@ -119,7 +125,7 @@ export class SlimScroll {
     let el = this.el;
 
     if (isWheel) {
-      delta = parseInt(dom.getStyle(bar, 'top'), 10) + y * 20 / 100 * bar.offsetHeight; 
+      delta = parseInt(dom.getStyle(bar, 'top'), 10) + y * 20 / 100 * bar.offsetHeight;
       delta = Math.min(Math.max(delta, 0), maxTop);
       delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
       dom.setStyle(bar, 'top', delta + 'px');
@@ -162,6 +168,10 @@ export class SlimScroll {
   };
 
   private destroy(): void {
+    if (this.mutationObserver) {
+      this.mutationObserver.disconnect();
+      this.mutationObserver = null;
+    }
     if (this.dom.hasClass(this.el.parentElement, 'slimscroll-wrapper')) {
       let wrapper = this.el.parentElement;
       let bar = this.dom.getElementsByClassName(this.el, 'slimscroll-bar')[0];
@@ -187,6 +197,14 @@ export class SlimScroll {
     this.getBarHeight();
     this.attachWheel(this.el);
     this.makeBarDraggable();
+    if(MutationObserver) {
+      this.mutationObserver = new MutationObserver(() => {
+        if (this.mutationThrottleTimeout)
+          clearTimeout(this.mutationThrottleTimeout);
+          this.mutationThrottleTimeout = setTimeout(this.onMutation.bind(this), 50);
+      });
+      this.mutationObserver.observe(this.el, {subtree: true, childList: true});
+    }
   }
 
 }
