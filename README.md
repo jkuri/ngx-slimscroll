@@ -17,24 +17,33 @@ npm install ng2-slimscroll
 ## Use Example:
 
 ```ts
-import {Component} from 'angular2/core';
-import {SlimScroll} from 'ng2-slimscroll';
+// app.module.ts
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
+import { SlimScrollModule } from 'ng2-slimscroll';
 
-@Component({
-  template: `
-    <div slimScroll 
-         background="#333" 
-         opacity="0.6" 
-         position="right" 
-         width="7px"
-         border-radius="5px">
-      Long scrollable content ...
-    </div>
-  `,
-  directives: [SlimScroll]
+@NgModule({
+  imports: [ SlimScrollModule ]
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    CommonModule,
+    HttpModule,
+    FormsModule
+  ],
+  bootstrap: [ AppComponent ]
 })
+export class AppModule { }
+```
 
-class App { }
+```html
+<div slimScroll></div>
 ```
 
 ## Author
