@@ -20,7 +20,7 @@
   ],
   "author": "Jan Kuri <jkuri88@gmail.com>",
   "main": "ng2-slimscroll.js",
-  "typings": "./ng2-slimscroll.d.ts",
+  "typings": "ng2-slimscroll.d.ts",
   "license": "MIT",
   "devDependencies": {
     "@angular/common": "^2.0.1",
@@ -28,10 +28,8 @@
     "@angular/core": "^2.0.1",
     "@angular/platform-browser": "^2.0.1",
     "core-js": "^2.4.1",
-    "es6-promise": "^3.0.2",
-    "es6-shim": "^0.33.3",
-    "reflect-metadata": "0.1.7",
-    "rxjs": "^5.0.0-beta.12",
+    "reflect-metadata": "0.1.8",
+    "rxjs": "5.0.0-beta.12",
     "typescript": "^2.0.3",
     "zone.js": "^0.6.25"
   }

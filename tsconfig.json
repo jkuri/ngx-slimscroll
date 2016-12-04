@@ -3,21 +3,11 @@
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "mapRoot": "",
+    "lib": ["es6", "dom"],
+    "rootDir": ".",
     "module": "commonjs",
     "moduleResolution": "node",
-    "noEmitOnError": true,
-    "noImplicitAny": false,
-    "rootDir": ".",
     "sourceMap": true,
-    "sourceRoot": "./",
     "target": "es5"
-  },
-  "files": [
-    "typings/index.d.ts",
-    "ng2-slimscroll.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  }
 }
