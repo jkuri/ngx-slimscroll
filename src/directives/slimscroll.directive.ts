@@ -1,47 +1,102 @@
-import { Directive, ViewContainerRef } from '@angular/core';
-import { BrowserDomAdapter } from '@angular/platform-browser/src/browser/browser_adapter';
+import { Directive, ViewContainerRef, OnInit, Renderer, Inject, Input } from '@angular/core';
+
+export interface ISlimScrollOptions {
+  position?: string;
+  barBackground?: string;
+  barOpacity?: string;
+  barWidth?: string;
+  barBorderRadius?: string;
+  barMargin?: string;
+  gridBackground?: string;
+  gridOpacity?: string;
+  gridWidth?: string;
+  gridBorderRadius?: string;
+  gridMargin?: string;
+}
+
+export class SlimScrollOptions {
+  position?: string;
+  barBackground?: string;
+  barOpacity?: string;
+  barWidth?: string;
+  barBorderRadius?: string;
+  barMargin?: string;
+  gridBackground?: string;
+  gridOpacity?: string;
+  gridWidth?: string;
+  gridBorderRadius?: string;
+  gridMargin?: string;
+
+  constructor(obj?: ISlimScrollOptions) {
+    this.position = obj && obj.position ? obj.position : 'right';
+    this.barBackground = obj && obj.barBackground ? obj.barBackground : '#343a40';
+    this.barOpacity = obj && obj.barOpacity ? obj.barOpacity : '1';
+    this.barWidth = obj && obj.barWidth ? obj.barWidth : '12';
+    this.barBorderRadius = obj && obj.barBorderRadius ? obj.barBorderRadius : '5';
+    this.barMargin = obj && obj.barMargin ? obj.barMargin : '1px 0';
+    this.gridBackground = obj && obj.gridBackground ? obj.gridBackground : '#adb5bd';
+    this.gridOpacity = obj && obj.gridOpacity ? obj.gridOpacity : '1';
+    this.gridWidth = obj && obj.gridWidth ? obj.gridWidth : '8';
+    this.gridBorderRadius = obj && obj.gridBorderRadius ? obj.gridBorderRadius : '10';
+    this.gridMargin = obj && obj.gridMargin ? obj.gridMargin : '1px 2px';
+  }
+}
 
 @Directive({
   selector: '[slimScroll]'
 })
-export class SlimScroll {
-  private el: any;
-  private wrapper: any;
-  private bar: any;
-  private viewContainer: ViewContainerRef;
-  private background: string;
-  private opacity: string;
-  private width: string;
-  private position: string;
-  private borderRadius: string;
-  private dom: BrowserDomAdapter;
+export class SlimScrollDirective implements OnInit {
+  @Input() options: ISlimScrollOptions;
+
+  private el: HTMLElement;
+  private wrapper: HTMLElement;
+  private grid: HTMLElement;
+  private bar: HTMLElement;
+  private body: HTMLElement;
+  private pageY: number;
+  private top: number;
+  private dragging: boolean;
   private mutationThrottleTimeout: number;
   private mutationObserver: MutationObserver;
 
-  constructor(viewContainer: ViewContainerRef) {
-    this.dom = new BrowserDomAdapter();
+  constructor(
+    @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
+    @Inject(Renderer) private renderer: Renderer) {
+    if (typeof window === 'undefined') { return; }
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
+    this.body = document.documentElement.querySelector('body');
+    this.mutationThrottleTimeout = 50;
+  }
 
-    let dom = this.dom;
-    let el = this.el;
+  ngOnInit() {
+    if (typeof window === 'undefined') { return; }
+    this.options = new SlimScrollOptions(this.options);
+    this.destroy();
+    this.setElementStyle();
+    this.wrapContainer();
+    this.initGrid();
+    this.initBar();
+    this.getBarHeight();
+    this.attachWheel(this.el);
+    this.makeBarDraggable();
 
-    this.background = dom.getAttribute(el, 'background') || '#000';
-    this.opacity = dom.getAttribute(el, 'opacity') || '0.5';
-    this.width = dom.getAttribute(el, 'width') || '7px';
-    this.position = dom.getAttribute(el, 'position') || 'right';
-    this.borderRadius = dom.getAttribute(el, 'border-radius') || '3px';
-
-    this.init();
+    if (MutationObserver) {
+      this.mutationObserver = new MutationObserver(() => {
+        if (this.mutationThrottleTimeout) {
+          clearTimeout(this.mutationThrottleTimeout);
+          this.mutationThrottleTimeout = setTimeout(this.onMutation.bind(this), 50);
+        }
+      });
+      this.mutationObserver.observe(this.el, {subtree: true, childList: true});
+    }
   }
 
   private setElementStyle(): void {
-    let dom = this.dom;
     let el = this.el;
-
-    dom.setStyle(el, 'overflow', 'hidden');
-    dom.setStyle(el, 'position', 'relative');
-    dom.setStyle(el, 'display', 'block');
+    this.renderer.setElementStyle(el, 'overflow', 'hidden');
+    this.renderer.setElementStyle(el, 'position', 'relative');
+    this.renderer.setElementStyle(el, 'display', 'block');
   }
 
   private onMutation() {
@@ -49,41 +104,60 @@ export class SlimScroll {
   }
 
   private wrapContainer(): void {
-    this.wrapper = this.dom.createElement('div');
-    let dom = this.dom;
+    this.wrapper = document.createElement('div');
     let wrapper = this.wrapper;
     let el = this.el;
 
-    dom.addClass(wrapper, 'slimscroll-wrapper');
-    dom.setStyle(wrapper, 'position', 'relative');
-    dom.setStyle(wrapper, 'overflow', 'hidden');
-    dom.setStyle(wrapper, 'display', 'block');
-    dom.setStyle(wrapper, 'margin', dom.getComputedStyle(el).margin);
-    dom.setStyle(wrapper, 'width', dom.getComputedStyle(el).width);
-    dom.setStyle(wrapper, 'height', dom.getComputedStyle(el).height);
+    this.renderer.setElementClass(wrapper, 'slimscroll-wrapper', true);
+    this.renderer.setElementStyle(wrapper, 'position', 'relative');
+    this.renderer.setElementStyle(wrapper, 'overflow', 'hidden');
+    this.renderer.setElementStyle(wrapper, 'display', 'block');
+    this.renderer.setElementStyle(wrapper, 'margin', getComputedStyle(el).margin);
+    this.renderer.setElementStyle(wrapper, 'width', getComputedStyle(el).width);
+    this.renderer.setElementStyle(wrapper, 'height', getComputedStyle(el).height);
 
     el.parentNode.insertBefore(wrapper, el);
     wrapper.appendChild(el);
   }
 
+  private initGrid(): void {
+    this.grid = document.createElement('div');
+    let grid = this.grid;
+
+    this.renderer.setElementClass(grid, 'slimscroll-grid', true);
+    this.renderer.setElementStyle(grid, 'position', 'absolute');
+    this.renderer.setElementStyle(grid, 'top', '0');
+    this.renderer.setElementStyle(grid, this.options.position, '0');
+    this.renderer.setElementStyle(grid, 'width', `${this.options.gridWidth}px`);
+    this.renderer.setElementStyle(grid, 'height', '100%');
+    this.renderer.setElementStyle(grid, 'background', this.options.gridBackground);
+    this.renderer.setElementStyle(grid, 'opacity', this.options.gridOpacity);
+    this.renderer.setElementStyle(grid, 'display', 'block');
+    this.renderer.setElementStyle(grid, 'cursor', 'pointer');
+    this.renderer.setElementStyle(grid, 'z-index', '99');
+    this.renderer.setElementStyle(grid, 'border-radius', `${this.options.gridBorderRadius}px`);
+    this.renderer.setElementStyle(grid, 'margin', this.options.gridMargin);
+
+    this.wrapper.appendChild(grid);
+  }
+
   private initBar(): void {
-    this.bar = this.dom.createElement('div');
-    let dom = this.dom;
+    this.bar = document.createElement('div');
     let bar = this.bar;
     let el = this.el;
 
-    dom.addClass(bar, 'slimscroll-bar');
-    dom.setStyle(bar, 'position', 'absolute');
-    dom.setStyle(bar, 'top', '0');
-    dom.setStyle(bar, this.position, '0');
-    dom.setStyle(bar, 'width', this.width);
-    dom.setStyle(bar, 'background', this.background);
-    dom.setStyle(bar, 'opacity', this.opacity);
-    dom.setStyle(bar, 'display', 'block');
-    dom.setStyle(bar, 'cursor', 'pointer');
-    dom.setStyle(bar, 'z-index', '99');
-    dom.setStyle(bar, 'border-radius', this.borderRadius);
-    dom.setStyle(bar, 'margin', '1px 0');
+    this.renderer.setElementClass(bar, 'slimscroll-bar', true);
+    this.renderer.setElementStyle(bar, 'position', 'absolute');
+    this.renderer.setElementStyle(bar, 'top', '0');
+    this.renderer.setElementStyle(bar, this.options.position, '0');
+    this.renderer.setElementStyle(bar, 'width', `${this.options.barWidth}px`);
+    this.renderer.setElementStyle(bar, 'background', this.options.barBackground);
+    this.renderer.setElementStyle(bar, 'opacity', this.options.barOpacity);
+    this.renderer.setElementStyle(bar, 'display', 'block');
+    this.renderer.setElementStyle(bar, 'cursor', 'pointer');
+    this.renderer.setElementStyle(bar, 'z-index', '100');
+    this.renderer.setElementStyle(bar, 'border-radius', `${this.options.barBorderRadius}px`);
+    this.renderer.setElementStyle(bar, 'margin', this.options.barMargin);
 
     this.wrapper.appendChild(bar);
   }
@@ -91,10 +165,10 @@ export class SlimScroll {
   private getBarHeight(): void {
     setTimeout(() => {
       let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
-      let display = barHeight === this.el.offsetHeight ? 'none' : 'block';
+      let display = parseInt(barHeight, 10) === this.el.offsetHeight ? 'none' : 'block';
 
-      this.dom.setStyle(this.bar, 'height', barHeight);
-      this.dom.setStyle(this.bar, 'display', display);
+      this.renderer.setElementStyle(this.bar, 'height', barHeight);
+      this.renderer.setElementStyle(this.bar, 'display', display);
     }, 1);
   }
 
@@ -120,18 +194,17 @@ export class SlimScroll {
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let percentScroll;
     let barTop;
-    let dom = this.dom;
     let bar = this.bar;
     let el = this.el;
 
     if (isWheel) {
-      delta = parseInt(dom.getStyle(bar, 'top'), 10) + y * 20 / 100 * bar.offsetHeight;
+      delta = parseInt(getComputedStyle(bar).top, 10) + y * 20 / 100 * bar.offsetHeight;
       delta = Math.min(Math.max(delta, 0), maxTop);
       delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
-      dom.setStyle(bar, 'top', delta + 'px');
+      this.renderer.setElementStyle(bar, 'top', delta + 'px');
     }
 
-    percentScroll = parseInt(dom.getStyle(bar, 'top'), 10) / (el.offsetHeight - bar.offsetHeight);
+    percentScroll = parseInt(getComputedStyle(bar).top, 10) / (el.offsetHeight - bar.offsetHeight);
     delta = percentScroll * (el.scrollHeight - el.offsetHeight);
 
     el.scrollTop = delta;
@@ -141,30 +214,34 @@ export class SlimScroll {
     let body = document.getElementsByTagName('body')[0];
     let el = this.el;
     let bar = this.bar;
-    let dom = this.dom;
 
-    bar.addEventListener('mousedown', (e) => {
-      let top = parseFloat(dom.getStyle(bar, 'top'));
-      let pageY = e.pageY;
+    bar.addEventListener('mousedown', (e: MouseEvent) => {
+      if (!this.dragging) {
+        this.pageY = e.pageY;
+        this.top = parseFloat(getComputedStyle(this.bar).top);
+      }
 
-      bar.addEventListener('mousemove', () => { this.barDraggableListener(event, top, pageY); }, false);
+      this.dragging = true;
+      this.body.addEventListener('mousemove', this.barDraggableListener, false);
+      this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
     }, false);
 
-    bar.addEventListener('mouseup', () => {
-      let newBar = bar.cloneNode(true);
-      bar.parentNode.replaceChild(newBar, bar);
-      this.makeBarDraggable();
-    }, false);
-
-    bar.addEventListener('selectstart', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    this.body.addEventListener('mouseup', () => {
+      this.body.removeEventListener('mousemove', this.barDraggableListener, false);
+      this.body.removeEventListener('selectstart', this.preventDefaultEvent, false);
+      this.dragging = false;
     }, false);
   };
 
-  private barDraggableListener = (e, top, pageY) => {
-    this.dom.setStyle(this.bar, 'top', top + e.pageY - pageY + 'px');
-    this.scrollContent(0, this.bar.offsetTop, false);
+  private preventDefaultEvent = (e: MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  private barDraggableListener = (e: MouseEvent) => {
+    let top = this.top + e.pageY - this.pageY;
+    this.renderer.setElementStyle(this.bar, 'top', `${top}px`);
+    this.scrollContent(0, true, false);
   };
 
   private destroy(): void {
@@ -172,10 +249,11 @@ export class SlimScroll {
       this.mutationObserver.disconnect();
       this.mutationObserver = null;
     }
-    if (this.dom.hasClass(this.el.parentElement, 'slimscroll-wrapper')) {
+
+    if (this.el.parentElement.classList.contains('slimscroll-wrapper')) {
       let wrapper = this.el.parentElement;
-      let bar = this.dom.getElementsByClassName(this.el, 'slimscroll-bar')[0];
-      this.dom.removeChild(this.el, bar);
+      let bar = this.el.querySelector('.slimscroll-bar');
+      this.el.removeChild(bar);
       this.unwrap(wrapper);
     }
   }
@@ -188,23 +266,4 @@ export class SlimScroll {
     }
     wrapper.parentNode.replaceChild(docFrag, wrapper);
   }
-
-  private init(): void {
-    this.destroy();
-    this.setElementStyle();
-    this.wrapContainer();
-    this.initBar();
-    this.getBarHeight();
-    this.attachWheel(this.el);
-    this.makeBarDraggable();
-    if(MutationObserver) {
-      this.mutationObserver = new MutationObserver(() => {
-        if (this.mutationThrottleTimeout)
-          clearTimeout(this.mutationThrottleTimeout);
-          this.mutationThrottleTimeout = setTimeout(this.onMutation.bind(this), 50);
-      });
-      this.mutationObserver.observe(this.el, {subtree: true, childList: true});
-    }
-  }
-
 }

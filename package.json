@@ -1,6 +1,6 @@
 {
   "name": "ng2-slimscroll",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "description": "Angular2 Customizable Scrollbar Implementation",
   "repository": {
     "type": "git",
@@ -23,10 +23,10 @@
   "typings": "ng2-slimscroll.d.ts",
   "license": "MIT",
   "devDependencies": {
-    "@angular/common": "^2.0.1",
-    "@angular/compiler": "^2.0.1",
-    "@angular/core": "^2.0.1",
-    "@angular/platform-browser": "^2.0.1",
+    "@angular/common": "^2.2.4",
+    "@angular/compiler": "^2.2.4",
+    "@angular/core": "^2.2.4",
+    "@angular/platform-browser": "^2.2.4",
     "core-js": "^2.4.1",
     "reflect-metadata": "0.1.8",
     "rxjs": "5.0.0-beta.12",

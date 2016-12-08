@@ -40,10 +40,26 @@ import { SlimScrollModule } from 'ng2-slimscroll';
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
-```
 
-```html
-<div slimScroll></div>
+// app.component.ts
+import { AppComponent, OnInit } from '@angular/core';
+import { ISlimScrollOptions } from 'ng2-slimscroll';
+
+@Component({
+  selector: 'app-root',
+  template: `<div slimScroll [options]="opts"></div>`
+})
+export class AppComponent imlements OnInit { 
+  opts: ISlimScrollOptions;
+
+  ngOnInit() {
+    this.opts = {
+      position: 'right',
+      barBackground: '#000000',
+      ... // check ISlimScrollOptions for all options
+    }
+  }
+}
 ```
 
 ## Author
