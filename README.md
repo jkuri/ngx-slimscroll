@@ -24,12 +24,12 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { SlimScrollModule } from 'ng2-slimscroll';
+import { SlimScrollDirective } from 'ng2-slimscroll';
 
 @NgModule({
-  imports: [ SlimScrollModule ]
   declarations: [
-    AppComponent
+    AppComponent,
+    SlimScrollDirective
   ],
   imports: [
     BrowserModule,
