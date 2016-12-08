@@ -9,4 +9,3 @@ export * from './src/directives/slimscroll.directive';
 })
 export class SlimScrollModule { }
 
-export * from './src/directives/slimscroll.directive';
