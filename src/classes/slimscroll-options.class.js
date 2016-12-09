@@ -1,4 +1,5 @@
-export var SlimScrollOptions = (function () {
+"use strict";
+var SlimScrollOptions = (function () {
     function SlimScrollOptions(obj) {
         this.position = obj && obj.position ? obj.position : 'right';
         this.barBackground = obj && obj.barBackground ? obj.barBackground : '#343a40';
@@ -14,3 +15,4 @@ export var SlimScrollOptions = (function () {
     }
     return SlimScrollOptions;
 }());
+exports.SlimScrollOptions = SlimScrollOptions;

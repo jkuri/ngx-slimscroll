@@ -1,16 +1,20 @@
-import { NgModule } from '@angular/core';
-import { SlimScrollDirective } from './src/directives/slimscroll.directive';
-export * from './src/classes/slimscroll-options.class';
-export var SlimScrollModule = (function () {
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+var core_1 = require('@angular/core');
+var slimscroll_directive_1 = require('./src/directives/slimscroll.directive');
+__export(require('./src/classes/slimscroll-options.class'));
+var SlimScrollModule = (function () {
     function SlimScrollModule() {
     }
     SlimScrollModule.decorators = [
-        { type: NgModule, args: [{
+        { type: core_1.NgModule, args: [{
                     declarations: [
-                        SlimScrollDirective
+                        slimscroll_directive_1.SlimScrollDirective
                     ],
                     exports: [
-                        SlimScrollDirective
+                        slimscroll_directive_1.SlimScrollDirective
                     ]
                 },] },
     ];
@@ -18,3 +22,4 @@ export var SlimScrollModule = (function () {
     SlimScrollModule.ctorParameters = function () { return []; };
     return SlimScrollModule;
 }());
+exports.SlimScrollModule = SlimScrollModule;

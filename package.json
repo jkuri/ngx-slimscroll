@@ -1,6 +1,6 @@
 {
   "name": "ng2-slimscroll",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Angular2 Customizable Scrollbar Implementation",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "./scripts/clean.sh",
     "dev": "tsc --watch",
-    "build": "./node_modules/.bin/ngc -p tsconfig.json && rollup -c",
+    "build": "./node_modules/.bin/ngc -p tsconfig.json",
     "lint": "tslint ./src/*.ts",
     "prepublish": "npm run lint && npm run build"
   },
@@ -22,9 +22,8 @@
     "slimscroll"
   ],
   "author": "Jan Kuri <jkuri88@gmail.com>",
-  "main": "dist/ng2-slimscrol.umd.js",
+  "main": "index.js",
   "typings": "index.d.ts",
-  "module": "index.js",
   "license": "MIT",
   "devDependencies": {
     "@angular/common": "^2.3.0",
@@ -36,9 +35,6 @@
     "codelyzer": "^2.0.0-beta.1",
     "core-js": "^2.4.1",
     "reflect-metadata": "0.1.8",
-    "rollup": "^0.36.4",
-    "rollup-plugin-commonjs": "^5.0.5",
-    "rollup-plugin-node-resolve": "^2.0.0",
     "rxjs": "5.0.0-beta.12",
     "tslint": "^4.0.2",
     "typescript": "2.0.10",
