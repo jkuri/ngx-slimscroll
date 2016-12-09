@@ -26,7 +26,9 @@
     "dist"
   ],
   "files": [
-    "ng2-slimscroll.ts"
+    "ng2-slimscroll.ts",
+    "src/directives/slimscroll.directive.ts",
+    "src/classes/slimscroll-options.class.ts"
   ],
   "angularCompilerOptions": {
     "genDir": "aot",

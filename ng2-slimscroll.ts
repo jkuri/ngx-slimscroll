@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SlimScrollDirective } from './src/directives/slimscroll.directive';
 
+export * from './src/classes/slimscroll-options.class';
+
 @NgModule({
   declarations: [
     SlimScrollDirective
@@ -11,4 +13,3 @@ import { SlimScrollDirective } from './src/directives/slimscroll.directive';
 })
 export class SlimScrollModule { }
 
-export { ISlimScrollOptions, SlimScrollOptions } from './src/directives/slimscroll.directive';
