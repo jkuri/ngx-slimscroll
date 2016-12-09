@@ -172,12 +172,12 @@ export class SlimScrollDirective implements OnInit {
     }, 1);
   }
 
-  private attachWheel(target): void {
+  private attachWheel(target: HTMLElement): void {
     target.addEventListener('DOMMouseScroll', this.onWheel, false);
     target.addEventListener('mousewheel', this.onWheel, false);
   }
 
-  private onWheel = (e) => {
+  private onWheel = (e: MouseWheelEvent) => {
     let delta = 0;
     let target = e.target || e.srcElement;
 
@@ -192,8 +192,8 @@ export class SlimScrollDirective implements OnInit {
   private scrollContent(y: number, isWheel: boolean, isJump: boolean): void {
     let delta = y;
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
-    let percentScroll;
-    let barTop;
+    let percentScroll: number;
+    let barTop: number;
     let bar = this.bar;
     let el = this.el;
 
@@ -258,7 +258,7 @@ export class SlimScrollDirective implements OnInit {
     }
   }
 
-  private unwrap(wrapper): void {
+  private unwrap(wrapper: HTMLElement): void {
     let docFrag = document.createDocumentFragment();
     while (wrapper.firstChild) {
       let child = wrapper.removeChild(wrapper.firstChild);

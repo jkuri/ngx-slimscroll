@@ -1,14 +1,18 @@
 {
   "name": "ng2-slimscroll",
-  "version": "0.9.2",
+  "version": "1.0.0",
   "description": "Angular2 Customizable Scrollbar Implementation",
+  "main": "ng2-datepicker.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jkuri/ng2-slimscroll.git"
   },
   "scripts": {
+    "clean": "./scripts/clean.sh",
     "dev": "tsc --watch",
-    "prepublish": "tsc"
+    "build": "./node_modules/.bin/ngc -p tsconfig.json",
+    "lint": "tslint ./src/*.ts",
+    "prepublish": "npm run lint && npm run build"
   },
   "keywords": [
     "ng2",
@@ -23,14 +27,18 @@
   "typings": "ng2-slimscroll.d.ts",
   "license": "MIT",
   "devDependencies": {
-    "@angular/common": "^2.2.4",
-    "@angular/compiler": "^2.2.4",
-    "@angular/core": "^2.2.4",
-    "@angular/platform-browser": "^2.2.4",
+    "@angular/common": "^2.3.0",
+    "@angular/compiler": "^2.3.0",
+    "@angular/compiler-cli": "^2.3.0",
+    "@angular/core": "^2.3.0",
+    "@angular/platform-browser": "^2.3.0",
+    "@types/node": "0.0.2",
+    "codelyzer": "^2.0.0-beta.1",
     "core-js": "^2.4.1",
     "reflect-metadata": "0.1.8",
     "rxjs": "5.0.0-beta.12",
-    "typescript": "^2.0.3",
-    "zone.js": "^0.6.25"
+    "tslint": "^4.0.2",
+    "typescript": "2.0.10",
+    "zone.js": "^0.7.2"
   }
 }
