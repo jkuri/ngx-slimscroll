@@ -8,6 +8,8 @@ Make scrollbar looks identical in any browser and any os.
 
 [http://ng2-slimscroll.jankuri.com](http://ng2-slimscroll.jankuri.com)
 
+You can download demo app [here](https://github.com/jkuri/ng2-slimscroll-demo).
+
 ## Installation: 
 
 ```bash
