@@ -1,4 +1,4 @@
-import { Directive, ViewContainerRef, OnInit, Renderer, Inject, Input } from '@angular/core';
+import { Directive, ViewContainerRef,  HostListener, OnInit, Renderer, Inject, Input } from '@angular/core';
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
 
 @Directive({
@@ -72,8 +72,8 @@ export class SlimScrollDirective implements OnInit {
     this.renderer.setElementStyle(wrapper, 'overflow', 'hidden');
     this.renderer.setElementStyle(wrapper, 'display', 'block');
     this.renderer.setElementStyle(wrapper, 'margin', getComputedStyle(el).margin);
-    this.renderer.setElementStyle(wrapper, 'width', getComputedStyle(el).width);
-    this.renderer.setElementStyle(wrapper, 'height', getComputedStyle(el).height);
+    this.renderer.setElementStyle(wrapper, 'width', 'inherit');
+    this.renderer.setElementStyle(wrapper, 'height', '100%');
 
     el.parentNode.insertBefore(wrapper, el);
     wrapper.appendChild(el);
@@ -225,4 +225,8 @@ export class SlimScrollDirective implements OnInit {
     }
     wrapper.parentNode.replaceChild(docFrag, wrapper);
   }
+    @HostListener('window:resize', ['$event'])
+    onResize() {
+        this.getBarHeight()
+    }
 }
