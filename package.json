@@ -1,7 +1,10 @@
 {
   "name": "ng2-slimscroll",
-  "version": "1.2.0",
-  "description": "Angular2 Customizable Scrollbar Implementation",
+  "version": "1.2.6",
+  "description": "Angular2 Customizable Scrollbar",
+  "main": "bundle/ng2-slimscroll.umd.js",
+  "module": "ng2-slimscroll.js",
+  "typings": "ng2-slimscroll.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jkuri/ng2-slimscroll.git"
@@ -9,7 +12,7 @@
   "scripts": {
     "clean": "./scripts/clean.sh",
     "dev": "tsc --watch",
-    "build": "./node_modules/.bin/ngc -p tsconfig.json",
+    "build": "./node_modules/.bin/ngc -p tsconfig.json && rollup -c",
     "lint": "tslint ./src/*.ts",
     "prepublish": "npm run lint && npm run build"
   },
@@ -22,22 +25,23 @@
     "slimscroll"
   ],
   "author": "Jan Kuri <jkuri88@gmail.com>",
-  "main": "index.js",
-  "typings": "index.d.ts",
   "license": "MIT",
   "devDependencies": {
-    "@angular/common": "^2.3.0",
-    "@angular/compiler": "^2.3.0",
-    "@angular/compiler-cli": "^2.3.0",
-    "@angular/core": "^2.3.0",
-    "@angular/platform-browser": "^2.3.0",
-    "@types/node": "0.0.2",
-    "codelyzer": "^2.0.0-beta.1",
+    "@angular/common": "^2.4.9",
+    "@angular/compiler": "^2.4.9",
+    "@angular/compiler-cli": "^2.4.9",
+    "@angular/core": "^2.4.9",
+    "@angular/platform-browser": "^2.4.9",
+    "@types/node": "7.0.5",
+    "codelyzer": "^3.0.0-beta.0",
     "core-js": "^2.4.1",
-    "reflect-metadata": "0.1.8",
-    "rxjs": "5.0.0-beta.12",
-    "tslint": "^4.0.2",
-    "typescript": "2.0.10",
-    "zone.js": "^0.7.2"
+    "reflect-metadata": "0.1.10",
+    "rollup": "^0.41.4",
+    "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "rxjs": "5.2.0",
+    "tslint": "^4.5.1",
+    "typescript": "2.2.1",
+    "zone.js": "^0.7.7"
   }
 }

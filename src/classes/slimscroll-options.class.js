@@ -1,4 +1,3 @@
-"use strict";
 var SlimScrollOptions = (function () {
     function SlimScrollOptions(obj) {
         this.position = obj && obj.position ? obj.position : 'right';
@@ -15,4 +14,4 @@ var SlimScrollOptions = (function () {
     }
     return SlimScrollOptions;
 }());
-exports.SlimScrollOptions = SlimScrollOptions;
+export { SlimScrollOptions };
