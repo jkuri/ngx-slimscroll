@@ -128,6 +128,7 @@ export class SlimScrollDirective implements OnInit {
 
       this.renderer.setElementStyle(this.bar, 'height', barHeight);
       this.renderer.setElementStyle(this.bar, 'display', display);
+      this.renderer.setElementStyle(this.grid, "display", display);
     }, 1);
   }
 
