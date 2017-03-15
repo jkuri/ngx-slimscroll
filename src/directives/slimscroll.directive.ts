@@ -17,6 +17,7 @@ export class SlimScrollDirective implements OnInit {
   private dragging: boolean;
   private mutationThrottleTimeout: number;
   private mutationObserver: MutationObserver;
+  private lastTouchPositionY: number;
 
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
@@ -135,6 +136,7 @@ export class SlimScrollDirective implements OnInit {
   private attachWheel(target: HTMLElement): void {
     target.addEventListener('DOMMouseScroll', this.onWheel, false);
     target.addEventListener('mousewheel', this.onWheel, false);
+    target.addEventListener('touchstart', this.onTouchStart, false);
   }
 
   private onWheel = (e: MouseWheelEvent) => {
@@ -148,6 +150,25 @@ export class SlimScrollDirective implements OnInit {
 
     if (e.preventDefault) { e.preventDefault(); }
   };
+
+  private onTouchStart = (e: TouchEvent) => {
+    e.preventDefault();
+    e.target.addEventListener('touchmove', this.onTouchMove, false);
+    e.target.addEventListener('touchend', this.onTouchEnd, false);
+    this.lastTouchPositionY = e.changedTouches[0].clientY;
+  };
+
+  private onTouchMove = (e: TouchEvent) => {
+    e.preventDefault();
+    let delta = (e.changedTouches[0].clientY - this.lastTouchPositionY) / 120;
+    this.lastTouchPositionY = e.changedTouches[0].clientY;
+    this.scrollContent(delta, true, false);
+  }
+
+  private onTouchEnd = (e: TouchEvent) => {
+    e.target.removeEventListener('touchmove');
+    e.target.removeEventListener('touchend');
+  }
 
   private scrollContent(y: number, isWheel: boolean, isJump: boolean): void {
     let delta = y;
