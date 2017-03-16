@@ -2,7 +2,8 @@ import { Directive, ViewContainerRef, OnInit, Renderer, Inject, Input } from '@a
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
 
 @Directive({
-  selector: '[slimScroll]'
+  selector: '[slimScroll]',
+  exportAs: 'slimScroll'
 })
 export class SlimScrollDirective implements OnInit {
   @Input() options: SlimScrollOptions;
