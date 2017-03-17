@@ -150,18 +150,18 @@ export class SlimScrollDirective implements OnInit {
     this.scrollContent(delta, true, false);
 
     if (e.preventDefault) { e.preventDefault(); }
-  };
+  }
 
   private onTouchStart = (e: TouchEvent) => {
     e.preventDefault();
     e.target.addEventListener('touchmove', this.onTouchMove, false);
     e.target.addEventListener('touchend', this.onTouchEnd, false);
     this.lastTouchPositionY = e.changedTouches[0].clientY;
-  };
+  }
 
   private onTouchMove = (e: TouchEvent) => {
     e.preventDefault();
-    let delta = (e.changedTouches[0].clientY - this.lastTouchPositionY) / 120;
+    let delta = (this.lastTouchPositionY - e.changedTouches[0].clientY) / 120;
     this.lastTouchPositionY = e.changedTouches[0].clientY;
     this.scrollContent(delta, true, false);
   }
