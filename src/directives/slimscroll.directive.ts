@@ -6,7 +6,7 @@ import { SlimScrollOptions } from '../classes/slimscroll-options.class';
   exportAs: 'slimScroll'
 })
 export class SlimScrollDirective implements OnInit {
-  @Input() options: SlimScrollOptions;
+  @Input() public options: SlimScrollOptions;
 
   private el: HTMLElement;
   private wrapper: HTMLElement;
@@ -30,7 +30,7 @@ export class SlimScrollDirective implements OnInit {
     this.mutationThrottleTimeout = 50;
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     if (typeof window === 'undefined') { return; }
     this.options = new SlimScrollOptions(this.options);
     this.destroy();
@@ -125,12 +125,13 @@ export class SlimScrollDirective implements OnInit {
 
   private getBarHeight(): void {
     setTimeout(() => {
-      let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
+      let rad = this.el.offsetHeight / this.el.scrollHeight;
+      let barHeight = Math.max((rad) * this.el.offsetHeight, 30) + 'px';
       let display = parseInt(barHeight, 10) === this.el.offsetHeight ? 'none' : 'block';
 
       this.renderer.setElementStyle(this.bar, 'height', barHeight);
       this.renderer.setElementStyle(this.bar, 'display', display);
-      this.renderer.setElementStyle(this.grid, "display", display);
+      this.renderer.setElementStyle(this.grid, 'display', display);
     }, 1);
   }
 
@@ -213,18 +214,18 @@ export class SlimScrollDirective implements OnInit {
       this.body.removeEventListener('selectstart', this.preventDefaultEvent, false);
       this.dragging = false;
     }, false);
-  };
+  }
 
   private preventDefaultEvent = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-  };
+  }
 
   private barDraggableListener = (e: MouseEvent) => {
     let top = this.top + e.pageY - this.pageY;
     this.renderer.setElementStyle(this.bar, 'top', `${top}px`);
     this.scrollContent(0, true, false);
-  };
+  }
 
   private destroy(): void {
     if (this.mutationObserver) {

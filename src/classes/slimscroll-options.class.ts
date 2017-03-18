@@ -13,17 +13,17 @@ export interface ISlimScrollOptions {
 }
 
 export class SlimScrollOptions {
-  position?: string;
-  barBackground?: string;
-  barOpacity?: string;
-  barWidth?: string;
-  barBorderRadius?: string;
-  barMargin?: string;
-  gridBackground?: string;
-  gridOpacity?: string;
-  gridWidth?: string;
-  gridBorderRadius?: string;
-  gridMargin?: string;
+  public position?: string;
+  public barBackground?: string;
+  public barOpacity?: string;
+  public barWidth?: string;
+  public barBorderRadius?: string;
+  public barMargin?: string;
+  public gridBackground?: string;
+  public gridOpacity?: string;
+  public gridWidth?: string;
+  public gridBorderRadius?: string;
+  public gridMargin?: string;
 
   constructor(obj?: ISlimScrollOptions) {
     this.position = obj && obj.position ? obj.position : 'right';
