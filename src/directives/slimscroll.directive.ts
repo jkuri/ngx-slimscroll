@@ -130,7 +130,7 @@ export class SlimScrollDirective implements OnInit {
 
       this.renderer.setElementStyle(this.bar, 'height', barHeight);
       this.renderer.setElementStyle(this.bar, 'display', display);
-      this.renderer.setElementStyle(this.grid, "display", display);
+      this.renderer.setElementStyle(this.grid, 'display', display);
     }, 1);
   }
 
@@ -153,7 +153,6 @@ export class SlimScrollDirective implements OnInit {
   }
 
   private onTouchStart = (e: TouchEvent) => {
-    e.preventDefault();
     e.target.addEventListener('touchmove', this.onTouchMove, false);
     e.target.addEventListener('touchend', this.onTouchEnd, false);
     this.lastTouchPositionY = e.changedTouches[0].clientY;
