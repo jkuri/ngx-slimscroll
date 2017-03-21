@@ -8,17 +8,17 @@ import { SlimScrollOptions } from '../classes/slimscroll-options.class';
 export class SlimScrollDirective implements OnInit {
   @Input() options: SlimScrollOptions;
 
-  private el: HTMLElement;
-  private wrapper: HTMLElement;
-  private grid: HTMLElement;
-  private bar: HTMLElement;
-  private body: HTMLElement;
-  private pageY: number;
-  private top: number;
-  private dragging: boolean;
-  private mutationThrottleTimeout: number;
-  private mutationObserver: MutationObserver;
-  private lastTouchPositionY: number;
+  el: HTMLElement;
+  wrapper: HTMLElement;
+  grid: HTMLElement;
+  bar: HTMLElement;
+  body: HTMLElement;
+  pageY: number;
+  top: number;
+  dragging: boolean;
+  mutationThrottleTimeout: number;
+  mutationObserver: MutationObserver;
+  lastTouchPositionY: number;
 
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
@@ -60,11 +60,11 @@ export class SlimScrollDirective implements OnInit {
     this.renderer.setElementStyle(el, 'display', 'block');
   }
 
-  private onMutation() {
+  onMutation() {
     this.getBarHeight();
   }
 
-  private wrapContainer(): void {
+  wrapContainer(): void {
     this.wrapper = document.createElement('div');
     let wrapper = this.wrapper;
     let el = this.el;
@@ -81,7 +81,7 @@ export class SlimScrollDirective implements OnInit {
     wrapper.appendChild(el);
   }
 
-  private initGrid(): void {
+  initGrid(): void {
     this.grid = document.createElement('div');
     let grid = this.grid;
 
@@ -102,7 +102,7 @@ export class SlimScrollDirective implements OnInit {
     this.wrapper.appendChild(grid);
   }
 
-  private initBar(): void {
+  initBar(): void {
     this.bar = document.createElement('div');
     let bar = this.bar;
     let el = this.el;
@@ -123,7 +123,7 @@ export class SlimScrollDirective implements OnInit {
     this.wrapper.appendChild(bar);
   }
 
-  private getBarHeight(): void {
+  getBarHeight(): void {
     setTimeout(() => {
       let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
       let display = parseInt(barHeight, 10) === this.el.offsetHeight ? 'none' : 'block';
@@ -134,13 +134,13 @@ export class SlimScrollDirective implements OnInit {
     }, 1);
   }
 
-  private attachWheel(target: HTMLElement): void {
+  attachWheel(target: HTMLElement): void {
     target.addEventListener('DOMMouseScroll', this.onWheel, false);
     target.addEventListener('mousewheel', this.onWheel, false);
     target.addEventListener('touchstart', this.onTouchStart, false);
   }
 
-  private onWheel = (e: MouseWheelEvent) => {
+  onWheel = (e: MouseWheelEvent) => {
     let delta = 0;
     let target = e.target || e.srcElement;
 
@@ -152,25 +152,25 @@ export class SlimScrollDirective implements OnInit {
     if (e.preventDefault) { e.preventDefault(); }
   }
 
-  private onTouchStart = (e: TouchEvent) => {
+  onTouchStart = (e: TouchEvent) => {
     e.target.addEventListener('touchmove', this.onTouchMove, false);
     e.target.addEventListener('touchend', this.onTouchEnd, false);
     this.lastTouchPositionY = e.changedTouches[0].clientY;
   }
 
-  private onTouchMove = (e: TouchEvent) => {
+  onTouchMove = (e: TouchEvent) => {
     e.preventDefault();
     let delta = (this.lastTouchPositionY - e.changedTouches[0].clientY) / 120;
     this.lastTouchPositionY = e.changedTouches[0].clientY;
     this.scrollContent(delta, true, false);
   }
 
-  private onTouchEnd = (e: TouchEvent) => {
+  onTouchEnd = (e: TouchEvent) => {
     e.target.removeEventListener('touchmove');
     e.target.removeEventListener('touchend');
   }
 
-  private scrollContent(y: number, isWheel: boolean, isJump: boolean): void {
+  scrollContent(y: number, isWheel: boolean, isJump: boolean): void {
     let delta = y;
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let percentScroll: number;
@@ -191,7 +191,7 @@ export class SlimScrollDirective implements OnInit {
     el.scrollTop = delta;
   }
 
-  private makeBarDraggable = () => {
+  makeBarDraggable = () => {
     let body = document.getElementsByTagName('body')[0];
     let el = this.el;
     let bar = this.bar;
@@ -214,18 +214,18 @@ export class SlimScrollDirective implements OnInit {
     }, false);
   };
 
-  private preventDefaultEvent = (e: MouseEvent) => {
+  preventDefaultEvent = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  private barDraggableListener = (e: MouseEvent) => {
+  barDraggableListener = (e: MouseEvent) => {
     let top = this.top + e.pageY - this.pageY;
     this.renderer.setElementStyle(this.bar, 'top', `${top}px`);
     this.scrollContent(0, true, false);
   };
 
-  private destroy(): void {
+  destroy(): void {
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
       this.mutationObserver = null;
@@ -239,7 +239,7 @@ export class SlimScrollDirective implements OnInit {
     }
   }
 
-  private unwrap(wrapper: HTMLElement): void {
+  unwrap(wrapper: HTMLElement): void {
     let docFrag = document.createDocumentFragment();
     while (wrapper.firstChild) {
       let child = wrapper.removeChild(wrapper.firstChild);
