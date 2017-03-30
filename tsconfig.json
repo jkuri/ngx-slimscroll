@@ -9,28 +9,20 @@
     "noEmitHelpers": false,
     "noImplicitAny": true,
     "declaration": true,
-    "skipLibCheck": true,
-    "stripInternal": true,
     "lib": ["es6", "dom"],
-    "rootDir": ".",
-    "types": [
-      "node"
-    ]
+    "rootDir": "."
   },
-  "include": [
-    "src/**/*.ts"
-  ],
   "exclude": [
     "node_modules",
     "bundles",
-    "dist"
+    "dist",
+    "src",
+    "aot"
   ],
   "files": [
-    "index.ts",
-    "ng2-slimscroll.ts"
+    "index.ts"
   ],
-  "angularCompilerOptions": {
-    "genDir": "aot",
-    "skipMetadataEmit" : false
+  "awesomeTypescriptLoaderOptions": {
+    "silent": true
   }
 }

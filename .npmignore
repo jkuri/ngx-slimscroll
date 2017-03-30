@@ -1,4 +1,3 @@
 node_modules
 npm-debug.log
-aot/
-.DS_Store/
+.DS_Store

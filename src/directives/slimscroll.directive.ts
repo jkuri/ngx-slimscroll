@@ -53,7 +53,7 @@ export class SlimScrollDirective implements OnInit {
     }
   }
 
-  private setElementStyle(): void {
+  setElementStyle(): void {
     let el = this.el;
     this.renderer.setElementStyle(el, 'overflow', 'hidden');
     this.renderer.setElementStyle(el, 'position', 'relative');
