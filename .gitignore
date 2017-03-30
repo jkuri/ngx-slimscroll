@@ -1,6 +1,6 @@
 node_modules/
 .DS_Store
-bundle/
+bundles
 index.d.ts
 index.js
 index.metadata.json
