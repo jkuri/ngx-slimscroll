@@ -105,7 +105,6 @@ export class SlimScrollDirective implements OnInit {
   initBar(): void {
     this.bar = document.createElement('div');
     let bar = this.bar;
-    let el = this.el;
 
     this.renderer.setElementClass(bar, 'slimscroll-bar', true);
     this.renderer.setElementStyle(bar, 'position', 'absolute');
@@ -142,7 +141,6 @@ export class SlimScrollDirective implements OnInit {
 
   onWheel = (e: MouseWheelEvent) => {
     let delta = 0;
-    let target = e.target || e.srcElement;
 
     if (e.wheelDelta) { delta = -e.wheelDelta / 120; }
     if (e.detail) { delta = e.detail / 3; }
@@ -174,7 +172,6 @@ export class SlimScrollDirective implements OnInit {
     let delta = y;
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let percentScroll: number;
-    let barTop: number;
     let bar = this.bar;
     let el = this.el;
 
@@ -192,8 +189,6 @@ export class SlimScrollDirective implements OnInit {
   }
 
   makeBarDraggable = () => {
-    let body = document.getElementsByTagName('body')[0];
-    let el = this.el;
     let bar = this.bar;
 
     bar.addEventListener('mousedown', (e: MouseEvent) => {
