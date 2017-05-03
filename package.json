@@ -1,6 +1,6 @@
 {
   "name": "ng2-slimscroll",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Angular2 Customizable Scrollbar",
   "main": "bundle/ng2-slimscroll.umd.js",
   "module": "ng2-slimscroll.js",
@@ -14,7 +14,7 @@
     "dev": "tsc --watch",
     "build": "webpack --config webpack/webpack.config.js --progress",
     "lint": "tslint ./src/*.ts",
-    "prepublish": "npm run lint && tsc && npm run build"
+    "prepublish": "npm run lint && ngc && npm run build"
   },
   "keywords": [
     "ng2",
