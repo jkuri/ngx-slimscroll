@@ -193,7 +193,7 @@ export class SlimScrollDirective implements OnInit {
     const mouseup = Observable.fromEvent(document.documentElement, 'mouseup');
     const touchend = Observable.fromEvent(document.documentElement, 'touchend');
 
-    const mousedrag = touchstart.mergeMap((e: MouseEvent) => {
+    const mousedrag = mousedown.mergeMap((e: MouseEvent) => {
       this.pageY = e.pageY;
       this.top = parseFloat(getComputedStyle(bar).top);
 
@@ -208,13 +208,14 @@ export class SlimScrollDirective implements OnInit {
       this.top = parseFloat(getComputedStyle(bar).top);
 
       return touchmove.map((tmove: TouchEvent) => {
-        return -(this.top + tmove.targetTouches[0].pageY - this.pageY) / 320;
+        return -(this.top + tmove.targetTouches[0].pageY - this.pageY);
       }).takeUntil(touchend);
     });
 
     Observable.merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
       this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
-      this.scrollContent(top, true, false);
+      this.renderer.setElementStyle(this.bar, 'top', `${top}px`);
+      this.scrollContent(0, true, false);
     });
 
     Observable.merge(...[mouseup, touchend]).subscribe(() => {
