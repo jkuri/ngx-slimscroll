@@ -11,3 +11,9 @@ ng2-slimscroll.d.ts
 ng2-slimscroll.js
 src/directives/slimscroll.directive.d.ts
 src/directives/slimscroll.directive.js
+index.ngfactory.ts
+index.ngsummary.json
+src/classes/slimscroll-options.class.metadata.json
+src/classes/slimscroll-options.class.ngsummary.json
+src/directives/slimscroll.directive.metadata.json
+src/directives/slimscroll.directive.ngsummary.json
