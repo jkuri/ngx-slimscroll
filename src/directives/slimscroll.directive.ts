@@ -1,5 +1,11 @@
 import { Directive, ViewContainerRef,  HostListener, OnInit, Renderer, Inject, Input } from '@angular/core';
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/map';
 
 @Directive({
   selector: '[slimScroll]',
@@ -39,8 +45,8 @@ export class SlimScrollDirective implements OnInit {
     this.initGrid();
     this.initBar();
     this.getBarHeight();
-    this.attachWheel(this.el);
-    this.makeBarDraggable();
+    this.initWheel();
+    this.initDrag();
 
     if (MutationObserver) {
       this.mutationObserver = new MutationObserver(() => {
@@ -49,7 +55,7 @@ export class SlimScrollDirective implements OnInit {
           this.mutationThrottleTimeout = setTimeout(this.onMutation.bind(this), 50);
         }
       });
-      this.mutationObserver.observe(this.el, {subtree: true, childList: true});
+      this.mutationObserver.observe(this.el, { subtree: true, childList: true });
     }
   }
 
@@ -133,41 +139,6 @@ export class SlimScrollDirective implements OnInit {
     }, 1);
   }
 
-  attachWheel(target: HTMLElement): void {
-    target.addEventListener('DOMMouseScroll', this.onWheel, false);
-    target.addEventListener('mousewheel', this.onWheel, false);
-    target.addEventListener('touchstart', this.onTouchStart, false);
-  }
-
-  onWheel = (e: MouseWheelEvent) => {
-    let delta = 0;
-
-    if (e.wheelDelta) { delta = -e.wheelDelta / 120; }
-    if (e.detail) { delta = e.detail / 3; }
-
-    this.scrollContent(delta, true, false);
-
-    if (e.preventDefault) { e.preventDefault(); }
-  }
-
-  onTouchStart = (e: TouchEvent) => {
-    e.target.addEventListener('touchmove', this.onTouchMove, false);
-    e.target.addEventListener('touchend', this.onTouchEnd, false);
-    this.lastTouchPositionY = e.changedTouches[0].clientY;
-  }
-
-  onTouchMove = (e: TouchEvent) => {
-    e.preventDefault();
-    let delta = (this.lastTouchPositionY - e.changedTouches[0].clientY) / 120;
-    this.lastTouchPositionY = e.changedTouches[0].clientY;
-    this.scrollContent(delta, true, false);
-  }
-
-  onTouchEnd = (e: TouchEvent) => {
-    e.target.removeEventListener('touchmove');
-    e.target.removeEventListener('touchend');
-  }
-
   scrollContent(y: number, isWheel: boolean, isJump: boolean): void {
     let delta = y;
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
@@ -188,36 +159,72 @@ export class SlimScrollDirective implements OnInit {
     el.scrollTop = delta;
   }
 
-  makeBarDraggable = () => {
-    let bar = this.bar;
+  initWheel = () => {
+    const dommousescroll = Observable.fromEvent(this.el, 'DOMMouseScroll');
+    const mousewheel = Observable.fromEvent(this.el, 'mousewheel');
 
-    bar.addEventListener('mousedown', (e: MouseEvent) => {
-      if (!this.dragging) {
-        this.pageY = e.pageY;
-        this.top = parseFloat(getComputedStyle(this.bar).top);
+    Observable.merge(...[dommousescroll, mousewheel]).subscribe((e: MouseWheelEvent) => {
+      let delta = 0;
+
+      if (e.wheelDelta) {
+        delta = -e.wheelDelta / 120;
       }
 
-      this.dragging = true;
-      this.body.addEventListener('mousemove', this.barDraggableListener, false);
-      this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
-    }, false);
+      if (e.detail) {
+        delta = e.detail / 3;
+      }
 
-    this.body.addEventListener('mouseup', () => {
-      this.body.removeEventListener('mousemove', this.barDraggableListener, false);
+      this.scrollContent(delta, true, false);
+
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+    });
+  }
+
+  initDrag = () => {
+    const bar = this.bar;
+
+    const mousemove = Observable.fromEvent(document.documentElement, 'mousemove');
+    const touchmove = Observable.fromEvent(document.documentElement, 'touchmove');
+
+    const mousedown = Observable.fromEvent(bar, 'mousedown');
+    const touchstart = Observable.fromEvent(this.el, 'touchstart');
+    const mouseup = Observable.fromEvent(document.documentElement, 'mouseup');
+    const touchend = Observable.fromEvent(document.documentElement, 'touchend');
+
+    const mousedrag = touchstart.mergeMap((e: MouseEvent) => {
+      this.pageY = e.pageY;
+      this.top = parseFloat(getComputedStyle(bar).top);
+
+      return mousemove.map((emove: MouseEvent) => {
+        emove.preventDefault();
+        return this.top + emove.pageY - this.pageY;
+      }).takeUntil(mouseup);
+    });
+
+    const touchdrag = touchstart.mergeMap((e: TouchEvent) => {
+      this.pageY = e.targetTouches[0].pageY;
+      this.top = parseFloat(getComputedStyle(bar).top);
+
+      return touchmove.map((tmove: TouchEvent) => {
+        return -(this.top + tmove.targetTouches[0].pageY - this.pageY) / 320;
+      }).takeUntil(touchend);
+    });
+
+    Observable.merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
+      this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
+      this.scrollContent(top, true, false);
+    });
+
+    Observable.merge(...[mouseup, touchend]).subscribe(() => {
       this.body.removeEventListener('selectstart', this.preventDefaultEvent, false);
-      this.dragging = false;
-    }, false);
+    });
   };
 
   preventDefaultEvent = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-  };
-
-  barDraggableListener = (e: MouseEvent) => {
-    let top = this.top + e.pageY - this.pageY;
-    this.renderer.setElementStyle(this.bar, 'top', `${top}px`);
-    this.scrollContent(0, true, false);
   };
 
   destroy(): void {
@@ -242,8 +249,9 @@ export class SlimScrollDirective implements OnInit {
     }
     wrapper.parentNode.replaceChild(docFrag, wrapper);
   }
-    @HostListener('window:resize', ['$event'])
-    onResize() {
-        this.getBarHeight()
-    }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.getBarHeight();
+  }
 }

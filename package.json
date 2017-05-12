@@ -1,6 +1,6 @@
 {
   "name": "ng2-slimscroll",
-  "version": "1.3.2",
+  "version": "2.0.0",
   "description": "Angular2 Customizable Scrollbar",
   "main": "bundle/ng2-slimscroll.umd.js",
   "module": "ng2-slimscroll.js",
