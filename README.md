@@ -8,9 +8,15 @@ Make scrollbar looks identical in any browser and any os.
 
 [http://ng2-slimscroll.jankuri.com](http://ng2-slimscroll.jankuri.com)
 
-You can download demo app [here](https://github.com/jkuri/ng2-slimscroll-demo).
+## Run Demo locally
 
-## Installation: 
+```sh
+git clone https://github.com/jkuri/ngx-uploader.git
+npm install
+npm start
+```
+
+## Installation:
 
 ```bash
 npm install ng2-slimscroll
@@ -51,7 +57,7 @@ import { ISlimScrollOptions } from 'ng2-slimscroll';
   selector: 'app-root',
   template: `<div slimScroll [options]="opts"></div>`
 })
-export class AppComponent imlements OnInit { 
+export class AppComponent imlements OnInit {
   opts: ISlimScrollOptions;
 
   ngOnInit() {
