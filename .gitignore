@@ -4,3 +4,4 @@ bundles
 *.ngsummary.json
 *.ngfactory.ts
 lib
+dist
