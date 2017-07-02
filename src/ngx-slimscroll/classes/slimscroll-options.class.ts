@@ -10,9 +10,11 @@ export interface ISlimScrollOptions {
   gridWidth?: string;
   gridBorderRadius?: string;
   gridMargin?: string;
+  alwaysVisible?: boolean;
+  visibleTimeout?: number;
 }
 
-export class SlimScrollOptions {
+export class SlimScrollOptions implements ISlimScrollOptions {
   position?: string;
   barBackground?: string;
   barOpacity?: string;
@@ -24,6 +26,8 @@ export class SlimScrollOptions {
   gridWidth?: string;
   gridBorderRadius?: string;
   gridMargin?: string;
+  alwaysVisible?: boolean;
+  visibleTimeout?: number;
 
   constructor(obj?: ISlimScrollOptions) {
     this.position = obj && obj.position ? obj.position : 'right';
@@ -37,5 +41,7 @@ export class SlimScrollOptions {
     this.gridWidth = obj && obj.gridWidth ? obj.gridWidth : '8';
     this.gridBorderRadius = obj && obj.gridBorderRadius ? obj.gridBorderRadius : '10';
     this.gridMargin = obj && obj.gridMargin ? obj.gridMargin : '1px 2px';
+    this.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : true;
+    this.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : 1000;
   }
 }

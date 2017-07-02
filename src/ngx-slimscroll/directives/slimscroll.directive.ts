@@ -25,11 +25,15 @@ export class SlimScrollDirective implements OnInit {
   mutationThrottleTimeout: number;
   mutationObserver: MutationObserver;
   lastTouchPositionY: number;
+  visibleTimeout: any;
 
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
-    @Inject(Renderer) private renderer: Renderer) {
-    if (typeof window === 'undefined') { return; }
+    @Inject(Renderer) private renderer: Renderer
+  ) {
+    if (typeof window === 'undefined') {
+      return;
+    }
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
     this.body = document.documentElement.querySelector('body');
@@ -37,7 +41,10 @@ export class SlimScrollDirective implements OnInit {
   }
 
   ngOnInit() {
-    if (typeof window === 'undefined') { return; }
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     this.options = new SlimScrollOptions(this.options);
     this.destroy();
     this.setElementStyle();
@@ -47,6 +54,10 @@ export class SlimScrollDirective implements OnInit {
     this.getBarHeight();
     this.initWheel();
     this.initDrag();
+
+    if (!this.options.alwaysVisible) {
+      this.hideBarAndGrid();
+    }
 
     if (MutationObserver) {
       this.mutationObserver = new MutationObserver(() => {
@@ -81,7 +92,6 @@ export class SlimScrollDirective implements OnInit {
     this.renderer.setElementStyle(wrapper, 'display', 'inline-block');
     this.renderer.setElementStyle(wrapper, 'margin', getComputedStyle(el).margin);
     this.renderer.setElementStyle(wrapper, 'width', 'inherit');
-    this.renderer.setElementStyle(wrapper, 'height', '100%');
 
     el.parentNode.insertBefore(wrapper, el);
     wrapper.appendChild(el);
@@ -94,9 +104,9 @@ export class SlimScrollDirective implements OnInit {
     this.renderer.setElementClass(grid, 'slimscroll-grid', true);
     this.renderer.setElementStyle(grid, 'position', 'absolute');
     this.renderer.setElementStyle(grid, 'top', '0');
+    this.renderer.setElementStyle(grid, 'bottom', '0');
     this.renderer.setElementStyle(grid, this.options.position, '0');
     this.renderer.setElementStyle(grid, 'width', `${this.options.gridWidth}px`);
-    this.renderer.setElementStyle(grid, 'height', '100%');
     this.renderer.setElementStyle(grid, 'background', this.options.gridBackground);
     this.renderer.setElementStyle(grid, 'opacity', this.options.gridOpacity);
     this.renderer.setElementStyle(grid, 'display', 'block');
@@ -144,6 +154,7 @@ export class SlimScrollDirective implements OnInit {
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let percentScroll: number;
     let bar = this.bar;
+    let grid = this.grid;
     let el = this.el;
 
     if (isWheel) {
@@ -157,6 +168,18 @@ export class SlimScrollDirective implements OnInit {
     delta = percentScroll * (el.scrollHeight - el.offsetHeight);
 
     el.scrollTop = delta;
+
+    this.showBarAndGrid();
+
+    if (!this.options.alwaysVisible) {
+      if (this.visibleTimeout) {
+        clearTimeout(this.visibleTimeout);
+      }
+
+      this.visibleTimeout = setTimeout(() => {
+        this.hideBarAndGrid();
+      }, this.options.visibleTimeout);
+    }
   }
 
   initWheel = () => {
@@ -222,6 +245,16 @@ export class SlimScrollDirective implements OnInit {
       this.body.removeEventListener('selectstart', this.preventDefaultEvent, false);
     });
   };
+
+  showBarAndGrid(): void {
+    this.renderer.setElementStyle(this.grid, 'background', this.options.gridBackground);
+    this.renderer.setElementStyle(this.bar, 'background', this.options.barBackground);
+  }
+
+  hideBarAndGrid(): void {
+    this.renderer.setElementStyle(this.grid, 'background', 'transparent');
+    this.renderer.setElementStyle(this.bar, 'background', 'transparent');
+  }
 
   preventDefaultEvent = (e: MouseEvent) => {
     e.preventDefault();

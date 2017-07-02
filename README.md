@@ -1,12 +1,12 @@
-# ng2-slimscroll
+# ngx-slimscroll
 
-***ng2-slimscroll*** is a customizable scrollbar directive for Angular2.
+***ngx-slimscroll*** is a customizable scrollbar directive for Angular2.
 
 Make scrollbar looks identical in any browser and any os.
 
 ## Demo
 
-[http://ng2-slimscroll.jankuri.com](http://ng2-slimscroll.jankuri.com)
+[http://ngx-slimscroll.jankuri.com](http://ngx-slimscroll.jankuri.com)
 
 ## Run Demo locally
 
@@ -19,7 +19,7 @@ npm start
 ## Installation:
 
 ```bash
-npm install ng2-slimscroll
+npm install ngx-slimscroll
 ```
 
 ## Use Example:
@@ -32,7 +32,7 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { SlimScrollModule } from 'ng2-slimscroll';
+import { SlimScrollModule } from 'ngx-slimscroll';
 
 @NgModule({
   declarations: [
@@ -51,7 +51,7 @@ export class AppModule { }
 
 // app.component.ts
 import { AppComponent, OnInit } from '@angular/core';
-import { ISlimScrollOptions } from 'ng2-slimscroll';
+import { ISlimScrollOptions } from 'ngx-slimscroll';
 
 @Component({
   selector: 'app-root',
