@@ -29,8 +29,6 @@ npm install ngx-slimscroll
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
-import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { SlimScrollModule } from 'ngx-slimscroll';
 
@@ -41,8 +39,6 @@ import { SlimScrollModule } from 'ngx-slimscroll';
   imports: [
     BrowserModule,
     CommonModule,
-    HttpModule,
-    FormsModule,
     SlimScrollModule
   ],
   bootstrap: [ AppComponent ]
@@ -62,9 +58,19 @@ export class AppComponent imlements OnInit {
 
   ngOnInit() {
     this.opts = {
-      position: 'right',
-      barBackground: '#000000',
-      ... // check ISlimScrollOptions for all options
+      position?: string; // left | right
+      barBackground?: string; // #C9C9C9
+      barOpacity?: string; // 0.8
+      barWidth?: string; // 10
+      barBorderRadius?: string; // 20
+      barMargin?: string; // 0
+      gridBackground?: string; // #D9D9D9
+      gridOpacity?: string; // 1
+      gridWidth?: string; // 2
+      gridBorderRadius?: string; // 20
+      gridMargin?: string; // 0
+      alwaysVisible?: boolean; // true
+      visibleTimeout?: number; // 1000
     }
   }
 }
