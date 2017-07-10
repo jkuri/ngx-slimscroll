@@ -285,7 +285,7 @@ export class SlimScrollDirective implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize() {
+  onResize(event: any) {
     this.getBarHeight();
   }
 }
