@@ -149,7 +149,7 @@ export class SlimScrollDirective implements OnInit {
     }, 1);
   }
 
-  scrollContent(y: number, isWheel: boolean, isJump: boolean): void {
+  scrollContent(y: number, isWheel: boolean, isJump: boolean): boolean {
     let delta = y;
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let percentScroll: number;
@@ -167,6 +167,7 @@ export class SlimScrollDirective implements OnInit {
     percentScroll = parseInt(getComputedStyle(bar).top, 10) / (el.offsetHeight - bar.offsetHeight);
     delta = percentScroll * (el.scrollHeight - el.offsetHeight);
 
+    const changed = !(el.scrollTop == delta);
     el.scrollTop = delta;
 
     this.showBarAndGrid();
@@ -180,6 +181,8 @@ export class SlimScrollDirective implements OnInit {
         this.hideBarAndGrid();
       }, this.options.visibleTimeout);
     }
+    
+    return changed;
   }
 
   initWheel = () => {
@@ -197,10 +200,15 @@ export class SlimScrollDirective implements OnInit {
         delta = e.detail / 3;
       }
 
-      this.scrollContent(delta, true, false);
+      if (this.scrollContent(delta, true, false)) {
 
-      if (e.preventDefault) {
-        e.preventDefault();
+        if (e.preventDefault) {
+          e.preventDefault();
+        }
+        
+        if (e.stopPropagation) {
+          e.stopPropagation();
+        }
       }
     });
   }
