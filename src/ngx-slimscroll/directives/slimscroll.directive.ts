@@ -92,6 +92,7 @@ export class SlimScrollDirective implements OnInit {
     this.renderer.setElementStyle(wrapper, 'display', 'inline-block');
     this.renderer.setElementStyle(wrapper, 'margin', getComputedStyle(el).margin);
     this.renderer.setElementStyle(wrapper, 'width', 'inherit');
+    this.renderer.setElementStyle(wrapper, 'height', getComputedStyle(el).height);
 
     el.parentNode.insertBefore(wrapper, el);
     wrapper.appendChild(el);
