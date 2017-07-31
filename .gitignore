@@ -3,5 +3,6 @@ node_modules/
 bundles
 *.ngsummary.json
 *.ngfactory.ts
+.idea
 lib
 dist
