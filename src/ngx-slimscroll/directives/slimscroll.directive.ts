@@ -229,7 +229,7 @@ export class SlimScrollDirective implements OnInit {
 
     const touchdrag = touchstart.mergeMap((e: TouchEvent) => {
       this.pageY = e.targetTouches[0].pageY;
-      this.top = parseFloat(getComputedStyle(bar).top);
+      this.top = -parseFloat(getComputedStyle(bar).top);
 
       return touchmove.map((tmove: TouchEvent) => {
         return -(this.top + tmove.targetTouches[0].pageY - this.pageY);
@@ -286,7 +286,7 @@ export class SlimScrollDirective implements OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize() {
+  onResize($event: any) {
     this.getBarHeight();
   }
 }
