@@ -1,6 +1,6 @@
 # ngx-slimscroll
 
-***ngx-slimscroll*** is a customizable scrollbar directive for Angular2.
+***ngx-slimscroll*** is a customizable scrollbar directive for Angular2+.
 
 Make scrollbar looks identical in any browser and any os.
 
@@ -8,7 +8,7 @@ Make scrollbar looks identical in any browser and any os.
 
 [http://ngx-slimscroll.jankuri.com](http://ngx-slimscroll.jankuri.com)
 
-## Run Demo locally
+## Run Demo Locally
 
 ```sh
 git clone https://github.com/jkuri/ngx-uploader.git
@@ -46,17 +46,19 @@ import { SlimScrollModule } from 'ngx-slimscroll';
 export class AppModule { }
 
 // app.component.ts
-import { AppComponent, OnInit } from '@angular/core';
-import { ISlimScrollOptions } from 'ngx-slimscroll';
+import { AppComponent, OnInit, EventEmitter } from '@angular/core';
+import { ISlimScrollOptions, SlimScrollEvent } from 'ngx-slimscroll';
 
 @Component({
   selector: 'app-root',
-  template: `<div slimScroll [options]="opts"></div>`
+  template: `<div slimScroll [options]="opts" [scrollEvents]="scrollEvents"></div>`
 })
 export class AppComponent imlements OnInit {
   opts: ISlimScrollOptions;
+  scrollEvents: EventEmitter<SlimScrollEvent>;
 
   ngOnInit() {
+    this.scrollEvents = new EventEmitter<SlimScrollEvent>();
     this.opts = {
       position?: string; // left | right
       barBackground?: string; // #C9C9C9
@@ -72,7 +74,68 @@ export class AppComponent imlements OnInit {
       alwaysVisible?: boolean; // true
       visibleTimeout?: number; // 1000
     }
+
+    this.play();
   }
+
+  play(): void {
+    let event = new SlimScrollEvent({
+      type: 'scrollToBottom',
+      duration: 2000,
+      easing: 'inOutQuad'
+    });
+
+    setTimeout(() => {
+      this.scrollEvents.emit(event);
+
+      setTimeout(() => {
+        event = new SlimScrollEvent({
+          type: 'scrollToTop',
+          duration: 3000,
+          easing: 'outCubic'
+        });
+
+        this.scrollEvents.emit(event);
+      }, 3000);
+    }, 3000);
+  }
+}
+
+// app.component.html
+<div class="scroll-window" slimScroll [options]="options" [scrollEvents]="scrollEvents">
+  <p>Long content ...</p>
+</div>
+```
+
+## Options
+
+```ts
+export interface ISlimScrollOptions {
+  position?: string;
+  barBackground?: string;
+  barOpacity?: string;
+  barWidth?: string;
+  barBorderRadius?: string;
+  barMargin?: string;
+  gridBackground?: string;
+  gridOpacity?: string;
+  gridWidth?: string;
+  gridBorderRadius?: string;
+  gridMargin?: string;
+  alwaysVisible?: boolean;
+  visibleTimeout?: number;
+}
+```
+
+## SlimScroll Event
+
+```ts
+export interface ISlimScrollEvent {
+  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo';
+  y?: number;
+  duration?: number;
+  easing?: 'linear' | 'inQuad' | 'outQuad' | 'inOutQuad' | 'inCubic' | 'outCubic' | 'inOutCubic' |
+  'inQuart' | 'outQuart' | 'inOutQuart' | 'inQuint' | 'outQuint' | 'inOutQuint';
 }
 ```
 
