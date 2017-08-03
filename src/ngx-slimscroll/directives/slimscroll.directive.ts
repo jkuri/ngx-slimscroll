@@ -188,7 +188,7 @@ export class SlimScrollDirective implements OnInit {
       this.renderer.setElementStyle(this.bar, 'height', barHeight);
       this.renderer.setElementStyle(this.bar, 'display', display);
       this.renderer.setElementStyle(this.grid, 'display', display);
-    }, 1);
+    });
   }
 
   scrollTo(y: number, duration: number, easingFunc: string): void {
@@ -230,9 +230,14 @@ export class SlimScrollDirective implements OnInit {
     let bar = this.bar;
     let grid = this.grid;
     let el = this.el;
+    let over = null;
 
     if (isWheel) {
       delta = parseInt(getComputedStyle(bar).top, 10) + y * 20 / 100 * bar.offsetHeight;
+      if (delta < 0 || delta > maxTop) {
+        over = delta;
+      }
+
       delta = Math.min(Math.max(delta, 0), maxTop);
       delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
       this.renderer.setElementStyle(bar, 'top', delta + 'px');
@@ -242,6 +247,16 @@ export class SlimScrollDirective implements OnInit {
     delta = percentScroll * (el.scrollHeight - el.offsetHeight);
 
     el.scrollTop = delta;
+
+    if (over) {
+      if (over < 0) {
+        over *= 3;
+        this.renderer.setElementStyle(this.el, 'paddingTop', -over + 'px');
+      } else {
+        over = (over - maxTop) * 3;
+        this.renderer.setElementStyle(this.el, 'paddingBottom', over + 'px');
+      }
+    }
 
     this.showBarAndGrid();
 

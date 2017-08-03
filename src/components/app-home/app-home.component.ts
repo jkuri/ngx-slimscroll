@@ -33,6 +33,10 @@ export class AppHomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.play();
+  }
+
+  play(): void {
     let event = new SlimScrollEvent({
       type: 'scrollToBottom',
       duration: 2000,
