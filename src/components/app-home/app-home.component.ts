@@ -50,6 +50,28 @@ export class AppHomeComponent implements OnInit {
         });
 
         this.scrollEvents.emit(event);
+
+        setTimeout(() => {
+          event = new SlimScrollEvent({
+            type: 'scrollToPercent',
+            percent: 80,
+            duration: 1000,
+            easing: 'linear'
+          });
+
+          this.scrollEvents.emit(event);
+
+          setTimeout(() => {
+            event = new SlimScrollEvent({
+              type: 'scrollTo',
+              y: 200,
+              duration: 4000,
+              easing: 'inOutQuint'
+            });
+
+            this.scrollEvents.emit(event);
+          }, 2000);
+        }, 4000);
       }, 3000);
     }, 3000);
   }

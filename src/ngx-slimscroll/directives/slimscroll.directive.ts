@@ -100,6 +100,14 @@ export class SlimScrollDirective implements OnInit {
     } else if (e.type === 'scrollToTop') {
       const y = 0;
       this.scrollTo(y, e.duration, e.easing);
+    } else if (e.type === 'scrollToPercent' && (e.percent >= 0 && e.percent <= 100)) {
+      const y = Math.round(((this.el.scrollHeight - this.el.clientHeight) / 100) * e.percent);
+      this.scrollTo(y, e.duration, e.easing);
+    } else if (e.type === 'scrollTo') {
+      const y = e.y;
+      if (y <= this.el.scrollHeight - this.el.clientHeight && y >= 0) {
+        this.scrollTo(y, e.duration, e.easing);
+      }
     }
   }
 
