@@ -1,5 +1,6 @@
-import { Directive, ViewContainerRef,  HostListener, OnInit, Renderer, Inject, Input } from '@angular/core';
+import { Directive, ViewContainerRef,  HostListener, OnInit, Renderer, Inject, Input, EventEmitter } from '@angular/core';
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
+import { SlimScrollEvent } from '../classes/slimscroll-event.class';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
@@ -7,12 +8,29 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/map';
 
+export const easing: { [key: string]: Function } = {
+  linear: (t) => { return t; },
+  inQuad: (t) => { return t * t; },
+  outQuad: (t) => { return t * (2 - t ); },
+  inOutQuad: (t) => { return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t; },
+  inCubic: (t) => { return t * t * t; },
+  outCubic: (t) => { return (--t) * t * t + 1; },
+  inOutCubic: (t) => { return t < .5 ? 4 * t * t * t : (t - 1) * ( 2 * t - 2) * (2 * t - 2) + 1; },
+  inQuart: (t) => { return t * t * t * t },
+  outQuart: (t) => { return 1 - (--t) * t * t * t; },
+  inOutQuart: (t) => { return t < .5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t; },
+  inQuint: (t) => { return t * t * t * t * t; },
+  outQuint: (t) => { return 1 + (--t) * t * t * t * t; },
+  inOutQuint: (t) => { return t < .5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t; }
+}
+
 @Directive({
   selector: '[slimScroll]',
   exportAs: 'slimScroll'
 })
 export class SlimScrollDirective implements OnInit {
   @Input() options: SlimScrollOptions;
+  @Input() scrollEvents: EventEmitter<SlimScrollEvent>;
 
   el: HTMLElement;
   wrapper: HTMLElement;
@@ -34,6 +52,7 @@ export class SlimScrollDirective implements OnInit {
     if (typeof window === 'undefined') {
       return;
     }
+
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
     this.body = document.documentElement.querySelector('body');
@@ -67,6 +86,20 @@ export class SlimScrollDirective implements OnInit {
         }
       });
       this.mutationObserver.observe(this.el, { subtree: true, childList: true });
+    }
+
+    if (this.scrollEvents && this.scrollEvents instanceof EventEmitter) {
+      this.scrollEvents.subscribe(event => this.handleEvent(event));
+    }
+  }
+
+  handleEvent(e: SlimScrollEvent): void {
+    if (e.type === 'scrollToBottom') {
+      const y = this.el.scrollHeight - this.el.clientHeight;
+      this.scrollTo(y, e.duration, e.easing);
+    } else if (e.type === 'scrollToTop') {
+      const y = 0;
+      this.scrollTo(y, e.duration, e.easing);
     }
   }
 
@@ -148,6 +181,38 @@ export class SlimScrollDirective implements OnInit {
       this.renderer.setElementStyle(this.bar, 'display', display);
       this.renderer.setElementStyle(this.grid, 'display', display);
     }, 1);
+  }
+
+  scrollTo(y: number, duration: number, easingFunc: string): void {
+    let start = Date.now();
+    let from = this.el.scrollTop;
+    let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
+    let maxElScrollTop = this.el.scrollHeight - this.el.clientHeight;
+    let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30);
+
+    if (from === y) {
+      return;
+    }
+
+    let scroll = (timestamp: number) => {
+      let currentTime = Date.now();
+      let time = Math.min(1, ((currentTime - start) / duration));
+      let easedTime = easing[easingFunc](time);
+
+      this.el.scrollTop = (easedTime * (y - from)) + from;
+
+      let percentScroll = this.el.scrollTop / maxElScrollTop;
+      let delta = Math.round(Math.round(this.el.clientHeight * percentScroll) - barHeight);
+      if (delta > 0) {
+        this.renderer.setElementStyle(this.bar, 'top', `${delta}px`);
+      }
+
+      if (time < 1) {
+        requestAnimationFrame(scroll);
+      }
+    }
+
+    requestAnimationFrame(scroll);
   }
 
   scrollContent(y: number, isWheel: boolean, isJump: boolean): void {
