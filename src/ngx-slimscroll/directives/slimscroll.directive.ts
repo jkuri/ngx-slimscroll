@@ -197,22 +197,38 @@ export class SlimScrollDirective implements OnInit {
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let maxElScrollTop = this.el.scrollHeight - this.el.clientHeight;
     let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30);
-
-    if (from === y) {
-      return;
-    }
+    const paddingTop = parseInt(this.el.style.paddingTop, 10);
+    const paddingBottom = parseInt(this.el.style.paddingBottom, 10);
 
     let scroll = (timestamp: number) => {
       let currentTime = Date.now();
       let time = Math.min(1, ((currentTime - start) / duration));
       let easedTime = easing[easingFunc](time);
 
-      this.el.scrollTop = (easedTime * (y - from)) + from;
+      if (!from || paddingTop > 0 || paddingBottom > 0) {
+        let fromY = null;
+
+        if (paddingTop > 0) {
+          fromY = -paddingTop;
+          fromY = -((easedTime * (y - fromY)) + fromY);
+          this.renderer.setElementStyle(this.el, 'paddingTop', `${fromY}px`);
+        }
+
+        if (paddingBottom > 0) {
+          fromY = paddingBottom;
+          fromY = ((easedTime * (y - fromY)) + fromY);
+          this.renderer.setElementStyle(this.el, 'paddingBottom', `${fromY}px`);
+        }
+      } else {
+        this.el.scrollTop = (easedTime * (y - from)) + from;
+      }
 
       let percentScroll = this.el.scrollTop / maxElScrollTop;
-      let delta = Math.round(Math.round(this.el.clientHeight * percentScroll) - barHeight);
-      if (delta > 0) {
-        this.renderer.setElementStyle(this.bar, 'top', `${delta}px`);
+      if (paddingBottom === 0) {
+        let delta = Math.round(Math.round(this.el.clientHeight * percentScroll) - barHeight);
+        if (delta > 0) {
+          this.renderer.setElementStyle(this.bar, 'top', `${delta}px`);
+        }
       }
 
       if (time < 1) {
@@ -223,7 +239,7 @@ export class SlimScrollDirective implements OnInit {
     requestAnimationFrame(scroll);
   }
 
-  scrollContent(y: number, isWheel: boolean, isJump: boolean): void {
+  scrollContent(y: number, isWheel: boolean, isJump: boolean): null | number {
     let delta = y;
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let percentScroll: number;
@@ -235,7 +251,7 @@ export class SlimScrollDirective implements OnInit {
     if (isWheel) {
       delta = parseInt(getComputedStyle(bar).top, 10) + y * 20 / 100 * bar.offsetHeight;
       if (delta < 0 || delta > maxTop) {
-        over = delta;
+        over = delta > maxTop ? delta - maxTop : delta;
       }
 
       delta = Math.min(Math.max(delta, 0), maxTop);
@@ -248,16 +264,6 @@ export class SlimScrollDirective implements OnInit {
 
     el.scrollTop = delta;
 
-    if (over) {
-      if (over < 0) {
-        over *= 3;
-        this.renderer.setElementStyle(this.el, 'paddingTop', -over + 'px');
-      } else {
-        over = (over - maxTop) * 3;
-        this.renderer.setElementStyle(this.el, 'paddingBottom', over + 'px');
-      }
-    }
-
     this.showBarAndGrid();
 
     if (!this.options.alwaysVisible) {
@@ -269,6 +275,8 @@ export class SlimScrollDirective implements OnInit {
         this.hideBarAndGrid();
       }, this.options.visibleTimeout);
     }
+
+    return over;
   }
 
   initWheel = () => {
@@ -327,11 +335,26 @@ export class SlimScrollDirective implements OnInit {
     Observable.merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
       this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
       this.renderer.setElementStyle(this.bar, 'top', `${top}px`);
-      this.scrollContent(0, true, false);
+      let over = this.scrollContent(0, true, false);
+      let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
+
+      if (over && over < 0 && -over <= maxTop) {
+        this.renderer.setElementStyle(this.el, 'paddingTop', -over + 'px');
+      } else if (over && over > 0 && over <= maxTop) {
+        this.renderer.setElementStyle(this.el, 'paddingBottom', over + 'px');
+      }
     });
 
     Observable.merge(...[mouseup, touchend]).subscribe(() => {
       this.body.removeEventListener('selectstart', this.preventDefaultEvent, false);
+      const paddingTop = parseInt(this.el.style.paddingTop, 10);
+      const paddingBottom = parseInt(this.el.style.paddingBottom, 10);
+
+      if (paddingTop > 0) {
+        this.scrollTo(0, 500, 'linear');
+      } else if (paddingBottom > 0) {
+        this.scrollTo(0, 500, 'linear');
+      }
     });
   };
 
