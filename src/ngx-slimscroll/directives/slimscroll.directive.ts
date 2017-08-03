@@ -9,19 +9,19 @@ import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/map';
 
 export const easing: { [key: string]: Function } = {
-  linear: (t) => { return t; },
-  inQuad: (t) => { return t * t; },
-  outQuad: (t) => { return t * (2 - t ); },
-  inOutQuad: (t) => { return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t; },
-  inCubic: (t) => { return t * t * t; },
-  outCubic: (t) => { return (--t) * t * t + 1; },
-  inOutCubic: (t) => { return t < .5 ? 4 * t * t * t : (t - 1) * ( 2 * t - 2) * (2 * t - 2) + 1; },
-  inQuart: (t) => { return t * t * t * t },
-  outQuart: (t) => { return 1 - (--t) * t * t * t; },
-  inOutQuart: (t) => { return t < .5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t; },
-  inQuint: (t) => { return t * t * t * t * t; },
-  outQuint: (t) => { return 1 + (--t) * t * t * t * t; },
-  inOutQuint: (t) => { return t < .5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t; }
+  linear: (t: number) => { return t; },
+  inQuad: (t: number) => { return t * t; },
+  outQuad: (t: number) => { return t * (2 - t ); },
+  inOutQuad: (t: number) => { return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t; },
+  inCubic: (t: number) => { return t * t * t; },
+  outCubic: (t: number) => { return (--t) * t * t + 1; },
+  inOutCubic: (t: number) => { return t < .5 ? 4 * t * t * t : (t - 1) * ( 2 * t - 2) * (2 * t - 2) + 1; },
+  inQuart: (t: number) => { return t * t * t * t },
+  outQuart: (t: number) => { return 1 - (--t) * t * t * t; },
+  inOutQuart: (t: number) => { return t < .5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t; },
+  inQuint: (t: number) => { return t * t * t * t * t; },
+  outQuint: (t: number) => { return 1 + (--t) * t * t * t * t; },
+  inOutQuint: (t: number) => { return t < .5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t; }
 }
 
 @Directive({
@@ -89,7 +89,7 @@ export class SlimScrollDirective implements OnInit {
     }
 
     if (this.scrollEvents && this.scrollEvents instanceof EventEmitter) {
-      this.scrollEvents.subscribe(event => this.handleEvent(event));
+      this.scrollEvents.subscribe((event: SlimScrollEvent) => this.handleEvent(event));
     }
   }
 
