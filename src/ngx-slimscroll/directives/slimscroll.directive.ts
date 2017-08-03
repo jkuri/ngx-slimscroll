@@ -132,7 +132,7 @@ export class SlimScrollDirective implements OnInit {
     this.renderer.setElementStyle(wrapper, 'overflow', 'hidden');
     this.renderer.setElementStyle(wrapper, 'display', 'inline-block');
     this.renderer.setElementStyle(wrapper, 'margin', getComputedStyle(el).margin);
-    this.renderer.setElementStyle(wrapper, 'width', 'inherit');
+    this.renderer.setElementStyle(wrapper, 'width', '100%');
     this.renderer.setElementStyle(wrapper, 'height', getComputedStyle(el).height);
 
     el.parentNode.insertBefore(wrapper, el);
@@ -197,15 +197,15 @@ export class SlimScrollDirective implements OnInit {
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let maxElScrollTop = this.el.scrollHeight - this.el.clientHeight;
     let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30);
-    const paddingTop = parseInt(this.el.style.paddingTop, 10);
-    const paddingBottom = parseInt(this.el.style.paddingBottom, 10);
+    const paddingTop = parseInt(this.el.style.paddingTop, 10) || 0;
+    const paddingBottom = parseInt(this.el.style.paddingBottom, 10) || 0;
 
     let scroll = (timestamp: number) => {
       let currentTime = Date.now();
       let time = Math.min(1, ((currentTime - start) / duration));
       let easedTime = easing[easingFunc](time);
 
-      if (!from || paddingTop > 0 || paddingBottom > 0) {
+      if (paddingTop > 0 || paddingBottom > 0) {
         let fromY = null;
 
         if (paddingTop > 0) {
@@ -334,6 +334,8 @@ export class SlimScrollDirective implements OnInit {
 
     Observable.merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
       this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
+      this.renderer.setElementStyle(this.body, 'touch-action', 'pan-y');
+      this.renderer.setElementStyle(this.body, 'user-select', 'none');
       this.renderer.setElementStyle(this.bar, 'top', `${top}px`);
       let over = this.scrollContent(0, true, false);
       let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
@@ -349,11 +351,13 @@ export class SlimScrollDirective implements OnInit {
       this.body.removeEventListener('selectstart', this.preventDefaultEvent, false);
       const paddingTop = parseInt(this.el.style.paddingTop, 10);
       const paddingBottom = parseInt(this.el.style.paddingBottom, 10);
+      this.renderer.setElementStyle(this.body, 'touch-action', 'unset');
+      this.renderer.setElementStyle(this.body, 'user-select', 'default');
 
       if (paddingTop > 0) {
-        this.scrollTo(0, 500, 'linear');
+        this.scrollTo(0, 300, 'linear');
       } else if (paddingBottom > 0) {
-        this.scrollTo(0, 500, 'linear');
+        this.scrollTo(0, 300, 'linear');
       }
     });
   };

@@ -79,16 +79,21 @@ export class AppComponent imlements OnInit {
   }
 
   play(): void {
-    let event = new SlimScrollEvent({
-      type: 'scrollToBottom',
-      duration: 2000,
-      easing: 'inOutQuad'
-    });
+    let event = null;
 
-    setTimeout(() => {
-      this.scrollEvents.emit(event);
+    Promise.resolve()
+      .then(() => this.timeout(3000))
+      .then(() => {
+        event = new SlimScrollEvent({
+          type: 'scrollToBottom',
+          duration: 2000,
+          easing: 'inOutQuad'
+        });
 
-      setTimeout(() => {
+        this.scrollEvents.emit(event);
+      })
+      .then(() => this.timeout(3000))
+      .then(() => {
         event = new SlimScrollEvent({
           type: 'scrollToTop',
           duration: 3000,
@@ -96,36 +101,39 @@ export class AppComponent imlements OnInit {
         });
 
         this.scrollEvents.emit(event);
+      })
+      .then(() => this.timeout(4000))
+      .then(() => {
+        event = new SlimScrollEvent({
+          type: 'scrollToPercent',
+          percent: 80,
+          duration: 1000,
+          easing: 'linear'
+        });
 
-        setTimeout(() => {
-          event = new SlimScrollEvent({
-            type: 'scrollToPercent',
-            percent: 80,
-            duration: 1000,
-            easing: 'linear'
-          });
+        this.scrollEvents.emit(event);
+      })
+      .then(() => this.timeout(2000))
+      .then(() => {
+        event = new SlimScrollEvent({
+          type: 'scrollTo',
+          y: 200,
+          duration: 4000,
+          easing: 'inOutQuint'
+        });
 
-          this.scrollEvents.emit(event);
+        this.scrollEvents.emit(event);
+      });
+  }
 
-          setTimeout(() => {
-            event = new SlimScrollEvent({
-              type: 'scrollTo',
-              y: 200,
-              duration: 4000,
-              easing: 'inOutQuint'
-            });
-
-            this.scrollEvents.emit(event);
-          }, 2000);
-        }, 4000);
-      }, 3000);
-    }, 3000);
+  timeout(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(() => resolve(), ms));
   }
 }
 
 // app.component.html
 <div class="scroll-window" slimScroll [options]="options" [scrollEvents]="scrollEvents">
-  <p>Long content ...</p>
+  <p>Long content</p>
 </div>
 ```
 
