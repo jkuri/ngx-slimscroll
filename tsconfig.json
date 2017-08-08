@@ -15,12 +15,13 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declaration": true
   },
   "files": [
     "index.ts"
   ],
   "angularCompilerOptions": {
-    "skipMetadataEmit": true
+    "skipMetadataEmit": false
   }
 }

@@ -1,10 +1,10 @@
 {
   "name": "ngx-slimscroll",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Angular2+ Customizable Scrollbar",
   "main": "bundles/ngx-slimscroll.umd.js",
-  "module": "index.js",
-  "typings": "index.d.ts",
+  "module": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jkuri/ngx-slimscroll.git"
