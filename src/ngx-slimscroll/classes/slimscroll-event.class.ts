@@ -1,5 +1,5 @@
 export interface ISlimScrollEvent {
-  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo';
+  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo' | 'recalculate';
   y?: number;
   percent?: number;
   duration?: number;
@@ -9,7 +9,7 @@ export interface ISlimScrollEvent {
 }
 
 export class SlimScrollEvent implements ISlimScrollEvent {
-  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo';
+  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo' | 'recalculate';
   y?: number;
   percent?: number;
   duration?: number;

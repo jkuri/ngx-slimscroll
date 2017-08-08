@@ -1,6 +1,6 @@
 {
   "name": "ngx-slimscroll",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Angular2+ Customizable Scrollbar",
   "main": "bundles/ngx-slimscroll.umd.js",
   "module": "index.js",

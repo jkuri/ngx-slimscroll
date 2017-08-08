@@ -108,6 +108,8 @@ export class SlimScrollDirective implements OnInit {
       if (y <= this.el.scrollHeight - this.el.clientHeight && y >= 0) {
         this.scrollTo(y, e.duration, e.easing);
       }
+    } else if (e.type === 'recalculate') {
+      this.getBarHeight();
     }
   }
 
