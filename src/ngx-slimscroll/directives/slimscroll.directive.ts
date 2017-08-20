@@ -58,10 +58,6 @@ export class SlimScrollDirective implements OnInit {
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
     @Inject(Renderer) private renderer: Renderer
   ) {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
     this.body = document.documentElement.querySelector('body');
@@ -69,12 +65,7 @@ export class SlimScrollDirective implements OnInit {
   }
 
   ngOnInit() {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
     this.options = new SlimScrollOptions(this.options);
-    this.destroy();
     this.setElementStyle();
     this.wrapContainer();
     this.initGrid();
@@ -134,9 +125,9 @@ export class SlimScrollDirective implements OnInit {
   }
 
   wrapContainer(): void {
-    this.wrapper = document.createElement('div');
-    let wrapper = this.wrapper;
-    let el = this.el;
+    this.wrapper = this.renderer.createElement(this.el, 'div');
+    const wrapper = this.wrapper;
+    const el = this.el;
 
     this.renderer.setElementClass(wrapper, 'slimscroll-wrapper', true);
     this.renderer.setElementStyle(wrapper, 'position', 'relative');
@@ -151,8 +142,8 @@ export class SlimScrollDirective implements OnInit {
   }
 
   initGrid(): void {
-    this.grid = document.createElement('div');
-    let grid = this.grid;
+    this.grid = this.renderer.createElement(this.el, 'div');
+    const grid = this.grid;
 
     this.renderer.setElementClass(grid, 'slimscroll-grid', true);
     this.renderer.setElementStyle(grid, 'position', 'absolute');
@@ -172,8 +163,8 @@ export class SlimScrollDirective implements OnInit {
   }
 
   initBar(): void {
-    this.bar = document.createElement('div');
-    let bar = this.bar;
+    this.bar = this.renderer.createElement(this.el, 'div');
+    const bar = this.bar;
 
     this.renderer.setElementClass(bar, 'slimscroll-bar', true);
     this.renderer.setElementStyle(bar, 'position', 'absolute');
@@ -193,8 +184,8 @@ export class SlimScrollDirective implements OnInit {
 
   getBarHeight(): void {
     setTimeout(() => {
-      let barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
-      let display = parseInt(barHeight, 10) === this.el.offsetHeight ? 'none' : 'block';
+      const barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
+      const display = parseInt(barHeight, 10) === this.el.offsetHeight ? 'none' : 'block';
 
       this.renderer.setElementStyle(this.bar, 'height', barHeight);
       this.renderer.setElementStyle(this.bar, 'display', display);
