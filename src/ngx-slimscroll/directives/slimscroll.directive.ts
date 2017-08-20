@@ -1,4 +1,13 @@
-import { Directive, ViewContainerRef,  HostListener, OnInit, Renderer, Inject, Input, EventEmitter } from '@angular/core';
+import {
+  Directive,
+  ViewContainerRef,
+  HostListener,
+  OnInit,
+  Renderer,
+  Inject,
+  Input,
+  EventEmitter
+} from '@angular/core';
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
 import { SlimScrollEvent } from '../classes/slimscroll-event.class';
 import { Observable } from 'rxjs/Observable';
@@ -16,13 +25,13 @@ export const easing: { [key: string]: Function } = {
   inCubic: (t: number) => { return t * t * t; },
   outCubic: (t: number) => { return (--t) * t * t + 1; },
   inOutCubic: (t: number) => { return t < .5 ? 4 * t * t * t : (t - 1) * ( 2 * t - 2) * (2 * t - 2) + 1; },
-  inQuart: (t: number) => { return t * t * t * t },
+  inQuart: (t: number) => { return t * t * t * t; },
   outQuart: (t: number) => { return 1 - (--t) * t * t * t; },
   inOutQuart: (t: number) => { return t < .5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t; },
   inQuint: (t: number) => { return t * t * t * t * t; },
   outQuint: (t: number) => { return 1 + (--t) * t * t * t * t; },
   inOutQuint: (t: number) => { return t < .5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t; }
-}
+};
 
 @Directive({
   selector: '[slimScroll]',
@@ -236,7 +245,7 @@ export class SlimScrollDirective implements OnInit {
       if (time < 1) {
         requestAnimationFrame(scroll);
       }
-    }
+    };
 
     requestAnimationFrame(scroll);
   }
@@ -362,7 +371,7 @@ export class SlimScrollDirective implements OnInit {
         this.scrollTo(0, 300, 'linear');
       }
     });
-  };
+  }
 
   showBarAndGrid(): void {
     this.renderer.setElementStyle(this.grid, 'background', this.options.gridBackground);
@@ -377,7 +386,7 @@ export class SlimScrollDirective implements OnInit {
   preventDefaultEvent = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-  };
+  }
 
   destroy(): void {
     if (this.mutationObserver) {

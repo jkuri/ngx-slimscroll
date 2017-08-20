@@ -21,5 +21,5 @@ testing.TestBed.initTestEnvironment(
   browser.platformBrowserDynamicTesting()
 );
 
-let context = require.context('./app', true, /\.spec\.ts$/);
+let context = require.context('.', true, /\.spec\.ts$/);
 context.keys().map(context);
