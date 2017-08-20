@@ -2,32 +2,36 @@ import {
   inject,
   async,
   TestBed,
-  ComponentFixture
+  ComponentFixture,
 } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 import { AppHomeComponent } from './app-home.component';
-import { NgSlimScrollModule } from '../../ngx-slimscroll/module/ngx-slimscroll.module';
+import { SlimScrollDirective } from '../../ngx-slimscroll/directives/slimscroll.directive';
 
 describe(`App`, () => {
   let comp: AppHomeComponent;
   let fixture: ComponentFixture<AppHomeComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ AppHomeComponent ],
-      imports: [ NgSlimScrollModule ]
-    })
-    .compileComponents();
-  }));
+  let des: DebugElement[];
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AppHomeComponent);
-    comp    = fixture.componentInstance;
+    fixture = TestBed.configureTestingModule({
+      declarations: [ AppHomeComponent, SlimScrollDirective ]
+    })
+    .createComponent(AppHomeComponent);
 
     fixture.detectChanges();
+    comp = fixture.componentInstance;
+    des = fixture.debugElement.queryAll(By.directive(SlimScrollDirective));
   });
 
-  it(`should be readly initialized`, () => {
+  it(`should initialized itself`, () => {
     expect(fixture).toBeDefined();
     expect(comp).toBeDefined();
   });
+
+  it(`should have two slimscroll directives applied`, () => {
+    expect(des.length).toBe(2);
+  });
+
 });

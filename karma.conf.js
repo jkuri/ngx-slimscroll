@@ -23,7 +23,9 @@ module.exports = (config) => {
     webpackMiddleware: {
       noInfo: true,
       stats: {
-        chunks: false
+        modules: false,
+        chunks: false,
+        warnings: false
       }
     },
     reporters: ['spec'],

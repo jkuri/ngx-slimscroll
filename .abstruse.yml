@@ -1,0 +1,24 @@
+language: node_js
+
+git:
+  depth: 3
+
+matrix:
+  - node_js: "8"
+    env: SCRIPT=lint
+  - node_js: "8"
+    env: SCRIPT=test
+
+preinstall:
+  - npm config set spin false
+  - npm config set progress false
+
+install:
+  - npm install
+
+postinstall:
+  - sudo /etc/init.d/xvfb start
+  - export DISPLAY=:99
+
+test:
+  - if [[ "$SCRIPT" ]]; then npm run-script $SCRIPT; fi
