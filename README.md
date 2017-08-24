@@ -8,7 +8,7 @@ Make scrollbar looks identical in any browser and any os.
 
 ## Demo
 
-[http://ngx-slimscroll.jankuri.com](http://ngx-slimscroll.jankuri.com)
+[http://ng2-slimscroll.jankuri.com](http://ng2-slimscroll.jankuri.com)
 
 ## Run Demo Locally
 
