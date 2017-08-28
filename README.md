@@ -171,6 +171,12 @@ export interface ISlimScrollEvent {
 }
 ```
 
+## Tests
+
+```sh
+npm test
+```
+
 ## Author
 
 [Jan Kuri](http://www.jankuri.com)
