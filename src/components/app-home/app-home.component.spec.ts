@@ -11,7 +11,7 @@ import { DebugElement } from '@angular/core';
 import { AppHomeComponent } from './app-home.component';
 import { SlimScrollDirective } from '../../ngx-slimscroll/directives/slimscroll.directive';
 
-describe(`App`, () => {
+describe(`Slimscroll Directive`, () => {
   let comp: AppHomeComponent;
   let fixture: ComponentFixture<AppHomeComponent>;
   let de: DebugElement;
@@ -27,9 +27,10 @@ describe(`App`, () => {
     fixture = TestBed.createComponent(AppHomeComponent);
     fixture.detectChanges();
     comp = fixture.componentInstance;
-    de = fixture.debugElement.query(By.directive(SlimScrollDirective));
+    const des = fixture.debugElement.queryAll(By.directive(SlimScrollDirective));
+    de = des[0];
     dir = de.injector.get(SlimScrollDirective) as SlimScrollDirective;
-    dir.ngOnInit();
+    fixture.detectChanges();
   });
 
   it(`should initialized itself`, () => {
@@ -92,4 +93,40 @@ describe(`App`, () => {
     expect(bar.styles['border-radius']).toBe(dir.options.barBorderRadius + 'px');
     expect(bar.styles.margin).toBe(dir.options.barMargin);
   });
+
+  it(`should set scroll bar style top on 'scrollContent' method`, fakeAsync(() => {
+    const bar = de.query(By.css('.slimscroll-bar'));
+
+    dir.scrollContent(10, true, false);
+    fixture.detectChanges();
+    expect(parseInt(bar.styles.top, 10)).toBeGreaterThan(0);
+  }));
+
+  it(`should set element scrollTop on 'scrollContent' method`, fakeAsync(() => {
+    const el = de.parent.query(By.css('.slimscroll-wrapper > div'));
+
+    dir.scrollContent(10, true, false);
+    fixture.detectChanges();
+    expect(parseInt(el.nativeElement.scrollTop, 10)).toBeGreaterThan(0);
+  }));
+
+  it(`should set scroll bar style top back to 0 on 'scrollContent' method`, fakeAsync(() => {
+    const bar = de.query(By.css('.slimscroll-bar'));
+
+    dir.scrollContent(10, true, false);
+    fixture.detectChanges();
+    dir.scrollContent(-10, true, false);
+    fixture.detectChanges();
+    expect(parseInt(bar.styles.top, 10)).toBe(0);
+  }));
+
+  it(`should set element scrollTop back on 0 on 'scrollContent' method`, fakeAsync(() => {
+    const el = de.parent.query(By.css('.slimscroll-wrapper > div'));
+
+    dir.scrollContent(10, true, false);
+    fixture.detectChanges();
+    dir.scrollContent(-10, true, false);
+    fixture.detectChanges();
+    expect(parseInt(el.nativeElement.scrollTop, 10)).toBe(0);
+  }));
 });

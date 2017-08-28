@@ -8,6 +8,7 @@ import {
   Input,
   EventEmitter
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
 import { SlimScrollEvent } from '../classes/slimscroll-event.class';
 import { Observable } from 'rxjs/Observable';
@@ -56,11 +57,12 @@ export class SlimScrollDirective implements OnInit {
 
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
-    @Inject(Renderer) private renderer: Renderer
+    @Inject(Renderer) private renderer: Renderer,
+    @Inject(DOCUMENT) private document: any
   ) {
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
-    this.body = document.documentElement.querySelector('body');
+    this.body = this.document.querySelector('body');
     this.mutationThrottleTimeout = 50;
   }
 
@@ -183,14 +185,12 @@ export class SlimScrollDirective implements OnInit {
   }
 
   getBarHeight(): void {
-    setTimeout(() => {
-      const barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
-      const display = parseInt(barHeight, 10) === this.el.offsetHeight ? 'none' : 'block';
+    const barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
+    const display = parseInt(barHeight, 10) === this.el.offsetHeight ? 'none' : 'block';
 
-      this.renderer.setElementStyle(this.bar, 'height', barHeight);
-      this.renderer.setElementStyle(this.bar, 'display', display);
-      this.renderer.setElementStyle(this.grid, 'display', display);
-    });
+    this.renderer.setElementStyle(this.bar, 'height', barHeight);
+    this.renderer.setElementStyle(this.bar, 'display', display);
+    this.renderer.setElementStyle(this.grid, 'display', display);
   }
 
   scrollTo(y: number, duration: number, easingFunc: string): void {
@@ -245,26 +245,24 @@ export class SlimScrollDirective implements OnInit {
     let delta = y;
     let maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     let percentScroll: number;
-    let bar = this.bar;
-    let grid = this.grid;
-    let el = this.el;
     let over = null;
 
     if (isWheel) {
-      delta = parseInt(getComputedStyle(bar).top, 10) + y * 20 / 100 * bar.offsetHeight;
+      delta = parseInt(getComputedStyle(this.bar).top, 10) + y * 20 / 100 * this.bar.offsetHeight;
+
       if (delta < 0 || delta > maxTop) {
         over = delta > maxTop ? delta - maxTop : delta;
       }
 
       delta = Math.min(Math.max(delta, 0), maxTop);
       delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
-      this.renderer.setElementStyle(bar, 'top', delta + 'px');
+      this.renderer.setElementStyle(this.bar, 'top', delta + 'px');
     }
 
-    percentScroll = parseInt(getComputedStyle(bar).top, 10) / (el.offsetHeight - bar.offsetHeight);
-    delta = percentScroll * (el.scrollHeight - el.offsetHeight);
+    percentScroll = parseInt(getComputedStyle(this.bar).top, 10) / (this.el.offsetHeight - this.bar.offsetHeight);
+    delta = percentScroll * (this.el.scrollHeight - this.el.offsetHeight);
 
-    el.scrollTop = delta;
+    this.el.scrollTop = delta;
 
     this.showBarAndGrid();
 
@@ -307,13 +305,13 @@ export class SlimScrollDirective implements OnInit {
   initDrag = () => {
     const bar = this.bar;
 
-    const mousemove = Observable.fromEvent(document.documentElement, 'mousemove');
-    const touchmove = Observable.fromEvent(document.documentElement, 'touchmove');
+    const mousemove = Observable.fromEvent(this.document.documentElement, 'mousemove');
+    const touchmove = Observable.fromEvent(this.document.documentElement, 'touchmove');
 
     const mousedown = Observable.fromEvent(bar, 'mousedown');
     const touchstart = Observable.fromEvent(this.el, 'touchstart');
-    const mouseup = Observable.fromEvent(document.documentElement, 'mouseup');
-    const touchend = Observable.fromEvent(document.documentElement, 'touchend');
+    const mouseup = Observable.fromEvent(this.document.documentElement, 'mouseup');
+    const touchend = Observable.fromEvent(this.document.documentElement, 'touchend');
 
     const mousedrag = mousedown.mergeMap((e: MouseEvent) => {
       this.pageY = e.pageY;
