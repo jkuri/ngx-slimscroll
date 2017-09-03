@@ -32,7 +32,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { SlimScrollModule } from 'ngx-slimscroll';
+import { NgSlimScrollModule } from 'ngx-slimscroll';
 
 @NgModule({
   declarations: [
@@ -41,7 +41,7 @@ import { SlimScrollModule } from 'ngx-slimscroll';
   imports: [
     BrowserModule,
     CommonModule,
-    SlimScrollModule
+    NgSlimScrollModule
   ],
   bootstrap: [ AppComponent ]
 })
