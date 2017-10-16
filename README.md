@@ -55,7 +55,7 @@ import { ISlimScrollOptions, SlimScrollEvent } from 'ngx-slimscroll';
   selector: 'app-root',
   template: `<div slimScroll [options]="opts" [scrollEvents]="scrollEvents"></div>`
 })
-export class AppComponent imlements OnInit {
+export class AppComponent implements OnInit {
   opts: ISlimScrollOptions;
   scrollEvents: EventEmitter<SlimScrollEvent>;
 
