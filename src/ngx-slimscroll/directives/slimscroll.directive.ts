@@ -3,6 +3,7 @@ import {
   ViewContainerRef,
   HostListener,
   OnInit,
+  OnDestroy,
   Renderer,
   Inject,
   Input,
@@ -12,6 +13,7 @@ import { DOCUMENT } from '@angular/common';
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
 import { SlimScrollEvent } from '../classes/slimscroll-event.class';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/mergeMap';
@@ -38,7 +40,7 @@ export const easing: { [key: string]: Function } = {
   selector: '[slimScroll]',
   exportAs: 'slimScroll'
 })
-export class SlimScrollDirective implements OnInit {
+export class SlimScrollDirective implements OnInit, OnDestroy {
   @Input() options: SlimScrollOptions;
   @Input() scrollEvents: EventEmitter<SlimScrollEvent>;
 
@@ -54,6 +56,7 @@ export class SlimScrollDirective implements OnInit {
   mutationObserver: MutationObserver;
   lastTouchPositionY: number;
   visibleTimeout: any;
+  interactionSubscriptions: Subscription = new Subscription();
 
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
@@ -91,8 +94,13 @@ export class SlimScrollDirective implements OnInit {
     }
 
     if (this.scrollEvents && this.scrollEvents instanceof EventEmitter) {
-      this.scrollEvents.subscribe((event: SlimScrollEvent) => this.handleEvent(event));
+      const scrollSubscription = this.scrollEvents.subscribe((event: SlimScrollEvent) => this.handleEvent(event));
+      this.interactionSubscriptions.add(scrollSubscription);
     }
+  }
+
+  ngOnDestroy() {
+    this.interactionSubscriptions.unsubscribe();
   }
 
   handleEvent(e: SlimScrollEvent): void {
@@ -283,7 +291,7 @@ export class SlimScrollDirective implements OnInit {
     const dommousescroll = Observable.fromEvent(this.el, 'DOMMouseScroll');
     const mousewheel = Observable.fromEvent(this.el, 'mousewheel');
 
-    Observable.merge(...[dommousescroll, mousewheel]).subscribe((e: MouseWheelEvent) => {
+    const wheelSubscription = Observable.merge(...[dommousescroll, mousewheel]).subscribe((e: MouseWheelEvent) => {
       let delta = 0;
 
       if (e.wheelDelta) {
@@ -300,6 +308,7 @@ export class SlimScrollDirective implements OnInit {
         e.preventDefault();
       }
     });
+    this.interactionSubscriptions.add(wheelSubscription);
   }
 
   initDrag = () => {
@@ -332,7 +341,7 @@ export class SlimScrollDirective implements OnInit {
       }).takeUntil(touchend);
     });
 
-    Observable.merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
+    const dragSubscription = Observable.merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
       this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
       this.renderer.setElementStyle(this.body, 'touch-action', 'pan-y');
       this.renderer.setElementStyle(this.body, 'user-select', 'none');
@@ -347,7 +356,7 @@ export class SlimScrollDirective implements OnInit {
       }
     });
 
-    Observable.merge(...[mouseup, touchend]).subscribe(() => {
+    const dragEndSubscription = Observable.merge(...[mouseup, touchend]).subscribe(() => {
       this.body.removeEventListener('selectstart', this.preventDefaultEvent, false);
       const paddingTop = parseInt(this.el.style.paddingTop, 10);
       const paddingBottom = parseInt(this.el.style.paddingBottom, 10);
@@ -360,6 +369,9 @@ export class SlimScrollDirective implements OnInit {
         this.scrollTo(0, 300, 'linear');
       }
     });
+
+    this.interactionSubscriptions.add(dragSubscription);
+    this.interactionSubscriptions.add(dragEndSubscription);
   }
 
   showBarAndGrid(): void {
