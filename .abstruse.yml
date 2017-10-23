@@ -12,7 +12,7 @@ before_install:
 install:
   - npm install
 
-test:
+script:
   - if [[ "$SCRIPT" ]]; then npm run-script $SCRIPT; fi
 
 cache:
