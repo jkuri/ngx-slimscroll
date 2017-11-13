@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
-import { SlimScrollDirective } from '../directives/slimscroll.directive';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {SLIM_SCROLL_GOLBAL_CONFIG, SlimScrollDirective} from '../directives/slimscroll.directive';
+import {SlimScrollOptions} from '../classes/slimscroll-options.class';
 
 @NgModule({
   declarations: [
@@ -9,4 +10,14 @@ import { SlimScrollDirective } from '../directives/slimscroll.directive';
     SlimScrollDirective
   ]
 })
-export class NgSlimScrollModule { }
+export class NgSlimScrollModule {
+
+  static withGlobalConfig(options: SlimScrollOptions): ModuleWithProviders {
+    return {
+      ngModule: NgSlimScrollModule,
+      providers: [
+          {provide: SLIM_SCROLL_GOLBAL_CONFIG, useValue: options}
+      ]
+    };
+  }
+}

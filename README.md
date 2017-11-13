@@ -139,6 +139,33 @@ export class AppComponent implements OnInit {
 </div>
 ```
 
+## Use Example with global config:
+
+You can create global configuration. At any time if you pass a SlimScrollOptions object via `[options]="options"` then it will override the global configuration for that particular directive. 
+```ts
+// app.module.ts
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { NgSlimScrollModule } from 'ngx-slimscroll';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    CommonModule,
+    NgSlimScrollModule.withGlobalConfig({
+          barBackground: 'red'
+    })
+  ],
+  bootstrap: [ AppComponent ]
+})
+export class AppModule { }
+```
+
 ## Options
 
 ```ts

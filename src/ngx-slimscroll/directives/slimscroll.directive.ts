@@ -1,13 +1,13 @@
 import {
-  Directive,
-  ViewContainerRef,
-  HostListener,
-  OnInit,
-  OnDestroy,
-  Renderer,
-  Inject,
-  Input,
-  EventEmitter
+    Directive,
+    ViewContainerRef,
+    HostListener,
+    OnInit,
+    OnDestroy,
+    Renderer,
+    Inject,
+    Input,
+    EventEmitter, InjectionToken, Optional
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
@@ -36,6 +36,8 @@ export const easing: { [key: string]: Function } = {
   inOutQuint: (t: number) => { return t < .5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t; }
 };
 
+export const SLIM_SCROLL_GOLBAL_CONFIG = new InjectionToken<SlimScrollOptions>('SlimScroll global configuration');
+
 @Directive({
   selector: '[slimScroll]',
   exportAs: 'slimScroll'
@@ -59,6 +61,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   interactionSubscriptions: Subscription = new Subscription();
 
   constructor(
+      @Optional() @Inject(SLIM_SCROLL_GOLBAL_CONFIG) private globalConfig: SlimScrollOptions,
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
     @Inject(Renderer) private renderer: Renderer,
     @Inject(DOCUMENT) private document: any
@@ -70,7 +73,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.options = new SlimScrollOptions(this.options);
+    this.options = new SlimScrollOptions(Object.assign({}, this.globalConfig, this.options));
     this.setElementStyle();
     this.wrapContainer();
     this.initGrid();

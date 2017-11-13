@@ -9,7 +9,9 @@ import { AppHomeComponent } from './components/app-home';
   imports: [
     BrowserModule,
     CommonModule,
-    NgSlimScrollModule
+    NgSlimScrollModule.withGlobalConfig({
+        barBackground: 'red'
+    })
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' }
