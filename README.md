@@ -1,27 +1,186 @@
-# NgxSlimscroll
+# ngx-slimscroll
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.4.
+[![AbstruseCI](https://abstruse.bleenco.io/badge/3)](https://abstruse.bleenco.io/repo/3)
 
-## Development server
+***ngx-slimscroll*** is a customizable scrollbar directive for Angular2+.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Make scrollbar looks identical in any browser and any os.
 
-## Code scaffolding
+## Demo
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+[http://ng2-slimscroll.jankuri.com](http://ng2-slimscroll.jankuri.com)
 
-## Build
+## Run Demo Locally
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+```sh
+git clone https://github.com/jkuri/ngx-uploader.git
+npm install
+npm start
+```
 
-## Running unit tests
+## Installation:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+npm install ngx-slimscroll
+```
 
-## Running end-to-end tests
+## Use Example:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```ts
+// app.module.ts
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { NgSlimScrollModule } from 'ngx-slimscroll';
 
-## Further help
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    CommonModule,
+    NgSlimScrollModule
+  ],
+  bootstrap: [ AppComponent ]
+})
+export class AppModule { }
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+// app.component.ts
+import { AppComponent, OnInit, EventEmitter } from '@angular/core';
+import { ISlimScrollOptions, SlimScrollEvent } from 'ngx-slimscroll';
+
+@Component({
+  selector: 'app-root',
+  template: `<div slimScroll [options]="opts" [scrollEvents]="scrollEvents"></div>`
+})
+export class AppComponent implements OnInit {
+  opts: ISlimScrollOptions;
+  scrollEvents: EventEmitter<SlimScrollEvent>;
+
+  ngOnInit() {
+    this.scrollEvents = new EventEmitter<SlimScrollEvent>();
+    this.opts = {
+      position?: string; // left | right
+      barBackground?: string; // #C9C9C9
+      barOpacity?: string; // 0.8
+      barWidth?: string; // 10
+      barBorderRadius?: string; // 20
+      barMargin?: string; // 0
+      gridBackground?: string; // #D9D9D9
+      gridOpacity?: string; // 1
+      gridWidth?: string; // 2
+      gridBorderRadius?: string; // 20
+      gridMargin?: string; // 0
+      alwaysVisible?: boolean; // true
+      visibleTimeout?: number; // 1000
+    }
+
+    this.play();
+  }
+
+  play(): void {
+    let event = null;
+
+    Promise.resolve()
+      .then(() => this.timeout(3000))
+      .then(() => {
+        event = new SlimScrollEvent({
+          type: 'scrollToBottom',
+          duration: 2000,
+          easing: 'inOutQuad'
+        });
+
+        this.scrollEvents.emit(event);
+      })
+      .then(() => this.timeout(3000))
+      .then(() => {
+        event = new SlimScrollEvent({
+          type: 'scrollToTop',
+          duration: 3000,
+          easing: 'outCubic'
+        });
+
+        this.scrollEvents.emit(event);
+      })
+      .then(() => this.timeout(4000))
+      .then(() => {
+        event = new SlimScrollEvent({
+          type: 'scrollToPercent',
+          percent: 80,
+          duration: 1000,
+          easing: 'linear'
+        });
+
+        this.scrollEvents.emit(event);
+      })
+      .then(() => this.timeout(2000))
+      .then(() => {
+        event = new SlimScrollEvent({
+          type: 'scrollTo',
+          y: 200,
+          duration: 4000,
+          easing: 'inOutQuint'
+        });
+
+        this.scrollEvents.emit(event);
+      });
+  }
+
+  timeout(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(() => resolve(), ms));
+  }
+}
+
+// app.component.html
+<div class="scroll-window" slimScroll [options]="options" [scrollEvents]="scrollEvents">
+  <p>Long content</p>
+</div>
+```
+
+## Options
+
+```ts
+export interface ISlimScrollOptions {
+  position?: string;
+  barBackground?: string;
+  barOpacity?: string;
+  barWidth?: string;
+  barBorderRadius?: string;
+  barMargin?: string;
+  gridBackground?: string;
+  gridOpacity?: string;
+  gridWidth?: string;
+  gridBorderRadius?: string;
+  gridMargin?: string;
+  alwaysVisible?: boolean;
+  visibleTimeout?: number;
+}
+```
+
+## SlimScroll Event
+
+```ts
+export interface ISlimScrollEvent {
+  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo';
+  y?: number;
+  duration?: number;
+  easing?: 'linear' | 'inQuad' | 'outQuad' | 'inOutQuad' | 'inCubic' | 'outCubic' | 'inOutCubic' |
+  'inQuart' | 'outQuart' | 'inOutQuart' | 'inQuint' | 'outQuint' | 'inOutQuint';
+}
+```
+
+## Tests
+
+```sh
+npm test
+```
+
+## Author
+
+[Jan Kuri](http://www.jankuri.com)
+
+## Licence
+
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
