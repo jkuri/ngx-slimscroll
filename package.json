@@ -1,6 +1,6 @@
 {
   "name": "ngx-slimscroll",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "license": "MIT",
   "main": "./dist/bundles/ngx-slimscroll.umd.js",
   "module": "./dist/ngx-slimscroll.es5.js",
@@ -13,7 +13,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:lib": "ng-packagr -p package.json"
+    "build:lib": "ng-packagr -p ng-package.json"
   },
   "devDependencies": {
     "@angular/animations": "^5.0.0",
@@ -50,11 +50,5 @@
     "tslint": "~5.7.0",
     "typescript": "~2.4.2",
     "zone.js": "^0.8.14"
-  },
-  "$schema": "./node_modules/ng-packagr/package.schema.json",
-  "ngPackage": {
-    "lib": {
-      "entryFile": "src/public_api.ts"
-    }
   }
 }
