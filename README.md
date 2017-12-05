@@ -134,7 +134,7 @@ export class AppComponent implements OnInit {
 }
 
 // app.component.html
-<div class="scroll-window" slimScroll [options]="options" [scrollEvents]="scrollEvents">
+<div class="scroll-window" slimScroll [options]="opts" [scrollEvents]="scrollEvents">
   <p>Long content</p>
 </div>
 ```
