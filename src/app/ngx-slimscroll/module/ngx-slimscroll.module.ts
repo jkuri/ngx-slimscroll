@@ -1,3 +1,4 @@
+import { SlimScrollService } from './../services/slim-scroll.service';
 import { NgModule } from '@angular/core';
 import { SlimScrollDirective } from '../directives/slimscroll.directive';
 
@@ -5,8 +6,13 @@ import { SlimScrollDirective } from '../directives/slimscroll.directive';
   declarations: [
     SlimScrollDirective
   ],
+  providers: [
+    SlimScrollService
+  ],
   exports: [
     SlimScrollDirective
   ]
 })
-export class NgSlimScrollModule { }
+export class NgSlimScrollModule {
+  constructor(public slimScrollerService: SlimScrollService) { }
+}

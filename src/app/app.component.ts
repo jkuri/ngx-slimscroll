@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { SlimScrollService } from './ngx-slimscroll/services/slim-scroll.service';
+import { Component, EventEmitter, OnInit, ElementRef } from '@angular/core';
 import { ISlimScrollOptions } from './ngx-slimscroll/classes/slimscroll-options.class';
 import { SlimScrollEvent } from './ngx-slimscroll/classes/slimscroll-event.class';
 
@@ -9,9 +10,13 @@ import { SlimScrollEvent } from './ngx-slimscroll/classes/slimscroll-event.class
 export class AppComponent implements OnInit {
   options: ISlimScrollOptions;
   secondOptions: ISlimScrollOptions;
+  thirdOptions: ISlimScrollOptions;
   scrollEvents: EventEmitter<SlimScrollEvent>;
 
-  constructor() {
+  constructor(
+    private elementRef: ElementRef,
+    private slimScrollService: SlimScrollService
+  ) {
     this.options = {
       barBackground: '#C9C9C9',
       gridBackground: '#D9D9D9',
@@ -30,11 +35,21 @@ export class AppComponent implements OnInit {
       gridMargin: '0'
     };
 
+    this.thirdOptions = {
+      barBackground: '#000',
+      gridBackground: '#DDDDDD',
+      barBorderRadius: '10',
+      barWidth: '5',
+      gridWidth: '2'
+    };
+
     this.scrollEvents = new EventEmitter<SlimScrollEvent>();
   }
 
   ngOnInit() {
     this.play();
+
+    this.startService();
   }
 
   play(): void {
@@ -87,5 +102,12 @@ export class AppComponent implements OnInit {
 
   timeout(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
+  }
+
+  startService() {
+    const scrollElem = this.elementRef.nativeElement.querySelector('#service-scroll');
+    if (scrollElem != null) {
+      this.slimScrollService.init(scrollElem, this.thirdOptions);
+    }
   }
 }
