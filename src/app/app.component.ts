@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
     this.thirdOptions = {
       barBackground: '#000',
       gridBackground: '#DDDDDD',
-      barBorderRadius: '10',
+      barBorderRadius: '50',
       barWidth: '5',
       gridWidth: '2'
     };
@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.play();
 
-    this.startService();
+    this.startServices();
   }
 
   play(): void {
@@ -104,10 +104,42 @@ export class AppComponent implements OnInit {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
   }
 
-  startService() {
+  startServices() {
     const scrollElem = this.elementRef.nativeElement.querySelector('#service-scroll');
     if (scrollElem != null) {
-      this.slimScrollService.init(scrollElem, this.thirdOptions);
+      const slimscroll1 = this.slimScrollService.init(scrollElem, this.thirdOptions);
+      this.playService(slimscroll1);
     }
+
+    const scrollElem2 = this.elementRef.nativeElement.querySelector('#service-scroll2');
+    if (scrollElem2 != null) {
+      const slimscroll2 = this.slimScrollService.init(scrollElem2, this.secondOptions);
+    }
+  }
+
+  playService(ssObj): void {
+    let event = null;
+
+    Promise.resolve()
+    .then(() => this.timeout(3000))
+    .then(() => {
+      event = new SlimScrollEvent({
+        type: 'scrollToBottom',
+        duration: 2000,
+        easing: 'inOutQuad'
+      });
+
+      this.slimScrollService.handleEvent(ssObj, event);
+    })
+    .then(() => this.timeout(3000))
+    .then(() => {
+      event = new SlimScrollEvent({
+        type: 'scrollToTop',
+        duration: 3000,
+        easing: 'outCubic'
+      });
+
+      this.slimScrollService.handleEvent(ssObj, event);
+    });
   }
 }
