@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { SlimScrollDirective } from '../directives/slimscroll.directive';
 import { SlimScrollService } from './../services/slim-scroll.service';
 
+export { SlimScrollService } from './../services/slim-scroll.service';
+
 @NgModule({
   declarations: [
     SlimScrollDirective
