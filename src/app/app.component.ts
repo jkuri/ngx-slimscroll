@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { SlimScrollService } from './ngx-slimscroll/services/slim-scroll.service';
+import { Component, EventEmitter, OnInit, ElementRef } from '@angular/core';
 import { ISlimScrollOptions } from './ngx-slimscroll/classes/slimscroll-options.class';
 import { SlimScrollEvent } from './ngx-slimscroll/classes/slimscroll-event.class';
 
@@ -9,9 +10,13 @@ import { SlimScrollEvent } from './ngx-slimscroll/classes/slimscroll-event.class
 export class AppComponent implements OnInit {
   options: ISlimScrollOptions;
   secondOptions: ISlimScrollOptions;
+  thirdOptions: ISlimScrollOptions;
   scrollEvents: EventEmitter<SlimScrollEvent>;
 
-  constructor() {
+  constructor(
+    private elementRef: ElementRef,
+    private slimScrollService: SlimScrollService
+  ) {
     this.options = {
       barBackground: '#C9C9C9',
       gridBackground: '#D9D9D9',
@@ -30,11 +35,21 @@ export class AppComponent implements OnInit {
       gridMargin: '0'
     };
 
+    this.thirdOptions = {
+      barBackground: '#000',
+      gridBackground: '#DDDDDD',
+      barBorderRadius: '50',
+      barWidth: '5',
+      gridWidth: '2'
+    };
+
     this.scrollEvents = new EventEmitter<SlimScrollEvent>();
   }
 
   ngOnInit() {
     this.play();
+
+    this.startServices();
   }
 
   play(): void {
@@ -87,5 +102,44 @@ export class AppComponent implements OnInit {
 
   timeout(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(() => resolve(), ms));
+  }
+
+  startServices() {
+    const scrollElem = this.elementRef.nativeElement.querySelector('#service-scroll');
+    if (scrollElem != null) {
+      const slimscroll1 = this.slimScrollService.init(scrollElem, this.thirdOptions);
+      this.playService(slimscroll1);
+    }
+
+    const scrollElem2 = this.elementRef.nativeElement.querySelector('#service-scroll2');
+    if (scrollElem2 != null) {
+      const slimscroll2 = this.slimScrollService.init(scrollElem2, this.secondOptions);
+    }
+  }
+
+  playService(ssObj): void {
+    let event = null;
+
+    Promise.resolve()
+    .then(() => this.timeout(3000))
+    .then(() => {
+      event = new SlimScrollEvent({
+        type: 'scrollToBottom',
+        duration: 2000,
+        easing: 'inOutQuad'
+      });
+
+      this.slimScrollService.handleEvent(ssObj, event);
+    })
+    .then(() => this.timeout(3000))
+    .then(() => {
+      event = new SlimScrollEvent({
+        type: 'scrollToTop',
+        duration: 3000,
+        easing: 'outCubic'
+      });
+
+      this.slimScrollService.handleEvent(ssObj, event);
+    });
   }
 }
