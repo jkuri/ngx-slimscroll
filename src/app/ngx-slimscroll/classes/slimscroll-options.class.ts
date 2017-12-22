@@ -12,6 +12,7 @@ export interface ISlimScrollOptions {
   gridMargin?: string;
   alwaysVisible?: boolean;
   visibleTimeout?: number;
+  scrollSensitivity?: number;
 }
 
 export class SlimScrollOptions implements ISlimScrollOptions {
@@ -28,6 +29,7 @@ export class SlimScrollOptions implements ISlimScrollOptions {
   gridMargin?: string;
   alwaysVisible?: boolean;
   visibleTimeout?: number;
+  scrollSensitivity?: number;
 
   constructor(obj?: ISlimScrollOptions) {
     this.position = obj && obj.position ? obj.position : 'right';
@@ -43,5 +45,6 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     this.gridMargin = obj && obj.gridMargin ? obj.gridMargin : '1px 2px';
     this.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : true;
     this.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : 1000;
+    this.scrollSensitivity = obj && obj.scrollSensitivity ? obj.scrollSensitivity : 1;
   }
 }

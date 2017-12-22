@@ -292,22 +292,16 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
     const mousewheel = Observable.fromEvent(this.el, 'mousewheel');
 
     const wheelSubscription = Observable.merge(...[dommousescroll, mousewheel]).subscribe((e: MouseWheelEvent) => {
-      let delta = 0;
-
-      if (e.wheelDelta) {
-        delta = -e.wheelDelta / 120;
-      }
-
-      if (e.detail) {
-        delta = e.detail / 3;
-      }
-
-      this.scrollContent(delta, true, false);
+      const scrollSensitivity = this.options.scrollSensitivity / 100;
+      let { wheelDeltaY } = e;
+      wheelDeltaY = (Math.sign(wheelDeltaY) === 1) ? Math.max(1, wheelDeltaY * scrollSensitivity) : Math.min(-1, wheelDeltaY * scrollSensitivity);
+      this.scrollContent(-wheelDeltaY, true, false);
 
       if (e.preventDefault) {
         e.preventDefault();
       }
     });
+
     this.interactionSubscriptions.add(wheelSubscription);
   }
 
