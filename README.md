@@ -75,6 +75,7 @@ export class AppComponent implements OnInit {
       gridMargin?: string; // 0
       alwaysVisible?: boolean; // true
       visibleTimeout?: number; // 1000
+      scrollSensitivity?: number; // 1
     }
 
     this.play();
@@ -163,7 +164,7 @@ export interface ISlimScrollOptions {
 
 ```ts
 export interface ISlimScrollEvent {
-  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo';
+  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo' | 'recalculate';
   y?: number;
   duration?: number;
   easing?: 'linear' | 'inQuad' | 'outQuad' | 'inOutQuad' | 'inCubic' | 'outCubic' | 'inOutCubic' |
