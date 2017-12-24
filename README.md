@@ -1,6 +1,6 @@
 # ngx-slimscroll
 
-[![AbstruseCI](https://abstruse.bleenco.io/badge/3)](https://abstruse.bleenco.io/repo/3)
+[![AbstruseCI](https://ci.bleenco.io/badge/9)](https://ci.bleenco.io/badge/9)
 
 ***ngx-slimscroll*** is a customizable scrollbar directive for Angular2+.
 
@@ -8,7 +8,7 @@ Make scrollbar looks identical in any browser and any os.
 
 ## Demo
 
-[http://ng2-slimscroll.jankuri.com](http://ng2-slimscroll.jankuri.com)
+[http://ngx-slimscroll.jankuri.com](http://ngx-slimscroll.jankuri.com)
 
 ## Run Demo Locally
 
