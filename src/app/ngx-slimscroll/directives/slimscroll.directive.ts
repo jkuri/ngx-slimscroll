@@ -6,11 +6,12 @@ import {
   OnDestroy,
   Renderer,
   Inject,
+  Optional,
   Input,
   EventEmitter
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { SlimScrollOptions } from '../classes/slimscroll-options.class';
+import { SlimScrollOptions, ISlimScrollOptions, SLIMSCROLL_DEFAULTS } from '../classes/slimscroll-options.class';
 import { SlimScrollEvent } from '../classes/slimscroll-event.class';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -23,11 +24,11 @@ import 'rxjs/add/operator/map';
 export const easing: { [key: string]: Function } = {
   linear: (t: number) => { return t; },
   inQuad: (t: number) => { return t * t; },
-  outQuad: (t: number) => { return t * (2 - t ); },
+  outQuad: (t: number) => { return t * (2 - t); },
   inOutQuad: (t: number) => { return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t; },
   inCubic: (t: number) => { return t * t * t; },
   outCubic: (t: number) => { return (--t) * t * t + 1; },
-  inOutCubic: (t: number) => { return t < .5 ? 4 * t * t * t : (t - 1) * ( 2 * t - 2) * (2 * t - 2) + 1; },
+  inOutCubic: (t: number) => { return t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1; },
   inQuart: (t: number) => { return t * t * t * t; },
   outQuart: (t: number) => { return 1 - (--t) * t * t * t; },
   inOutQuart: (t: number) => { return t < .5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t; },
@@ -61,7 +62,8 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
     @Inject(Renderer) private renderer: Renderer,
-    @Inject(DOCUMENT) private document: any
+    @Inject(DOCUMENT) private document: any,
+    @Inject(SLIMSCROLL_DEFAULTS) @Optional() private optionsDefaults: ISlimScrollOptions
   ) {
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
@@ -70,7 +72,15 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.options = new SlimScrollOptions(this.options);
+    console.log('optionsDefaults', this.optionsDefaults);
+    console.log('options', this.options);
+    if (this.optionsDefaults) {
+      this.options = new SlimScrollOptions(this.optionsDefaults).merge(this.options);
+    } else {
+      this.options = new SlimScrollOptions(this.options);
+    }
+    console.log('options', this.options);
+
     this.setElementStyle();
     this.wrapContainer();
     this.initGrid();

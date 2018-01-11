@@ -1,3 +1,7 @@
+import { ISlimScrollOptions } from './slimscroll-options.class';
+import { ISlimScrollEvent } from './slimscroll-event.class';
+import { InjectionToken } from '@angular/core';
+
 export interface ISlimScrollOptions {
   position?: string;
   barBackground?: string;
@@ -14,6 +18,10 @@ export interface ISlimScrollOptions {
   visibleTimeout?: number;
   scrollSensitivity?: number;
 }
+
+export const SLIMSCROLL_DEFAULTS: InjectionToken<ISlimScrollOptions>
+    = new InjectionToken('NGX_SLIMSCROLL_DEFAULTS');
+
 
 export class SlimScrollOptions implements ISlimScrollOptions {
   position?: string;
@@ -46,5 +54,26 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     this.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : true;
     this.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : 1000;
     this.scrollSensitivity = obj && obj.scrollSensitivity ? obj.scrollSensitivity : 1;
+  }
+
+  public merge(obj?: ISlimScrollOptions): SlimScrollOptions {
+    const result = new SlimScrollOptions();
+
+    result.position = obj && obj.position ? obj.position : this.position;
+    result.barBackground = obj && obj.barBackground ? obj.barBackground : this.barBackground;
+    result.barOpacity = obj && obj.barOpacity ? obj.barOpacity : this.barOpacity;
+    result.barWidth = obj && obj.barWidth ? obj.barWidth : this.barWidth;
+    result.barBorderRadius = obj && obj.barBorderRadius ? obj.barBorderRadius : this.barBorderRadius;
+    result.barMargin = obj && obj.barMargin ? obj.barMargin : this.barMargin;
+    result.gridBackground = obj && obj.gridBackground ? obj.gridBackground : this.gridBackground;
+    result.gridOpacity = obj && obj.gridOpacity ? obj.gridOpacity : this.gridBackground;
+    result.gridWidth = obj && obj.gridWidth ? obj.gridWidth : this.gridWidth;
+    result.gridBorderRadius = obj && obj.gridBorderRadius ? obj.gridBorderRadius : this.gridBorderRadius;
+    result.gridMargin = obj && obj.gridMargin ? obj.gridMargin : this.gridMargin;
+    result.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : this.alwaysVisible;
+    result.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : this.visibleTimeout;
+    result.scrollSensitivity = obj && obj.scrollSensitivity ? obj.scrollSensitivity : this.scrollSensitivity;
+
+    return result;
   }
 }

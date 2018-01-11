@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { NgSlimScrollModule } from './ngx-slimscroll/module/ngx-slimscroll.module';
 
 import { AppComponent } from './app.component';
+import { SlimScrollOptions, SLIMSCROLL_DEFAULTS } from '../public_api';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,14 @@ import { AppComponent } from './app.component';
     BrowserModule,
     NgSlimScrollModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: SLIMSCROLL_DEFAULTS,
+      useValue: {
+        alwaysVisible : false
+      }
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
