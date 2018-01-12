@@ -72,14 +72,11 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('optionsDefaults', this.optionsDefaults);
-    console.log('options', this.options);
     if (this.optionsDefaults) {
       this.options = new SlimScrollOptions(this.optionsDefaults).merge(this.options);
     } else {
       this.options = new SlimScrollOptions(this.options);
     }
-    console.log('options', this.options);
 
     this.setElementStyle();
     this.wrapContainer();
