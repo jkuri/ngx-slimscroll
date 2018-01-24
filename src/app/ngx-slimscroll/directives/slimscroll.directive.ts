@@ -13,6 +13,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
 import { SlimScrollEvent } from '../classes/slimscroll-event.class';
+import { SlimScrollState, ISlimScrollState } from '../classes/slimscroll-state.class';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
@@ -44,7 +45,7 @@ export const easing: { [key: string]: Function } = {
 export class SlimScrollDirective implements OnInit, OnDestroy {
   @Input() options: SlimScrollOptions;
   @Input() scrollEvents: EventEmitter<SlimScrollEvent>;
-  @Output('scrollChanged') scrollChanged = new EventEmitter<any>();
+  @Output('scrollChanged') scrollChanged = new EventEmitter<ISlimScrollState>();
 
   el: HTMLElement;
   wrapper: HTMLElement;
@@ -254,6 +255,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   scrollContent(y: number, isWheel: boolean, isJump: boolean): null | number {
     let delta = y;
     const maxTop = this.el.offsetHeight - this.bar.offsetHeight;
+    const hiddenContent = this.el.scrollHeight - this.el.offsetHeight;
     let percentScroll: number;
     let over = null;
 
@@ -270,7 +272,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
     }
 
     percentScroll = parseInt(getComputedStyle(this.bar).top, 10) / (this.el.offsetHeight - this.bar.offsetHeight);
-    delta = percentScroll * (this.el.scrollHeight - this.el.offsetHeight);
+    delta = percentScroll * hiddenContent;
 
     this.el.scrollTop = delta;
 
@@ -285,8 +287,11 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
         this.hideBarAndGrid();
       }, this.options.visibleTimeout);
     }
-
-    this.scrollChanged.emit({scrollPosition: this.el.scrollTop});
+    const isScrollAtStart = delta === 0;
+    const isScrollAtEnd = delta === hiddenContent;
+    const scrollPosition = Math.ceil(delta);
+    const scrollState = new SlimScrollState({scrollPosition, isScrollAtStart, isScrollAtEnd});
+    this.scrollChanged.emit(scrollState);
 
     return over;
   }

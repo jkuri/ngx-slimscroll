@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ISlimScrollOptions } from './ngx-slimscroll/classes/slimscroll-options.class';
 import { SlimScrollEvent } from './ngx-slimscroll/classes/slimscroll-event.class';
-
+import { SlimScrollState, ISlimScrollState } from './ngx-slimscroll/classes/slimscroll-state.class';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -9,7 +9,7 @@ import { SlimScrollEvent } from './ngx-slimscroll/classes/slimscroll-event.class
 export class AppComponent {
   options: ISlimScrollOptions;
   secondOptions: ISlimScrollOptions;
-  scrollPosition = 0;
+  slimScrollState = new SlimScrollState();
 
   constructor() {
     this.options = {
@@ -20,7 +20,7 @@ export class AppComponent {
       gridWidth: '2'
     };
   }
-  scrollChanged($event) {
-    this.scrollPosition = $event.scrollPosition;
+  scrollChanged($event: ISlimScrollState) {
+    this.slimScrollState = $event;
   }
 }
