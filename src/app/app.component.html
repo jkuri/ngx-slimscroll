@@ -51,8 +51,16 @@
         </div>
       </div>
       <div class=columns>
-          <div class="column is-6 is-offset-6">
-              <span class="tag is-white">Current scroll position: {{ scrollPosition }}</span>
+          <div class="column is-6 is-offset-3">
+            <div class="columns">
+              <div class="column has-text-centered">
+                  <span class="tag is-white">Current scroll position: {{ slimScrollState.scrollPosition }}</span>
+              </div>
+              <div class="column has-text-centered">
+                  <span *ngIf="slimScrollState.isScrollAtStart" class="tag is-success">Scroll is at Start</span>
+                  <span *ngIf="slimScrollState.isScrollAtEnd" class="tag is-danger">Scroll is at End</span>
+                </div>              
+            </div>
           </div>
       </div>
     </div>
