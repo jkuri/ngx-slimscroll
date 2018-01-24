@@ -13,7 +13,7 @@ Make scrollbar looks identical in any browser and any os.
 ## Run Demo Locally
 
 ```sh
-git clone https://github.com/jkuri/ngx-uploader.git
+git clone https://github.com/jkuri/ngx-slimscroll.git
 npm install
 npm start
 ```
