@@ -17,6 +17,7 @@
     "prepublishOnly": "npm run build:lib"
   },
   "devDependencies": {
+    "@angular-devkit/core": "0.0.28",
     "@angular/animations": "^5.0.0",
     "@angular/cli": "1.5.4",
     "@angular/common": "^5.0.0",
