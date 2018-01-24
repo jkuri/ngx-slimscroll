@@ -7,7 +7,8 @@ import {
   Renderer,
   Inject,
   Input,
-  EventEmitter
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { SlimScrollOptions } from '../classes/slimscroll-options.class';
@@ -43,6 +44,7 @@ export const easing: { [key: string]: Function } = {
 export class SlimScrollDirective implements OnInit, OnDestroy {
   @Input() options: SlimScrollOptions;
   @Input() scrollEvents: EventEmitter<SlimScrollEvent>;
+  @Output('onScrollChange') onScrollChange = new EventEmitter<any>();
 
   el: HTMLElement;
   wrapper: HTMLElement;
@@ -283,6 +285,8 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
         this.hideBarAndGrid();
       }, this.options.visibleTimeout);
     }
+
+    this.onScrollChange.emit({scrollPosition: this.el.scrollTop});
 
     return over;
   }
