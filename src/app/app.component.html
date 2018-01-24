@@ -4,7 +4,7 @@
 
       <div class="columns is-multiline">
         <div class="column is-6 is-offset-3">
-          <div class="scroll-window" slimScroll (onScrollChange)="scrollChanged($event)" [options]="options">
+          <div class="scroll-window" slimScroll (scrollChanged)="scrollChanged($event)" [options]="options">
             <h1>What is Lorem Ipsum?</h1>
             <p>
               Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
@@ -52,7 +52,7 @@
       </div>
       <div class=columns>
           <div class="column is-6 is-offset-6">
-              <span class="tag is-white">Current scroll position: {{scrollPosition}}</span>
+              <span class="tag is-white">Current scroll position: {{ scrollPosition }}</span>
           </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ import { SlimScrollEvent } from './ngx-slimscroll/classes/slimscroll-event.class
 export class AppComponent {
   options: ISlimScrollOptions;
   secondOptions: ISlimScrollOptions;
-  scrollPosition: number = 0;
+  scrollPosition = 0;
 
   constructor() {
     this.options = {
@@ -20,7 +20,7 @@ export class AppComponent {
       gridWidth: '2'
     };
   }
-  scrollChanged($event){
+  scrollChanged($event) {
     this.scrollPosition = $event.scrollPosition;
   }
 }
