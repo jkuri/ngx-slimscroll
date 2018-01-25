@@ -138,20 +138,19 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   }
 
   wrapContainer(): void {
-    this.wrapper = this.renderer.createElement(this.el, 'div');
+    const parentElement = this.el.parentNode;
+    this.wrapper = this.renderer.createElement(parentElement, 'div');
     const wrapper = this.wrapper;
-    const el = this.el;
 
     this.renderer.setElementClass(wrapper, 'slimscroll-wrapper', true);
     this.renderer.setElementStyle(wrapper, 'position', 'relative');
     this.renderer.setElementStyle(wrapper, 'overflow', 'hidden');
     this.renderer.setElementStyle(wrapper, 'display', 'inline-block');
-    this.renderer.setElementStyle(wrapper, 'margin', getComputedStyle(el).margin);
+    this.renderer.setElementStyle(wrapper, 'margin',this.el.style.margin);
     this.renderer.setElementStyle(wrapper, 'width', '100%');
-    this.renderer.setElementStyle(wrapper, 'height', getComputedStyle(el).height);
+    this.renderer.setElementStyle(wrapper, 'height', this.el.style.height);
 
-    el.parentNode.insertBefore(wrapper, el);
-    wrapper.appendChild(el);
+    wrapper.appendChild(this.el);
   }
 
   initGrid(): void {
@@ -260,7 +259,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
     let over = null;
 
     if (isWheel) {
-      delta = parseInt(getComputedStyle(this.bar).top, 10) + y * 20 / 100 * this.bar.offsetHeight;
+      delta = parseInt(this.bar.style.top, 10) + y * 20 / 100 * this.bar.offsetHeight;
 
       if (delta < 0 || delta > maxTop) {
         over = delta > maxTop ? delta - maxTop : delta;
@@ -271,7 +270,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
       this.renderer.setElementStyle(this.bar, 'top', delta + 'px');
     }
 
-    percentScroll = parseInt(getComputedStyle(this.bar).top, 10) / (this.el.offsetHeight - this.bar.offsetHeight);
+    percentScroll = parseInt(this.bar.style.top, 10) / (this.el.offsetHeight - this.bar.offsetHeight);
     delta = percentScroll * hiddenContent;
 
     this.el.scrollTop = delta;
@@ -329,7 +328,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
 
     const mousedrag = mousedown.mergeMap((e: MouseEvent) => {
       this.pageY = e.pageY;
-      this.top = parseFloat(getComputedStyle(bar).top);
+      this.top = parseFloat(bar.style.top);
 
       return mousemove.map((emove: MouseEvent) => {
         emove.preventDefault();
@@ -339,7 +338,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
 
     const touchdrag = touchstart.mergeMap((e: TouchEvent) => {
       this.pageY = e.targetTouches[0].pageY;
-      this.top = -parseFloat(getComputedStyle(bar).top);
+      this.top = -parseFloat(bar.style.top);
 
       return touchmove.map((tmove: TouchEvent) => {
         return -(this.top + tmove.targetTouches[0].pageY - this.pageY);
