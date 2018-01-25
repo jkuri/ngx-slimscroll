@@ -146,7 +146,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
     this.renderer.setElementStyle(wrapper, 'position', 'relative');
     this.renderer.setElementStyle(wrapper, 'overflow', 'hidden');
     this.renderer.setElementStyle(wrapper, 'display', 'inline-block');
-    this.renderer.setElementStyle(wrapper, 'margin',this.el.style.margin);
+    this.renderer.setElementStyle(wrapper, 'margin', this.el.style.margin);
     this.renderer.setElementStyle(wrapper, 'width', '100%');
     this.renderer.setElementStyle(wrapper, 'height', this.el.style.height);
 
