@@ -49,7 +49,7 @@ describe(`Slimscroll Directive`, () => {
     expect(wrapper.styles.position).toBe('relative');
     expect(wrapper.styles.overflow).toBe('hidden');
     expect(wrapper.styles.display).toBe('inline-block');
-    expect(wrapper.styles.margin).toBe(getComputedStyle(de.nativeElement).margin);
+    expect(wrapper.styles.margin).toBe(de.nativeElement.style.margin);
     expect(wrapper.styles.width).toBe('100%');
   });
 
