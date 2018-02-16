@@ -6,12 +6,13 @@ import {
   OnDestroy,
   Renderer,
   Inject,
+  Optional,
   Input,
   EventEmitter,
   Output
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { SlimScrollOptions } from '../classes/slimscroll-options.class';
+import { SlimScrollOptions, ISlimScrollOptions, SLIMSCROLL_DEFAULTS } from '../classes/slimscroll-options.class';
 import { SlimScrollEvent } from '../classes/slimscroll-event.class';
 import { SlimScrollState, ISlimScrollState } from '../classes/slimscroll-state.class';
 import { Observable } from 'rxjs/Observable';
@@ -64,7 +65,8 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
     @Inject(Renderer) private renderer: Renderer,
-    @Inject(DOCUMENT) private document: any
+    @Inject(DOCUMENT) private document: any,
+    @Inject(SLIMSCROLL_DEFAULTS) @Optional() private optionsDefaults: ISlimScrollOptions
   ) {
     this.viewContainer = viewContainer;
     this.el = viewContainer.element.nativeElement;
@@ -73,7 +75,12 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.options = new SlimScrollOptions(this.options);
+    if (this.optionsDefaults) {
+      this.options = new SlimScrollOptions(this.optionsDefaults).merge(this.options);
+    } else {
+      this.options = new SlimScrollOptions(this.options);
+    }
+
     this.setElementStyle();
     this.wrapContainer();
     this.initGrid();
