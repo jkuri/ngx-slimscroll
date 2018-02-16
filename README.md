@@ -32,7 +32,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { NgSlimScrollModule } from 'ngx-slimscroll';
+import { NgSlimScrollModule, SLIMSCROLL_DEFAULTS } from 'ngx-slimscroll';
 
 @NgModule({
   declarations: [
@@ -42,6 +42,15 @@ import { NgSlimScrollModule } from 'ngx-slimscroll';
     BrowserModule,
     CommonModule,
     NgSlimScrollModule
+  ],
+  providers: [ 
+    // OPTIONAL : provide default global settings which will be merge with component options.
+    {
+      provide: SLIMSCROLL_DEFAULTS,
+      useValue: {
+        alwaysVisible : false
+      }
+    },
   ],
   bootstrap: [ AppComponent ]
 })
@@ -158,6 +167,36 @@ export interface ISlimScrollOptions {
   alwaysVisible?: boolean;
   visibleTimeout?: number;
 }
+```
+
+## Global Default Options
+
+You can provide global default options. You achieve this by defining a provider in your AppModule using `SCRIMSCROLL_DEFAULTS` [injection token](https://angular.io/guide/dependency-injection#ngmodule-providers). 
+
+Example:
+
+```typescript
+@NgModule({
+  // Omitted for brevity
+  providers: [
+    {
+      provide: SLIMSCROLL_DEFAULTS,
+      useValue: {
+        alwaysVisible: false,
+        gridOpacity: '0.2', barOpacity: '0.5',
+        gridBackground: '#c2c2c2',
+        gridWidth: '6',
+        gridMargin: '2px 2px',
+        barBackground: '#2C3E50',
+        barWidth: '6',
+        barMargin: '2px 2px'
+      }
+    }
+   // other providers
+   ]
+  ]
+})
+export class AppModule { }
 ```
 
 ## SlimScroll Event
