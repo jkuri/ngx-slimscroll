@@ -4,7 +4,7 @@ import {
   HostListener,
   OnInit,
   OnDestroy,
-  Renderer,
+  Renderer2,
   Inject,
   Optional,
   Input,
@@ -26,11 +26,11 @@ import 'rxjs/add/operator/map';
 export const easing: { [key: string]: Function } = {
   linear: (t: number) => t,
   inQuad: (t: number) => t * t,
-  outQuad: (t: number) => t * (2 - t ),
+  outQuad: (t: number) => t * (2 - t),
   inOutQuad: (t: number) => t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
   inCubic: (t: number) => t * t * t,
   outCubic: (t: number) => (--t) * t * t + 1,
-  inOutCubic: (t: number) => t < .5 ? 4 * t * t * t : (t - 1) * ( 2 * t - 2) * (2 * t - 2) + 1,
+  inOutCubic: (t: number) => t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
   inQuart: (t: number) => t * t * t * t,
   outQuart: (t: number) => 1 - (--t) * t * t * t,
   inOutQuart: (t: number) => t < .5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t,
@@ -64,7 +64,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
 
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
-    @Inject(Renderer) private renderer: Renderer,
+    @Inject(Renderer2) private renderer: Renderer2,
     @Inject(DOCUMENT) private document: any,
     @Inject(SLIMSCROLL_DEFAULTS) @Optional() private optionsDefaults: ISlimScrollOptions
   ) {
@@ -81,7 +81,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
       this.options = new SlimScrollOptions(this.options);
     }
 
-    this.setElementStyle();
+    this.setStyle();
     this.wrapContainer();
     this.initGrid();
     this.initBar();
@@ -133,11 +133,11 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
     }
   }
 
-  setElementStyle(): void {
+  setStyle(): void {
     const el = this.el;
-    this.renderer.setElementStyle(el, 'overflow', 'hidden');
-    this.renderer.setElementStyle(el, 'position', 'relative');
-    this.renderer.setElementStyle(el, 'display', 'block');
+    this.renderer.setStyle(el, 'overflow', 'hidden');
+    this.renderer.setStyle(el, 'position', 'relative');
+    this.renderer.setStyle(el, 'display', 'block');
   }
 
   onMutation() {
@@ -145,70 +145,70 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   }
 
   wrapContainer(): void {
-    this.wrapper = this.renderer.createElement(this.el, 'div');
+    this.wrapper = this.renderer.createElement('div');
     const wrapper = this.wrapper;
     const el = this.el;
 
-    this.renderer.setElementClass(wrapper, 'slimscroll-wrapper', true);
-    this.renderer.setElementStyle(wrapper, 'position', 'relative');
-    this.renderer.setElementStyle(wrapper, 'overflow', 'hidden');
-    this.renderer.setElementStyle(wrapper, 'display', 'inline-block');
-    this.renderer.setElementStyle(wrapper, 'margin', getComputedStyle(el).margin);
-    this.renderer.setElementStyle(wrapper, 'width', '100%');
-    this.renderer.setElementStyle(wrapper, 'height', getComputedStyle(el).height);
+    this.renderer.addClass(wrapper, 'slimscroll-wrapper');
+    this.renderer.setStyle(wrapper, 'position', 'relative');
+    this.renderer.setStyle(wrapper, 'overflow', 'hidden');
+    this.renderer.setStyle(wrapper, 'display', 'inline-block');
+    this.renderer.setStyle(wrapper, 'margin', getComputedStyle(el).margin);
+    this.renderer.setStyle(wrapper, 'width', '100%');
+    this.renderer.setStyle(wrapper, 'height', getComputedStyle(el).height);
 
-    el.parentNode.insertBefore(wrapper, el);
-    wrapper.appendChild(el);
+    this.renderer.insertBefore(el.parentNode, wrapper, el);
+    this.renderer.appendChild(wrapper, el);
   }
 
   initGrid(): void {
-    this.grid = this.renderer.createElement(this.el, 'div');
+    this.grid = this.renderer.createElement('div');
     const grid = this.grid;
 
-    this.renderer.setElementClass(grid, 'slimscroll-grid', true);
-    this.renderer.setElementStyle(grid, 'position', 'absolute');
-    this.renderer.setElementStyle(grid, 'top', '0');
-    this.renderer.setElementStyle(grid, 'bottom', '0');
-    this.renderer.setElementStyle(grid, this.options.position, '0');
-    this.renderer.setElementStyle(grid, 'width', `${this.options.gridWidth}px`);
-    this.renderer.setElementStyle(grid, 'background', this.options.gridBackground);
-    this.renderer.setElementStyle(grid, 'opacity', this.options.gridOpacity);
-    this.renderer.setElementStyle(grid, 'display', 'block');
-    this.renderer.setElementStyle(grid, 'cursor', 'pointer');
-    this.renderer.setElementStyle(grid, 'z-index', '99');
-    this.renderer.setElementStyle(grid, 'border-radius', `${this.options.gridBorderRadius}px`);
-    this.renderer.setElementStyle(grid, 'margin', this.options.gridMargin);
+    this.renderer.addClass(grid, 'slimscroll-grid');
+    this.renderer.setStyle(grid, 'position', 'absolute');
+    this.renderer.setStyle(grid, 'top', '0');
+    this.renderer.setStyle(grid, 'bottom', '0');
+    this.renderer.setStyle(grid, this.options.position, '0');
+    this.renderer.setStyle(grid, 'width', `${this.options.gridWidth}px`);
+    this.renderer.setStyle(grid, 'background', this.options.gridBackground);
+    this.renderer.setStyle(grid, 'opacity', this.options.gridOpacity);
+    this.renderer.setStyle(grid, 'display', 'block');
+    this.renderer.setStyle(grid, 'cursor', 'pointer');
+    this.renderer.setStyle(grid, 'z-index', '99');
+    this.renderer.setStyle(grid, 'border-radius', `${this.options.gridBorderRadius}px`);
+    this.renderer.setStyle(grid, 'margin', this.options.gridMargin);
 
-    this.wrapper.appendChild(grid);
+    this.renderer.appendChild(this.wrapper, grid);
   }
 
   initBar(): void {
-    this.bar = this.renderer.createElement(this.el, 'div');
+    this.bar = this.renderer.createElement('div');
     const bar = this.bar;
 
-    this.renderer.setElementClass(bar, 'slimscroll-bar', true);
-    this.renderer.setElementStyle(bar, 'position', 'absolute');
-    this.renderer.setElementStyle(bar, 'top', '0');
-    this.renderer.setElementStyle(bar, this.options.position, '0');
-    this.renderer.setElementStyle(bar, 'width', `${this.options.barWidth}px`);
-    this.renderer.setElementStyle(bar, 'background', this.options.barBackground);
-    this.renderer.setElementStyle(bar, 'opacity', this.options.barOpacity);
-    this.renderer.setElementStyle(bar, 'display', 'block');
-    this.renderer.setElementStyle(bar, 'cursor', 'pointer');
-    this.renderer.setElementStyle(bar, 'z-index', '100');
-    this.renderer.setElementStyle(bar, 'border-radius', `${this.options.barBorderRadius}px`);
-    this.renderer.setElementStyle(bar, 'margin', this.options.barMargin);
+    this.renderer.addClass(bar, 'slimscroll-bar');
+    this.renderer.setStyle(bar, 'position', 'absolute');
+    this.renderer.setStyle(bar, 'top', '0');
+    this.renderer.setStyle(bar, this.options.position, '0');
+    this.renderer.setStyle(bar, 'width', `${this.options.barWidth}px`);
+    this.renderer.setStyle(bar, 'background', this.options.barBackground);
+    this.renderer.setStyle(bar, 'opacity', this.options.barOpacity);
+    this.renderer.setStyle(bar, 'display', 'block');
+    this.renderer.setStyle(bar, 'cursor', 'pointer');
+    this.renderer.setStyle(bar, 'z-index', '100');
+    this.renderer.setStyle(bar, 'border-radius', `${this.options.barBorderRadius}px`);
+    this.renderer.setStyle(bar, 'margin', this.options.barMargin);
 
-    this.wrapper.appendChild(bar);
+    this.renderer.appendChild(this.wrapper, bar);
   }
 
   getBarHeight(): void {
     const barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
     const display = parseInt(barHeight, 10) === this.el.offsetHeight ? 'none' : 'block';
 
-    this.renderer.setElementStyle(this.bar, 'height', barHeight);
-    this.renderer.setElementStyle(this.bar, 'display', display);
-    this.renderer.setElementStyle(this.grid, 'display', display);
+    this.renderer.setStyle(this.bar, 'height', barHeight);
+    this.renderer.setStyle(this.bar, 'display', display);
+    this.renderer.setStyle(this.grid, 'display', display);
   }
 
   scrollTo(y: number, duration: number, easingFunc: string): void {
@@ -231,13 +231,13 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
         if (paddingTop > 0) {
           fromY = -paddingTop;
           fromY = -((easedTime * (y - fromY)) + fromY);
-          this.renderer.setElementStyle(this.el, 'paddingTop', `${fromY}px`);
+          this.renderer.setStyle(this.el, 'paddingTop', `${fromY}px`);
         }
 
         if (paddingBottom > 0) {
           fromY = paddingBottom;
           fromY = ((easedTime * (y - fromY)) + fromY);
-          this.renderer.setElementStyle(this.el, 'paddingBottom', `${fromY}px`);
+          this.renderer.setStyle(this.el, 'paddingBottom', `${fromY}px`);
         }
       } else {
         this.el.scrollTop = (easedTime * (y - from)) + from;
@@ -247,7 +247,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
       if (paddingBottom === 0) {
         const delta = Math.round(Math.round(this.el.clientHeight * percentScroll) - barHeight);
         if (delta > 0) {
-          this.renderer.setElementStyle(this.bar, 'top', `${delta}px`);
+          this.renderer.setStyle(this.bar, 'top', `${delta}px`);
         }
       }
 
@@ -275,7 +275,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
 
       delta = Math.min(Math.max(delta, 0), maxTop);
       delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
-      this.renderer.setElementStyle(this.bar, 'top', delta + 'px');
+      this.renderer.setStyle(this.bar, 'top', delta + 'px');
     }
 
     percentScroll = parseInt(getComputedStyle(this.bar).top, 10) / (this.el.offsetHeight - this.bar.offsetHeight);
@@ -297,7 +297,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
     const isScrollAtStart = delta === 0;
     const isScrollAtEnd = delta === hiddenContent;
     const scrollPosition = Math.ceil(delta);
-    const scrollState = new SlimScrollState({scrollPosition, isScrollAtStart, isScrollAtEnd});
+    const scrollState = new SlimScrollState({ scrollPosition, isScrollAtStart, isScrollAtEnd });
     this.scrollChanged.emit(scrollState);
 
     return over;
@@ -308,12 +308,17 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
     const mousewheel = Observable.fromEvent(this.el, 'mousewheel');
 
     const wheelSubscription = Observable.merge(...[dommousescroll, mousewheel]).subscribe((e: MouseWheelEvent) => {
-      const scrollSensitivity = this.options.scrollSensitivity / 100;
-      let { wheelDeltaY } = e;
-      const maxScaledDelta = Math.max(1, wheelDeltaY * scrollSensitivity);
-      const minScaledDelta = Math.min(-1, wheelDeltaY * scrollSensitivity);
-      wheelDeltaY = (Math.sign(wheelDeltaY) === 1) ?  maxScaledDelta : minScaledDelta;
-      this.scrollContent(-wheelDeltaY, true, false);
+      let delta = 0;
+
+      if (e.wheelDelta) {
+        delta = -e.wheelDelta / 120;
+      }
+
+      if (e.detail) {
+        delta = e.detail / 3;
+      }
+
+      this.scrollContent(delta, true, false);
 
       if (e.preventDefault) {
         e.preventDefault();
@@ -355,16 +360,16 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
 
     const dragSubscription = Observable.merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
       this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
-      this.renderer.setElementStyle(this.body, 'touch-action', 'pan-y');
-      this.renderer.setElementStyle(this.body, 'user-select', 'none');
-      this.renderer.setElementStyle(this.bar, 'top', `${top}px`);
+      this.renderer.setStyle(this.body, 'touch-action', 'pan-y');
+      this.renderer.setStyle(this.body, 'user-select', 'none');
+      this.renderer.setStyle(this.bar, 'top', `${top}px`);
       const over = this.scrollContent(0, true, false);
       const maxTop = this.el.offsetHeight - this.bar.offsetHeight;
 
       if (over && over < 0 && -over <= maxTop) {
-        this.renderer.setElementStyle(this.el, 'paddingTop', -over + 'px');
+        this.renderer.setStyle(this.el, 'paddingTop', -over + 'px');
       } else if (over && over > 0 && over <= maxTop) {
-        this.renderer.setElementStyle(this.el, 'paddingBottom', over + 'px');
+        this.renderer.setStyle(this.el, 'paddingBottom', over + 'px');
       }
     });
 
@@ -372,8 +377,8 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
       this.body.removeEventListener('selectstart', this.preventDefaultEvent, false);
       const paddingTop = parseInt(this.el.style.paddingTop, 10);
       const paddingBottom = parseInt(this.el.style.paddingBottom, 10);
-      this.renderer.setElementStyle(this.body, 'touch-action', 'unset');
-      this.renderer.setElementStyle(this.body, 'user-select', 'default');
+      this.renderer.setStyle(this.body, 'touch-action', 'unset');
+      this.renderer.setStyle(this.body, 'user-select', 'default');
 
       if (paddingTop > 0) {
         this.scrollTo(0, 300, 'linear');
@@ -387,13 +392,13 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   }
 
   showBarAndGrid(): void {
-    this.renderer.setElementStyle(this.grid, 'background', this.options.gridBackground);
-    this.renderer.setElementStyle(this.bar, 'background', this.options.barBackground);
+    this.renderer.setStyle(this.grid, 'background', this.options.gridBackground);
+    this.renderer.setStyle(this.bar, 'background', this.options.barBackground);
   }
 
   hideBarAndGrid(): void {
-    this.renderer.setElementStyle(this.grid, 'background', 'transparent');
-    this.renderer.setElementStyle(this.bar, 'background', 'transparent');
+    this.renderer.setStyle(this.grid, 'background', 'transparent');
+    this.renderer.setStyle(this.bar, 'background', 'transparent');
   }
 
   preventDefaultEvent = (e: MouseEvent) => {

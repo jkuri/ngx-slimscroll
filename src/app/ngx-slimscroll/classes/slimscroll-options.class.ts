@@ -16,7 +16,6 @@ export interface ISlimScrollOptions {
   gridMargin?: string;
   alwaysVisible?: boolean;
   visibleTimeout?: number;
-  scrollSensitivity?: number;
 }
 
 export const SLIMSCROLL_DEFAULTS: InjectionToken<ISlimScrollOptions>
@@ -36,7 +35,6 @@ export class SlimScrollOptions implements ISlimScrollOptions {
   gridMargin?: string;
   alwaysVisible?: boolean;
   visibleTimeout?: number;
-  scrollSensitivity?: number;
 
   constructor(obj?: ISlimScrollOptions) {
     this.position = obj && obj.position ? obj.position : 'right';
@@ -52,7 +50,6 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     this.gridMargin = obj && obj.gridMargin ? obj.gridMargin : '1px 2px';
     this.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : true;
     this.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : 1000;
-    this.scrollSensitivity = obj && obj.scrollSensitivity ? obj.scrollSensitivity : 1;
   }
 
   public merge(obj?: ISlimScrollOptions): SlimScrollOptions {
@@ -71,7 +68,6 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     result.gridMargin = obj && obj.gridMargin ? obj.gridMargin : this.gridMargin;
     result.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : this.alwaysVisible;
     result.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : this.visibleTimeout;
-    result.scrollSensitivity = obj && obj.scrollSensitivity ? obj.scrollSensitivity : this.scrollSensitivity;
 
     return result;
   }
