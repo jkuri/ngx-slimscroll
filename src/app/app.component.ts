@@ -17,7 +17,8 @@ export class AppComponent {
       gridBackground: '#f8f8f8',
       barBorderRadius: '10',
       barWidth: '6',
-      gridWidth: '2'
+      gridWidth: '2',
+      alwaysVisible: true
     };
   }
   scrollChanged($event: ISlimScrollState) {

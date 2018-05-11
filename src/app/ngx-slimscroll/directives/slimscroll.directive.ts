@@ -15,13 +15,8 @@ import { DOCUMENT } from '@angular/common';
 import { SlimScrollOptions, ISlimScrollOptions, SLIMSCROLL_DEFAULTS } from '../classes/slimscroll-options.class';
 import { SlimScrollEvent } from '../classes/slimscroll-event.class';
 import { SlimScrollState, ISlimScrollState } from '../classes/slimscroll-state.class';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/map';
+import { Observable, Subscription, fromEvent, merge } from 'rxjs';
+import { mergeMap, map, takeUntil } from 'rxjs/operators';
 
 export const easing: { [key: string]: Function } = {
   linear: (t: number) => t,
@@ -304,10 +299,10 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   }
 
   initWheel = () => {
-    const dommousescroll = Observable.fromEvent(this.el, 'DOMMouseScroll');
-    const mousewheel = Observable.fromEvent(this.el, 'mousewheel');
+    const dommousescroll = fromEvent(this.el, 'DOMMouseScroll');
+    const mousewheel = fromEvent(this.el, 'mousewheel');
 
-    const wheelSubscription = Observable.merge(...[dommousescroll, mousewheel]).subscribe((e: MouseWheelEvent) => {
+    const wheelSubscription = merge(...[dommousescroll, mousewheel]).subscribe((e: MouseWheelEvent) => {
       let delta = 0;
 
       if (e.wheelDelta) {
@@ -331,34 +326,48 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   initDrag = () => {
     const bar = this.bar;
 
-    const mousemove = Observable.fromEvent(this.document.documentElement, 'mousemove');
-    const touchmove = Observable.fromEvent(this.document.documentElement, 'touchmove');
+    const mousemove = fromEvent(this.document.documentElement, 'mousemove');
+    const touchmove = fromEvent(this.document.documentElement, 'touchmove');
 
-    const mousedown = Observable.fromEvent(bar, 'mousedown');
-    const touchstart = Observable.fromEvent(this.el, 'touchstart');
-    const mouseup = Observable.fromEvent(this.document.documentElement, 'mouseup');
-    const touchend = Observable.fromEvent(this.document.documentElement, 'touchend');
+    const mousedown = fromEvent(bar, 'mousedown');
+    const touchstart = fromEvent(this.el, 'touchstart');
+    const mouseup = fromEvent(this.document.documentElement, 'mouseup');
+    const touchend = fromEvent(this.document.documentElement, 'touchend');
 
-    const mousedrag = mousedown.mergeMap((e: MouseEvent) => {
-      this.pageY = e.pageY;
-      this.top = parseFloat(getComputedStyle(bar).top);
+    const mousedrag = mousedown
+      .pipe(
+        mergeMap((e: MouseEvent) => {
+          this.pageY = e.pageY;
+          this.top = parseFloat(getComputedStyle(bar).top);
 
-      return mousemove.map((emove: MouseEvent) => {
-        emove.preventDefault();
-        return this.top + emove.pageY - this.pageY;
-      }).takeUntil(mouseup);
-    });
+          return mousemove
+            .pipe(
+              map((emove: MouseEvent) => {
+                emove.preventDefault();
+                return this.top + emove.pageY - this.pageY;
+              }),
+              takeUntil(mouseup)
+            );
+        })
+      );
 
-    const touchdrag = touchstart.mergeMap((e: TouchEvent) => {
-      this.pageY = e.targetTouches[0].pageY;
-      this.top = -parseFloat(getComputedStyle(bar).top);
+    const touchdrag = touchstart
+      .pipe(
+        mergeMap((e: TouchEvent) => {
+          this.pageY = e.targetTouches[0].pageY;
+          this.top = -parseFloat(getComputedStyle(bar).top);
 
-      return touchmove.map((tmove: TouchEvent) => {
-        return -(this.top + tmove.targetTouches[0].pageY - this.pageY);
-      }).takeUntil(touchend);
-    });
+          return touchmove
+            .pipe(
+              map((tmove: TouchEvent) => {
+                return -(this.top + tmove.targetTouches[0].pageY - this.pageY);
+              }),
+              takeUntil(touchend)
+            );
+        })
+      );
 
-    const dragSubscription = Observable.merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
+    const dragSubscription = merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
       this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
       this.renderer.setStyle(this.body, 'touch-action', 'pan-y');
       this.renderer.setStyle(this.body, 'user-select', 'none');
@@ -373,7 +382,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
       }
     });
 
-    const dragEndSubscription = Observable.merge(...[mouseup, touchend]).subscribe(() => {
+    const dragEndSubscription = merge(...[mouseup, touchend]).subscribe(() => {
       this.body.removeEventListener('selectstart', this.preventDefaultEvent, false);
       const paddingTop = parseInt(this.el.style.paddingTop, 10);
       const paddingBottom = parseInt(this.el.style.paddingBottom, 10);
