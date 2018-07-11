@@ -203,6 +203,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
 
     this.renderer.setStyle(this.bar, 'height', barHeight);
     this.renderer.setStyle(this.bar, 'display', display);
+    display === 'none' ? this.renderer.addClass(this.wrapper, 'bar-hidden') : this.renderer.removeClass(this.wrapper, 'bar-hidden');
     this.renderer.setStyle(this.grid, 'display', display);
   }
 
