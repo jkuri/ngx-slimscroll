@@ -9,6 +9,7 @@ import { SlimScrollState, ISlimScrollState } from './ngx-slimscroll/classes/slim
 export class AppComponent {
   options: ISlimScrollOptions;
   secondOptions: ISlimScrollOptions;
+  enableScroll = true;
   slimScrollState = new SlimScrollState();
 
   constructor() {
