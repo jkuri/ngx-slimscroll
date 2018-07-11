@@ -2,14 +2,15 @@ import {
   Directive,
   ViewContainerRef,
   HostListener,
-  OnInit,
+  OnChanges,
   OnDestroy,
   Renderer2,
   Inject,
   Optional,
   Input,
   EventEmitter,
-  Output
+  Output,
+  SimpleChanges
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { SlimScrollOptions, ISlimScrollOptions, SLIMSCROLL_DEFAULTS } from '../classes/slimscroll-options.class';
@@ -38,7 +39,8 @@ export const easing: { [key: string]: Function } = {
   selector: '[slimScroll]', // tslint:disable-line
   exportAs: 'slimScroll'
 })
-export class SlimScrollDirective implements OnInit, OnDestroy {
+export class SlimScrollDirective implements OnChanges, OnDestroy {
+  @Input() enabled: boolean;
   @Input() options: SlimScrollOptions;
   @Input() scrollEvents: EventEmitter<SlimScrollEvent>;
   @Output('scrollChanged') scrollChanged = new EventEmitter<ISlimScrollState>();
@@ -55,8 +57,7 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
   mutationObserver: MutationObserver;
   lastTouchPositionY: number;
   visibleTimeout: any;
-  interactionSubscriptions: Subscription = new Subscription();
-
+  interactionSubscriptions: Subscription;
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
     @Inject(Renderer2) private renderer: Renderer2,
@@ -69,7 +70,23 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
     this.mutationThrottleTimeout = 50;
   }
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.enabled) {
+      if (this.enabled) {
+        this.setup();
+      } else {
+        this.ngOnDestroy();
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.destroy();
+    this.interactionSubscriptions.unsubscribe();
+  }
+
+  setup() {
+    this.interactionSubscriptions = new Subscription();
     if (this.optionsDefaults) {
       this.options = new SlimScrollOptions(this.optionsDefaults).merge(this.options);
     } else {
@@ -89,6 +106,9 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
     }
 
     if (MutationObserver) {
+      if (this.mutationObserver) {
+        this.mutationObserver.disconnect();
+      }
       this.mutationObserver = new MutationObserver(() => {
         if (this.mutationThrottleTimeout) {
           clearTimeout(this.mutationThrottleTimeout);
@@ -102,10 +122,6 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
       const scrollSubscription = this.scrollEvents.subscribe((event: SlimScrollEvent) => this.handleEvent(event));
       this.interactionSubscriptions.add(scrollSubscription);
     }
-  }
-
-  ngOnDestroy() {
-    this.interactionSubscriptions.unsubscribe();
   }
 
   handleEvent(e: SlimScrollEvent): void {
@@ -424,8 +440,10 @@ export class SlimScrollDirective implements OnInit, OnDestroy {
 
     if (this.el.parentElement.classList.contains('slimscroll-wrapper')) {
       const wrapper = this.el.parentElement;
-      const bar = this.el.querySelector('.slimscroll-bar');
-      this.el.removeChild(bar);
+      const bar = wrapper.querySelector('.slimscroll-bar');
+      wrapper.removeChild(bar);
+      const grid = wrapper.querySelector('.slimscroll-grid');
+      wrapper.removeChild(grid);
       this.unwrap(wrapper);
     }
   }
