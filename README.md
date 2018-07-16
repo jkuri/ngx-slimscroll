@@ -149,6 +149,16 @@ export class AppComponent implements OnInit {
 </div>
 ```
 
+## Disabling the scrollbar directive
+
+There is an input of the directive `enabled` defaults to `true`. Some users may want to control the scrollbar availability by some external condition. You can use the `enabled` input.
+
+```html
+<div class="scroll-window" slimScroll [enabled]="externalCondition" [options]="opts">
+  <p>Long content</p>
+</div>
+```
+
 ## Options
 
 ```ts
@@ -209,6 +219,13 @@ export interface ISlimScrollEvent {
   easing?: 'linear' | 'inQuad' | 'outQuad' | 'inOutQuad' | 'inCubic' | 'outCubic' | 'inOutCubic' |
   'inQuart' | 'outQuart' | 'inOutQuart' | 'inQuint' | 'outQuint' | 'inOutQuint';
 }
+```
+
+And you could be notified for the visibility change event of the scrollbar via `barVisibilityChange`.
+`true` for being visible, `false` for being invisible. For example:
+
+```html
+<div slimscoll (barVisibilityChange)="doSomething($event)"></div> 
 ```
 
 ## Tests
