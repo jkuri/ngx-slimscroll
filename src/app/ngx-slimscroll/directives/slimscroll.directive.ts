@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { SlimScrollOptions, ISlimScrollOptions, SLIMSCROLL_DEFAULTS } from '../classes/slimscroll-options.class';
-import { SlimScrollEvent } from '../classes/slimscroll-event.class';
+import { ISlimScrollEvent, SlimScrollEvent } from '../classes/slimscroll-event.class';
 import { SlimScrollState, ISlimScrollState } from '../classes/slimscroll-state.class';
 import { Observable, Subscription, fromEvent, merge } from 'rxjs';
 import { mergeMap, map, takeUntil } from 'rxjs/operators';
@@ -40,10 +40,11 @@ export const easing: { [key: string]: Function } = {
   exportAs: 'slimScroll'
 })
 export class SlimScrollDirective implements OnChanges, OnDestroy {
-  @Input() enabled: boolean;
+  @Input() enabled = true;
   @Input() options: SlimScrollOptions;
-  @Input() scrollEvents: EventEmitter<SlimScrollEvent>;
+  @Input() scrollEvents: EventEmitter<ISlimScrollEvent>;
   @Output('scrollChanged') scrollChanged = new EventEmitter<ISlimScrollState>();
+  @Output('barVisibilityChange') barVisibilityChange = new EventEmitter<boolean>();
 
   el: HTMLElement;
   wrapper: HTMLElement;
@@ -211,6 +212,7 @@ export class SlimScrollDirective implements OnChanges, OnDestroy {
     this.renderer.setStyle(bar, 'margin', this.options.barMargin);
 
     this.renderer.appendChild(this.wrapper, bar);
+    this.barVisibilityChange.emit(true);
   }
 
   getBarHeight(): void {
@@ -219,8 +221,8 @@ export class SlimScrollDirective implements OnChanges, OnDestroy {
 
     this.renderer.setStyle(this.bar, 'height', barHeight);
     this.renderer.setStyle(this.bar, 'display', display);
-    display === 'none' ? this.renderer.addClass(this.wrapper, 'bar-hidden') : this.renderer.removeClass(this.wrapper, 'bar-hidden');
     this.renderer.setStyle(this.grid, 'display', display);
+    this.barVisibilityChange.emit(display !== 'none');
   }
 
   scrollTo(y: number, duration: number, easingFunc: string): void {
