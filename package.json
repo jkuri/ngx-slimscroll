@@ -1,6 +1,6 @@
 {
   "name": "ngx-slimscroll",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "license": "MIT",
   "main": "./dist/bundles/ngx-slimscroll.umd.js",
   "module": "./dist/ngx-slimscroll.es5.js",
