@@ -1,3 +1,26 @@
+# Change Log
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+<a name="5.2.0"></a>
+# 5.2.0 (2018-07-16)
+
+
+### Bug Fixes
+
+* replace the `bar-hidden` class with output event approach ([ad1b320](https://github.com/jkuri/ngx-slimscroll/commit/ad1b320))
+* undefined subscription for interactionSubscriptions ([c1a0ac9](https://github.com/jkuri/ngx-slimscroll/commit/c1a0ac9))
+
+
+### Features
+
+* **renderer2:** update to Renderer2 ([95b1991](https://github.com/jkuri/ngx-slimscroll/commit/95b1991))
+* **sensitivity:** add scroll sensitivity option ([a3124e0](https://github.com/jkuri/ngx-slimscroll/commit/a3124e0))
+* add a class `bar-hidden` to wrapper to reveal the state ([1b8216a](https://github.com/jkuri/ngx-slimscroll/commit/1b8216a))
+* support enabled switch for the directive ([5fab880](https://github.com/jkuri/ngx-slimscroll/commit/5fab880))
+
+
+
 <a name="5.1.0"></a>
 # [5.1.0](https://e-cloud.github.com/e-cloud/ngx-slimscroll/compare/v5.0.0...v5.1.0) (2018-07-16)
 
@@ -50,6 +73,3 @@
 
 <a name="3.5.0"></a>
 # 3.5.0 (2017-11-28)
-
-
-
