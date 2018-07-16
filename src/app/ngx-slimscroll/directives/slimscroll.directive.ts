@@ -4,6 +4,7 @@ import {
   HostListener,
   OnChanges,
   OnDestroy,
+  OnInit,
   Renderer2,
   Inject,
   Optional,
@@ -39,7 +40,7 @@ export const easing: { [key: string]: Function } = {
   selector: '[slimScroll]', // tslint:disable-line
   exportAs: 'slimScroll'
 })
-export class SlimScrollDirective implements OnChanges, OnDestroy {
+export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   @Input() enabled = true;
   @Input() options: SlimScrollOptions;
   @Input() scrollEvents: EventEmitter<ISlimScrollEvent>;
@@ -69,6 +70,13 @@ export class SlimScrollDirective implements OnChanges, OnDestroy {
     this.el = viewContainer.element.nativeElement;
     this.body = this.document.querySelector('body');
     this.mutationThrottleTimeout = 50;
+  }
+
+  ngOnInit() {
+    // setup if no changes for enabled for the first time
+    if (!this.interactionSubscriptions && this.enabled) {
+      this.setup();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
