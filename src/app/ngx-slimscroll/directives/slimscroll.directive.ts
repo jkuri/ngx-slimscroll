@@ -76,14 +76,13 @@ export class SlimScrollDirective implements OnChanges, OnDestroy {
       if (this.enabled) {
         this.setup();
       } else {
-        this.ngOnDestroy();
+        this.destroy();
       }
     }
   }
 
   ngOnDestroy() {
     this.destroy();
-    this.interactionSubscriptions.unsubscribe();
   }
 
   setup() {
@@ -447,6 +446,10 @@ export class SlimScrollDirective implements OnChanges, OnDestroy {
       const grid = wrapper.querySelector('.slimscroll-grid');
       wrapper.removeChild(grid);
       this.unwrap(wrapper);
+    }
+
+    if (this.interactionSubscriptions) {
+      this.interactionSubscriptions.unsubscribe();
     }
   }
 
