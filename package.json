@@ -14,9 +14,11 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:lib": "ng-packagr -p ng-package.json",
-    "prepublishOnly": "npm run build:lib"
+    "prepublishOnly": "npm run build:lib",
+    "release": "standard-version"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "~0.6.1",
     "@angular-devkit/core": "0.6.1",
     "@angular/animations": "6.0.1",
     "@angular/cli": "^6.0.1",
@@ -44,14 +46,14 @@
     "karma-coverage-istanbul-reporter": "^1.4.2",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^1.0.0",
-    "ng-packagr": "^2.4.2",
+    "ng-packagr": "^3.0.3",
     "node-sass": "^4.9.0",
     "protractor": "~5.3.1",
     "rxjs": "^6.1.0",
+    "standard-version": "^4.4.0",
     "ts-node": "~6.0.2",
     "tslint": "~5.9.1",
     "typescript": "2.7.2",
-    "zone.js": "^0.8.26",
-    "@angular-devkit/build-angular": "~0.6.1"
+    "zone.js": "^0.8.26"
   }
 }
