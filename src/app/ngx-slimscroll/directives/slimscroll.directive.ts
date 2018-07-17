@@ -223,8 +223,13 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   }
 
   getBarHeight(): void {
-    const barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30) + 'px';
-    const display = parseInt(barHeight, 10) === this.el.offsetHeight ? 'none' : 'block';
+    const elHeight = this.el.offsetHeight;
+    const barHeight = Math.max((elHeight / this.el.scrollHeight) * elHeight, 30) + 'px';
+    const display = parseInt(barHeight, 10) === elHeight ? 'none' : 'block';
+
+    if (this.wrapper.offsetHeight !== elHeight) {
+      this.renderer.setStyle(this.wrapper, 'height', elHeight + 'px');
+    }
 
     this.renderer.setStyle(this.bar, 'height', barHeight);
     this.renderer.setStyle(this.bar, 'display', display);
