@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="5.2.2"></a>
+## [5.2.2](https://github.com/jkuri/ngx-slimscroll/compare/v5.2.0...v5.2.2) (2018-07-17)
+
+
+### Bug Fixes
+
+* correct the height of wrapper for dynamic rendering cases ([3c5a921](https://github.com/jkuri/ngx-slimscroll/commit/3c5a921))
+* perform setup by default if user don't specify it ([1739060](https://github.com/jkuri/ngx-slimscroll/commit/1739060))
+
+
+
 <a name="5.2.1"></a>
 ## [5.2.1](https://e-cloud.github.com/e-cloud/ngx-slimscroll/compare/v5.2.0...v5.2.1) (2018-07-16)
 
