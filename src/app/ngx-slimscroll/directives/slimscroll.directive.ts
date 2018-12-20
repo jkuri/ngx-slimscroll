@@ -44,8 +44,8 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   @Input() enabled = true;
   @Input() options: SlimScrollOptions;
   @Input() scrollEvents: EventEmitter<ISlimScrollEvent>;
-  @Output('scrollChanged') scrollChanged = new EventEmitter<ISlimScrollState>();
-  @Output('barVisibilityChange') barVisibilityChange = new EventEmitter<boolean>();
+  @Output() scrollChanged = new EventEmitter<ISlimScrollState>();
+  @Output() barVisibilityChange = new EventEmitter<boolean>();
 
   el: HTMLElement;
   wrapper: HTMLElement;
@@ -55,7 +55,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   pageY: number;
   top: number;
   dragging: boolean;
-  mutationThrottleTimeout: number;
+  mutationThrottleTimeout: number | any;
   mutationObserver: MutationObserver;
   lastTouchPositionY: number;
   visibleTimeout: any;
@@ -333,11 +333,11 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     const dommousescroll = fromEvent(this.el, 'DOMMouseScroll');
     const mousewheel = fromEvent(this.el, 'mousewheel');
 
-    const wheelSubscription = merge(...[dommousescroll, mousewheel]).subscribe((e: MouseWheelEvent) => {
+    const wheelSubscription = merge(...[dommousescroll, mousewheel]).subscribe((e: WheelEvent) => {
       let delta = 0;
 
-      if (e.wheelDelta) {
-        delta = -e.wheelDelta / 120;
+      if ((<any>e).wheelDelta) {
+        delta = -(<any>e).wheelDelta / 120;
       }
 
       if (e.detail) {
