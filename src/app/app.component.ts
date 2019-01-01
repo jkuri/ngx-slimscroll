@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ISlimScrollOptions } from './ngx-slimscroll/classes/slimscroll-options.class';
-import { SlimScrollEvent } from './ngx-slimscroll/classes/slimscroll-event.class';
 import { SlimScrollState, ISlimScrollState } from './ngx-slimscroll/classes/slimscroll-state.class';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -22,6 +22,7 @@ export class AppComponent {
       alwaysVisible: true
     };
   }
+
   scrollChanged($event: ISlimScrollState) {
     this.slimScrollState = $event;
   }

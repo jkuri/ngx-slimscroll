@@ -62,7 +62,7 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     result.barBorderRadius = obj && obj.barBorderRadius ? obj.barBorderRadius : this.barBorderRadius;
     result.barMargin = obj && obj.barMargin ? obj.barMargin : this.barMargin;
     result.gridBackground = obj && obj.gridBackground ? obj.gridBackground : this.gridBackground;
-    result.gridOpacity = obj && obj.gridOpacity ? obj.gridOpacity : this.gridBackground;
+    result.gridOpacity = obj && obj.gridOpacity ? obj.gridOpacity : this.gridOpacity;
     result.gridWidth = obj && obj.gridWidth ? obj.gridWidth : this.gridWidth;
     result.gridBorderRadius = obj && obj.gridBorderRadius ? obj.gridBorderRadius : this.gridBorderRadius;
     result.gridMargin = obj && obj.gridMargin ? obj.gridMargin : this.gridMargin;
