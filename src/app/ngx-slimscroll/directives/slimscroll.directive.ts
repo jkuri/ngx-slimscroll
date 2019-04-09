@@ -477,6 +477,8 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize($event: any) {
-    this.getBarHeight();
+    if (this.enabled) {
+      this.getBarHeight();
+    }
   }
 }
