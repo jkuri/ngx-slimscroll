@@ -9,7 +9,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { AppComponent } from './app.component';
-import { SlimScrollDirective } from './ngx-slimscroll/directives/slimscroll.directive';
+import { SlimScrollDirective } from '../ngx-slimscroll/src/directives/slimscroll.directive';
 
 describe(`Slimscroll Directive`, () => {
   let comp: AppComponent;

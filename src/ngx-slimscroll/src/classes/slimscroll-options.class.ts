@@ -1,5 +1,3 @@
-import { ISlimScrollOptions } from './slimscroll-options.class';
-import { ISlimScrollEvent } from './slimscroll-event.class';
 import { InjectionToken } from '@angular/core';
 
 export interface ISlimScrollOptions {

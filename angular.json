@@ -119,6 +119,21 @@
           }
         }
       }
+    },
+    "lib": {
+      "projectType": "library",
+      "root": "src/ngx-slimscroll",
+      "sourceRoot": "src/ngx-slimscroll/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "src/ngx-slimscroll/tsconfig.lib.json",
+            "project": "src/ngx-slimscroll/ng-package.json"
+          }
+        }
+      }
     }
   },
   "defaultProject": "ngx-slimscroll",

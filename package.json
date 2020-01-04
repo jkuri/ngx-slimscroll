@@ -17,14 +17,15 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:lib": "ng-packagr -p ng-package.json",
-    "prepublishOnly": "npm run build:lib",
+    "build:lib": "ng build lib",
+    "prepublishOnly": "ng build lib",
     "release": "standard-version",
     "serve": "node ./dist/server.js",
     "docker": "docker build -t ngx-slimscroll ."
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.20",
+    "@angular-devkit/build-ng-packagr": "^0.803.21",
     "@angular-devkit/core": "8.3.20",
     "@angular/animations": "8.2.14",
     "@angular/cli": "^8.3.20",
