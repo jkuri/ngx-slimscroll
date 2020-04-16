@@ -49,7 +49,7 @@ import { NgSlimScrollModule, SLIMSCROLL_DEFAULTS } from 'ngx-slimscroll';
       provide: SLIMSCROLL_DEFAULTS,
       useValue: {
         alwaysVisible : false
-      }
+      } as ISlimScrollOptions
     },
   ],
   bootstrap: [ AppComponent ]
@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.scrollEvents = new EventEmitter<SlimScrollEvent>();
     this.opts = {
-      position?: string; // left | right
+      position?: 'left' | 'right';
       barBackground?: string; // #C9C9C9
       barOpacity?: string; // 0.8
       barWidth?: string; // 10
@@ -85,6 +85,7 @@ export class AppComponent implements OnInit {
       alwaysVisible?: boolean; // true
       visibleTimeout?: number; // 1000
       scrollSensitivity?: number; // 1
+      alwaysPreventDefaultScroll?: boolean; // true
     }
 
     this.play();
@@ -163,7 +164,7 @@ There is an input of the directive `enabled` defaults to `true`. Some users may 
 
 ```ts
 export interface ISlimScrollOptions {
-  position?: string;
+  position?: 'left' | 'right';
   barBackground?: string;
   barOpacity?: string;
   barWidth?: string;
@@ -176,8 +177,24 @@ export interface ISlimScrollOptions {
   gridMargin?: string;
   alwaysVisible?: boolean;
   visibleTimeout?: number;
+  alwaysPreventDefaultScroll?: boolean;
 }
 ```
+**Description:**
+- `position`: The position of the scroll bar (default: `right`).
+- `barBackground`: The background color of the scroll bar (default: `#343a40`).
+- `barOpacity`: Defines the opacity of the scroll bar (default: `1`).
+- `barWidth`: Customize the width of the scroll bar (default: `12` px).
+- `barBorderRadius`: The border radius of the scroll bar (default: `5` px).
+- `barMargin`: The margin of the scroll bar. Supports the CSS-Style spelling (default: `1px 0`).
+- `gridBackground`: The background color of the grid (the line on which the scroll bar is arranged; default: `#adb5bd`).
+- `gridOpacity`: The opacity of the grid (default: `1`).
+- `gridWidth`: The width of the grid (default: `8` px).
+- `gridBorderRadius`: The border radius of the grid (default: `10` px).
+- `gridMargin`: The margin of the grid. Supports the CSS-Style spelling (default: `1px 2px`).
+- `alwaysVisible`: If this option is enabled the scroll bar is displayed permanently, otherwise it will be faded out after the visible timeout (default: `true`).
+- `visibleTimeout`: Represents the time the scroll bar is shown (default: `1000` ms). ***Hint**: It is necessary to set the option `alwaysVisible` to `false`*.
+- `alwaysPreventDefaultScroll`: Disable this flag to forward the scroll event if top or bottom of the slimscroll container is reached (default: `true`)
 
 ## Global Default Options
 
@@ -193,14 +210,15 @@ Example:
       provide: SLIMSCROLL_DEFAULTS,
       useValue: {
         alwaysVisible: false,
-        gridOpacity: '0.2', barOpacity: '0.5',
+        gridOpacity: '0.2', 
+        barOpacity: '0.5',
         gridBackground: '#c2c2c2',
         gridWidth: '6',
         gridMargin: '2px 2px',
         barBackground: '#2C3E50',
         barWidth: '6',
         barMargin: '2px 2px'
-      }
+      } as ISlimScrollOptions
     }
    // other providers
    ]
