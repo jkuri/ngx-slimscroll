@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
 export interface ISlimScrollOptions {
-  position?: string;
+  position?: 'left' | 'right';
   barBackground?: string;
   barOpacity?: string;
   barWidth?: string;
@@ -21,7 +21,7 @@ export const SLIMSCROLL_DEFAULTS: InjectionToken<ISlimScrollOptions>
     = new InjectionToken('NGX_SLIMSCROLL_DEFAULTS');
 
 export class SlimScrollOptions implements ISlimScrollOptions {
-  position?: string;
+  position?: 'left' | 'right';
   barBackground?: string;
   barOpacity?: string;
   barWidth?: string;
