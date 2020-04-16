@@ -14,6 +14,7 @@ export interface ISlimScrollOptions {
   gridMargin?: string;
   alwaysVisible?: boolean;
   visibleTimeout?: number;
+  alwaysPreventDefaultScroll?: boolean;
 }
 
 export const SLIMSCROLL_DEFAULTS: InjectionToken<ISlimScrollOptions>
@@ -33,6 +34,7 @@ export class SlimScrollOptions implements ISlimScrollOptions {
   gridMargin?: string;
   alwaysVisible?: boolean;
   visibleTimeout?: number;
+  alwaysPreventDefaultScroll?: boolean;
 
   constructor(obj?: ISlimScrollOptions) {
     this.position = obj && obj.position ? obj.position : 'right';
@@ -48,6 +50,7 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     this.gridMargin = obj && obj.gridMargin ? obj.gridMargin : '1px 2px';
     this.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : true;
     this.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : 1000;
+    this.alwaysPreventDefaultScroll = obj && typeof obj.alwaysPreventDefaultScroll !== 'undefined' ? obj.alwaysPreventDefaultScroll : true;
   }
 
   public merge(obj?: ISlimScrollOptions): SlimScrollOptions {
@@ -66,6 +69,7 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     result.gridMargin = obj && obj.gridMargin ? obj.gridMargin : this.gridMargin;
     result.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : this.alwaysVisible;
     result.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : this.visibleTimeout;
+    result.alwaysPreventDefaultScroll = obj && typeof obj.alwaysPreventDefaultScroll !== 'undefined' ? obj.alwaysPreventDefaultScroll : true;
 
     return result;
   }
