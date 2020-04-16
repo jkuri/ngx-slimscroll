@@ -330,9 +330,9 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
         delta = e.detail / 3;
       }
 
-      this.scrollContent(delta, true, false);
+      const over = this.scrollContent(delta, true, false);
 
-      if (e.preventDefault) {
+      if (e.preventDefault && (this.options.alwaysPreventDefaultScroll || over === null)) {
         e.preventDefault();
       }
     });
