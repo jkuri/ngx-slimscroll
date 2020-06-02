@@ -1,12 +1,26 @@
 import { DOCUMENT } from '@angular/common';
-import { Directive, EventEmitter, HostListener, Inject, Input, OnChanges, OnDestroy, OnInit, Optional, Output, Renderer2, SimpleChanges, ViewContainerRef } from '@angular/core';
+import {
+  Directive,
+  EventEmitter,
+  HostListener,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Output,
+  Renderer2,
+  SimpleChanges,
+  ViewContainerRef
+} from '@angular/core';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { map, mergeMap, takeUntil } from 'rxjs/operators';
-import { ISlimScrollEvent, SlimScrollEvent } from '../classes/slimscroll-event.class';
-import { ISlimScrollOptions, SlimScrollOptions, SLIMSCROLL_DEFAULTS } from '../classes/slimscroll-options.class';
-import { ISlimScrollState, SlimScrollState } from '../classes/slimscroll-state.class';
+import { ISlimScrollEvent, SlimScrollEvent } from './slimscroll-event.class';
+import { ISlimScrollOptions, SlimScrollOptions, SLIMSCROLL_DEFAULTS } from './slimscroll-options.class';
+import { ISlimScrollState, SlimScrollState } from './slimscroll-state.class';
 
-export const easing: { [key: string]: Function } = {
+export const easing: { [key: string]: (t: number) => number } = {
   linear: (t: number) => t,
   inQuad: (t: number) => t * t,
   outQuad: (t: number) => t * (2 - t),

@@ -18,7 +18,7 @@ export interface ISlimScrollOptions {
 }
 
 export const SLIMSCROLL_DEFAULTS: InjectionToken<ISlimScrollOptions>
-    = new InjectionToken('NGX_SLIMSCROLL_DEFAULTS');
+  = new InjectionToken('NGX_SLIMSCROLL_DEFAULTS');
 
 export class SlimScrollOptions implements ISlimScrollOptions {
   position?: 'left' | 'right';

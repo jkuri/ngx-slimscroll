@@ -4,8 +4,8 @@ export interface ISlimScrollEvent {
   percent?: number;
   duration?: number;
   easing?: 'linear' | 'inQuad' | 'outQuad' | 'inOutQuad' | 'inCubic' |
-    'outCubic' | 'inOutCubic' | 'inQuart' | 'outQuart' | 'inOutQuart' |
-    'inQuint' | 'outQuint' | 'inOutQuint';
+  'outCubic' | 'inOutCubic' | 'inQuart' | 'outQuart' | 'inOutQuart' |
+  'inQuint' | 'outQuint' | 'inOutQuint';
 }
 
 export class SlimScrollEvent implements ISlimScrollEvent {

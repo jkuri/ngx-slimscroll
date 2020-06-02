@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SlimScrollDirective } from '../directives/slimscroll.directive';
+import { SlimScrollDirective } from './slimscroll.directive';
 
 @NgModule({
   declarations: [

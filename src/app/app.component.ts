@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ISlimScrollOptions } from '../ngx-slimscroll/src/classes/slimscroll-options.class';
-import { SlimScrollState, ISlimScrollState } from '../ngx-slimscroll/src/classes/slimscroll-state.class';
+import { ISlimScrollOptions, SlimScrollState, ISlimScrollState } from 'ngx-slimscroll';
 
 @Component({
   selector: 'app-root',

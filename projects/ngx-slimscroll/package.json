@@ -1,0 +1,11 @@
+{
+  "name": "ngx-slimscroll",
+  "version": "9.1.0",
+  "peerDependencies": {
+    "@angular/common": "^9.1.9",
+    "@angular/core": "^9.1.9"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0"
+  }
+}

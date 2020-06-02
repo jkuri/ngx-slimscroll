@@ -1,10 +1,10 @@
-FROM node:10-alpine as build
+FROM node:12-alpine as build
 
 WORKDIR /app
 COPY . /app/
-RUN apk add --no-cache yarn && yarn install && yarn build:all
+RUN apk add --no-cache yarn && yarn install && yarn build
 
-FROM alpine:3.8
+FROM alpine:latest
 
 LABEL AUTHOR="Jan Kuri" AUTHOR_EMAIL="jkuri88@gmail.com"
 

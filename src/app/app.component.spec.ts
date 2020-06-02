@@ -7,7 +7,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { AppComponent } from './app.component';
-import { SlimScrollDirective } from '../ngx-slimscroll/src/directives/slimscroll.directive';
+import { SlimScrollDirective } from 'ngx-slimscroll';
 
 describe(`Slimscroll Directive`, () => {
   let comp: AppComponent;
@@ -17,7 +17,7 @@ describe(`Slimscroll Directive`, () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppComponent, SlimScrollDirective ]
+      declarations: [AppComponent, SlimScrollDirective]
     }).compileComponents();
   }));
 
