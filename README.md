@@ -21,7 +21,7 @@ npm start
 ## Installation:
 
 ```bash
-npm install ngx-slimscroll
+yarn add ngx-slimscroll # or npm install ngx-slimscroll
 ```
 
 ## Use Example:

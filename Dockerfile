@@ -2,7 +2,7 @@ FROM node:12-alpine as build
 
 WORKDIR /app
 COPY . /app/
-RUN apk add --no-cache yarn && yarn install && yarn build
+RUN apk add --no-cache yarn && yarn install && yarn build:all
 
 FROM alpine:latest
 
