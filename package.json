@@ -1,6 +1,6 @@
 {
   "name": "slimscroll",
-  "version": "0.0.0",
+  "version": "9.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open",
@@ -10,7 +10,8 @@
     "build:all": "npm run build:lib && npm run build && npm run build:server",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "changelog": "standard-changelog --save standard-changelog"
   },
   "private": true,
   "dependencies": {
@@ -37,6 +38,8 @@
     "@types/node": "^12.11.1",
     "bulma": "^0.8.2",
     "codelyzer": "^5.1.2",
+    "conventional-changelog": "^3.1.21",
+    "conventional-changelog-angular": "^5.0.10",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~5.0.0",
@@ -46,6 +49,7 @@
     "karma-jasmine-html-reporter": "^1.4.2",
     "ng-packagr": "^9.0.0",
     "protractor": "~5.4.3",
+    "standard-changelog": "^2.0.24",
     "ts-loader": "^7.0.5",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
