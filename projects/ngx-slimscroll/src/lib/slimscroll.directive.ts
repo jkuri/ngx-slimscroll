@@ -60,20 +60,19 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   lastTouchPositionY: number;
   visibleTimeout: any;
   interactionSubscriptions: Subscription;
+
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
     @Inject(Renderer2) private renderer: Renderer2,
     @Inject(DOCUMENT) private document: any,
     @Inject(SLIMSCROLL_DEFAULTS) @Optional() private optionsDefaults: ISlimScrollOptions
   ) {
-    this.viewContainer = viewContainer;
-    this.el = viewContainer.element.nativeElement;
+    this.el = this.viewContainer.element.nativeElement;
     this.body = this.document.querySelector('body');
     this.mutationThrottleTimeout = 50;
   }
 
   ngOnInit() {
-    // setup if no changes for enabled for the first time
     if (!this.interactionSubscriptions && this.enabled) {
       this.setup();
     }
@@ -143,8 +142,9 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
       const y = Math.round(((this.el.scrollHeight - this.el.clientHeight) / 100) * e.percent);
       this.scrollTo(y, e.duration, e.easing);
     } else if (e.type === 'scrollTo') {
-      const y = e.y;
-      if (y <= this.el.scrollHeight - this.el.clientHeight && y >= 0) {
+      const max = this.el.scrollHeight - this.el.clientHeight;
+      const y = e.y <= max ? e.y : max;
+      if (y >= 0) {
         this.scrollTo(y, e.duration, e.easing);
       }
     } else if (e.type === 'recalculate') {
@@ -155,8 +155,6 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   setStyle(): void {
     const el = this.el;
     this.renderer.setStyle(el, 'overflow', 'hidden');
-    this.renderer.setStyle(el, 'position', 'relative');
-    this.renderer.setStyle(el, 'display', 'block');
   }
 
   onMutation() {
@@ -171,7 +169,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     this.renderer.addClass(wrapper, 'slimscroll-wrapper');
     this.renderer.setStyle(wrapper, 'position', 'relative');
     this.renderer.setStyle(wrapper, 'overflow', 'hidden');
-    this.renderer.setStyle(wrapper, 'display', 'inline-block');
+    this.renderer.setStyle(wrapper, 'display', 'block');
     this.renderer.setStyle(wrapper, 'margin', getComputedStyle(el).margin);
     this.renderer.setStyle(wrapper, 'width', '100%');
     this.renderer.setStyle(wrapper, 'height', getComputedStyle(el).height);
@@ -246,7 +244,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     const paddingTop = parseInt(this.el.style.paddingTop, 10) || 0;
     const paddingBottom = parseInt(this.el.style.paddingBottom, 10) || 0;
 
-    const scroll = (timestamp: number) => {
+    const scroll = () => {
       const currentTime = Date.now();
       const time = Math.min(1, ((currentTime - start) / duration));
       const easedTime = easing[easingFunc](time);
@@ -257,13 +255,13 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
         if (paddingTop > 0) {
           fromY = -paddingTop;
           fromY = -((easedTime * (y - fromY)) + fromY);
-          this.renderer.setStyle(this.el, 'paddingTop', `${fromY}px`);
+          this.renderer.setStyle(this.el, 'padding-top', `${fromY}px`);
         }
 
         if (paddingBottom > 0) {
           fromY = paddingBottom;
           fromY = ((easedTime * (y - fromY)) + fromY);
-          this.renderer.setStyle(this.el, 'paddingBottom', `${fromY}px`);
+          this.renderer.setStyle(this.el, 'padding-bottom', `${fromY}px`);
         }
       } else {
         this.el.scrollTop = (easedTime * (y - from)) + from;
@@ -276,6 +274,12 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
           this.renderer.setStyle(this.bar, 'top', `${delta}px`);
         }
       }
+
+      const isScrollAtStart = this.el.scrollTop === 0;
+      const isScrollAtEnd = this.el.scrollTop === this.el.scrollHeight - this.el.offsetHeight;
+      const scrollPosition = Math.ceil(this.el.scrollTop);
+      const scrollState = new SlimScrollState({ scrollPosition, isScrollAtStart, isScrollAtEnd });
+      this.scrollChanged.emit(scrollState);
 
       if (time < 1) {
         requestAnimationFrame(scroll);
@@ -336,8 +340,8 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     const wheelSubscription = merge(...[dommousescroll, mousewheel]).subscribe((e: WheelEvent) => {
       let delta = 0;
 
-      if ((<any>e).wheelDelta) {
-        delta = -(<any>e).wheelDelta / 120;
+      if ((e as any).wheelDelta) {
+        delta = -(e as any).wheelDelta / 120;
       }
 
       if (e.detail) {

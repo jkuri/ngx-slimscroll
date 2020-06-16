@@ -69,7 +69,8 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     result.gridMargin = obj && obj.gridMargin ? obj.gridMargin : this.gridMargin;
     result.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : this.alwaysVisible;
     result.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : this.visibleTimeout;
-    result.alwaysPreventDefaultScroll = obj && typeof obj.alwaysPreventDefaultScroll !== 'undefined' ? obj.alwaysPreventDefaultScroll : true;
+    result.alwaysPreventDefaultScroll = obj && typeof obj.alwaysPreventDefaultScroll !== 'undefined' ?
+      obj.alwaysPreventDefaultScroll : true;
 
     return result;
   }
