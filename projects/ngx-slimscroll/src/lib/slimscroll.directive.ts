@@ -268,7 +268,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
 
       const percentScroll = this.el.scrollTop / maxElScrollTop;
       if (paddingBottom === 0) {
-        const delta = Math.round(this.el.clientHeight * percentScroll);
+        const delta = Math.round((this.el.clientHeight - barHeight) * percentScroll);
         if (delta > 0) {
           this.renderer.setStyle(this.bar, 'top', `${delta}px`);
         }

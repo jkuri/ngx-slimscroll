@@ -1,6 +1,6 @@
 {
   "name": "ngx-slimscroll",
-  "version": "9.2.1",
+  "version": "9.2.2",
   "peerDependencies": {
     "@angular/common": "^9.1.9",
     "@angular/core": "^9.1.9"
