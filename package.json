@@ -1,6 +1,6 @@
 {
   "name": "slimscroll",
-  "version": "9.2.0",
+  "version": "9.2.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open",
