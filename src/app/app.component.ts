@@ -25,11 +25,11 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     Promise.resolve()
-      .then(() => this.timeout(1000))
+      .then(() => this.timeout(500))
       .then(() => {
         const ev = new SlimScrollEvent({
           type: 'scrollTo',
-          y: 1000,
+          y: 1200,
           duration: 1000,
           easing: 'inOutQuart'
         });

@@ -238,7 +238,6 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   scrollTo(y: number, duration: number, easingFunc: string): void {
     const start = Date.now();
     const from = this.el.scrollTop;
-    const maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     const maxElScrollTop = this.el.scrollHeight - this.el.clientHeight;
     const barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30);
     const paddingTop = parseInt(this.el.style.paddingTop, 10) || 0;
@@ -269,7 +268,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
 
       const percentScroll = this.el.scrollTop / maxElScrollTop;
       if (paddingBottom === 0) {
-        const delta = Math.round(Math.round(this.el.clientHeight * percentScroll) - barHeight);
+        const delta = Math.round(this.el.clientHeight * percentScroll);
         if (delta > 0) {
           this.renderer.setStyle(this.bar, 'top', `${delta}px`);
         }
