@@ -159,6 +159,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
 
   onMutation() {
     this.getBarHeight();
+    this.setBarTop();
   }
 
   wrapContainer(): void {
@@ -238,8 +239,6 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   scrollTo(y: number, duration: number, easingFunc: string): void {
     const start = Date.now();
     const from = this.el.scrollTop;
-    const maxElScrollTop = this.el.scrollHeight - this.el.clientHeight;
-    const barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30);
     const paddingTop = parseInt(this.el.style.paddingTop, 10) || 0;
     const paddingBottom = parseInt(this.el.style.paddingBottom, 10) || 0;
 
@@ -266,13 +265,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
         this.el.scrollTop = (easedTime * (y - from)) + from;
       }
 
-      const percentScroll = this.el.scrollTop / maxElScrollTop;
-      if (paddingBottom === 0) {
-        const delta = Math.round((this.el.clientHeight - barHeight) * percentScroll);
-        if (delta > 0) {
-          this.renderer.setStyle(this.bar, 'top', `${delta}px`);
-        }
-      }
+      this.setBarTop();
 
       const isScrollAtStart = this.el.scrollTop === 0;
       const isScrollAtEnd = this.el.scrollTop === this.el.scrollHeight - this.el.offsetHeight;
@@ -432,6 +425,19 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
 
     this.interactionSubscriptions.add(dragSubscription);
     this.interactionSubscriptions.add(dragEndSubscription);
+  }
+
+  setBarTop(): void {
+    const barHeight = Math.max((this.el.offsetHeight / this.el.scrollHeight) * this.el.offsetHeight, 30);
+    const maxScrollTop = this.el.scrollHeight - this.el.clientHeight;
+    const paddingBottom = parseInt(this.el.style.paddingBottom, 10) || 0;
+    const percentScroll = this.el.scrollTop / maxScrollTop;
+    if (paddingBottom === 0) {
+      const delta = Math.round((this.el.clientHeight - barHeight) * percentScroll);
+      if (delta > 0) {
+        this.renderer.setStyle(this.bar, 'top', `${delta}px`);
+      }
+    }
   }
 
   showBarAndGrid(): void {

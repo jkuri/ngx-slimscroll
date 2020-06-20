@@ -17,7 +17,7 @@
     ],
     "paths": {
       "ngx-slimscroll": [
-        "dist/ngx-slimscroll"
+        "projects/ngx-slimscroll/src/public-api"
       ]
     }
   },
