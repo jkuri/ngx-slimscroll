@@ -17,8 +17,9 @@ export class AppComponent implements OnInit {
       barBackground: '#3E3F42',
       gridBackground: '#EFF1F5',
       barBorderRadius: '10',
-      barWidth: '8',
+      barWidth: '6',
       gridWidth: '4',
+      gridMargin: '0 1px',
       alwaysVisible: true
     };
   }

@@ -17,8 +17,7 @@ export interface ISlimScrollOptions {
   alwaysPreventDefaultScroll?: boolean;
 }
 
-export const SLIMSCROLL_DEFAULTS: InjectionToken<ISlimScrollOptions>
-  = new InjectionToken('NGX_SLIMSCROLL_DEFAULTS');
+export const SLIMSCROLL_DEFAULTS: InjectionToken<ISlimScrollOptions> = new InjectionToken('NGX_SLIMSCROLL_DEFAULTS');
 
 export class SlimScrollOptions implements ISlimScrollOptions {
   position?: 'left' | 'right';
@@ -42,15 +41,16 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     this.barOpacity = obj && obj.barOpacity ? obj.barOpacity : '1';
     this.barWidth = obj && obj.barWidth ? obj.barWidth : '12';
     this.barBorderRadius = obj && obj.barBorderRadius ? obj.barBorderRadius : '5';
-    this.barMargin = obj && obj.barMargin ? obj.barMargin : '1px 0';
+    this.barMargin = obj && obj.barMargin ? obj.barMargin : '0 0 0 0';
     this.gridBackground = obj && obj.gridBackground ? obj.gridBackground : '#adb5bd';
     this.gridOpacity = obj && obj.gridOpacity ? obj.gridOpacity : '1';
     this.gridWidth = obj && obj.gridWidth ? obj.gridWidth : '8';
     this.gridBorderRadius = obj && obj.gridBorderRadius ? obj.gridBorderRadius : '10';
-    this.gridMargin = obj && obj.gridMargin ? obj.gridMargin : '1px 2px';
+    this.gridMargin = obj && obj.gridMargin ? obj.gridMargin : '0 0 0 0';
     this.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : true;
     this.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : 1000;
-    this.alwaysPreventDefaultScroll = obj && typeof obj.alwaysPreventDefaultScroll !== 'undefined' ? obj.alwaysPreventDefaultScroll : true;
+    this.alwaysPreventDefaultScroll =
+      obj && typeof obj.alwaysPreventDefaultScroll !== 'undefined' ? obj.alwaysPreventDefaultScroll : true;
   }
 
   public merge(obj?: ISlimScrollOptions): SlimScrollOptions {
@@ -69,8 +69,8 @@ export class SlimScrollOptions implements ISlimScrollOptions {
     result.gridMargin = obj && obj.gridMargin ? obj.gridMargin : this.gridMargin;
     result.alwaysVisible = obj && typeof obj.alwaysVisible !== 'undefined' ? obj.alwaysVisible : this.alwaysVisible;
     result.visibleTimeout = obj && obj.visibleTimeout ? obj.visibleTimeout : this.visibleTimeout;
-    result.alwaysPreventDefaultScroll = obj && typeof obj.alwaysPreventDefaultScroll !== 'undefined' ?
-      obj.alwaysPreventDefaultScroll : true;
+    result.alwaysPreventDefaultScroll =
+      obj && typeof obj.alwaysPreventDefaultScroll !== 'undefined' ? obj.alwaysPreventDefaultScroll : true;
 
     return result;
   }
