@@ -24,16 +24,16 @@ export const easing: { [key: string]: (t: number) => number } = {
   linear: (t: number) => t,
   inQuad: (t: number) => t * t,
   outQuad: (t: number) => t * (2 - t),
-  inOutQuad: (t: number) => t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+  inOutQuad: (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
   inCubic: (t: number) => t * t * t,
-  outCubic: (t: number) => (--t) * t * t + 1,
-  inOutCubic: (t: number) => t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
+  outCubic: (t: number) => --t * t * t + 1,
+  inOutCubic: (t: number) => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1),
   inQuart: (t: number) => t * t * t * t,
-  outQuart: (t: number) => 1 - (--t) * t * t * t,
-  inOutQuart: (t: number) => t < .5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t,
+  outQuart: (t: number) => 1 - --t * t * t * t,
+  inOutQuart: (t: number) => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t),
   inQuint: (t: number) => t * t * t * t * t,
-  outQuint: (t: number) => 1 + (--t) * t * t * t * t,
-  inOutQuint: (t: number) => t < .5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t
+  outQuint: (t: number) => 1 + --t * t * t * t * t,
+  inOutQuint: (t: number) => (t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t)
 };
 
 @Directive({
@@ -60,6 +60,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   lastTouchPositionY: number;
   visibleTimeout: any;
   interactionSubscriptions: Subscription;
+  current: { max: number; percent: number };
 
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
@@ -138,7 +139,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     } else if (e.type === 'scrollToTop') {
       const y = 0;
       this.scrollTo(y, e.duration, e.easing);
-    } else if (e.type === 'scrollToPercent' && (e.percent >= 0 && e.percent <= 100)) {
+    } else if (e.type === 'scrollToPercent' && e.percent >= 0 && e.percent <= 100) {
       const y = Math.round(((this.el.scrollHeight - this.el.clientHeight) / 100) * e.percent);
       this.scrollTo(y, e.duration, e.easing);
     } else if (e.type === 'scrollTo') {
@@ -244,7 +245,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
 
     const scroll = () => {
       const currentTime = Date.now();
-      const time = Math.min(1, ((currentTime - start) / duration));
+      const time = Math.min(1, (currentTime - start) / duration);
       const easedTime = easing[easingFunc](time);
 
       if (paddingTop > 0 || paddingBottom > 0) {
@@ -252,33 +253,36 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
 
         if (paddingTop > 0) {
           fromY = -paddingTop;
-          fromY = -((easedTime * (y - fromY)) + fromY);
+          fromY = -(easedTime * (y - fromY) + fromY);
           this.renderer.setStyle(this.el, 'padding-top', `${fromY}px`);
         }
 
         if (paddingBottom > 0) {
           fromY = paddingBottom;
-          fromY = ((easedTime * (y - fromY)) + fromY);
+          fromY = easedTime * (y - fromY) + fromY;
           this.renderer.setStyle(this.el, 'padding-bottom', `${fromY}px`);
         }
       } else {
-        this.el.scrollTop = (easedTime * (y - from)) + from;
+        this.el.scrollTop = easedTime * (y - from) + from;
       }
 
       this.setBarTop();
-
-      const isScrollAtStart = this.el.scrollTop === 0;
-      const isScrollAtEnd = this.el.scrollTop === this.el.scrollHeight - this.el.offsetHeight;
-      const scrollPosition = Math.ceil(this.el.scrollTop);
-      const scrollState = new SlimScrollState({ scrollPosition, isScrollAtStart, isScrollAtEnd });
-      this.scrollChanged.emit(scrollState);
+      this.saveCurrent();
+      this.updateScrollState();
 
       if (time < 1) {
         requestAnimationFrame(scroll);
       }
     };
 
-    requestAnimationFrame(scroll);
+    if (!duration || !easingFunc) {
+      this.el.scrollTop = y;
+      this.setBarTop();
+      this.saveCurrent();
+      this.updateScrollState();
+    } else {
+      requestAnimationFrame(scroll);
+    }
   }
 
   scrollContent(y: number, isWheel: boolean, isJump: boolean): null | number {
@@ -289,14 +293,14 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     let over = null;
 
     if (isWheel) {
-      delta = parseInt(getComputedStyle(this.bar).top, 10) + y * 20 / 100 * this.bar.offsetHeight;
+      delta = parseInt(getComputedStyle(this.bar).top, 10) + ((y * 20) / 100) * this.bar.offsetHeight;
 
       if (delta < 0 || delta > maxTop) {
         over = delta > maxTop ? delta - maxTop : delta;
       }
 
       delta = Math.min(Math.max(delta, 0), maxTop);
-      delta = (y > 0) ? Math.ceil(delta) : Math.floor(delta);
+      delta = y > 0 ? Math.ceil(delta) : Math.floor(delta);
       this.renderer.setStyle(this.bar, 'top', delta + 'px');
     }
 
@@ -316,16 +320,22 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
         this.hideBarAndGrid();
       }, this.options.visibleTimeout);
     }
-    const isScrollAtStart = delta === 0;
-    const isScrollAtEnd = delta === hiddenContent;
-    const scrollPosition = Math.ceil(delta);
-    const scrollState = new SlimScrollState({ scrollPosition, isScrollAtStart, isScrollAtEnd });
-    this.scrollChanged.emit(scrollState);
+
+    this.updateScrollState();
+    this.saveCurrent();
 
     return over;
   }
 
-  initWheel = () => {
+  updateScrollState(): void {
+    const isScrollAtStart = this.el.scrollTop === 0;
+    const isScrollAtEnd = this.el.scrollTop === this.el.scrollHeight - this.el.offsetHeight;
+    const scrollPosition = Math.ceil(this.el.scrollTop);
+    const scrollState = new SlimScrollState({ scrollPosition, isScrollAtStart, isScrollAtEnd });
+    this.scrollChanged.emit(scrollState);
+  }
+
+  initWheel(): void {
     const dommousescroll = fromEvent(this.el, 'DOMMouseScroll');
     const mousewheel = fromEvent(this.el, 'mousewheel');
 
@@ -350,7 +360,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     this.interactionSubscriptions.add(wheelSubscription);
   }
 
-  initDrag = () => {
+  initDrag(): void {
     const bar = this.bar;
 
     const mousemove = fromEvent(this.document.documentElement, 'mousemove');
@@ -361,38 +371,34 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     const mouseup = fromEvent(this.document.documentElement, 'mouseup');
     const touchend = fromEvent(this.document.documentElement, 'touchend');
 
-    const mousedrag = mousedown
-      .pipe(
-        mergeMap((e: MouseEvent) => {
-          this.pageY = e.pageY;
-          this.top = parseFloat(getComputedStyle(bar).top);
+    const mousedrag = mousedown.pipe(
+      mergeMap((e: MouseEvent) => {
+        this.pageY = e.pageY;
+        this.top = parseFloat(getComputedStyle(bar).top);
 
-          return mousemove
-            .pipe(
-              map((emove: MouseEvent) => {
-                emove.preventDefault();
-                return this.top + emove.pageY - this.pageY;
-              }),
-              takeUntil(mouseup)
-            );
-        })
-      );
+        return mousemove.pipe(
+          map((emove: MouseEvent) => {
+            emove.preventDefault();
+            return this.top + emove.pageY - this.pageY;
+          }),
+          takeUntil(mouseup)
+        );
+      })
+    );
 
-    const touchdrag = touchstart
-      .pipe(
-        mergeMap((e: TouchEvent) => {
-          this.pageY = e.targetTouches[0].pageY;
-          this.top = -parseFloat(getComputedStyle(bar).top);
+    const touchdrag = touchstart.pipe(
+      mergeMap((e: TouchEvent) => {
+        this.pageY = e.targetTouches[0].pageY;
+        this.top = -parseFloat(getComputedStyle(bar).top);
 
-          return touchmove
-            .pipe(
-              map((tmove: TouchEvent) => {
-                return -(this.top + tmove.targetTouches[0].pageY - this.pageY);
-              }),
-              takeUntil(touchend)
-            );
-        })
-      );
+        return touchmove.pipe(
+          map((tmove: TouchEvent) => {
+            return -(this.top + tmove.targetTouches[0].pageY - this.pageY);
+          }),
+          takeUntil(touchend)
+        );
+      })
+    );
 
     const dragSubscription = merge(...[mousedrag, touchdrag]).subscribe((top: number) => {
       this.body.addEventListener('selectstart', this.preventDefaultEvent, false);
@@ -440,6 +446,12 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  saveCurrent(): void {
+    const max = this.el.scrollHeight - this.el.clientHeight;
+    const percent = this.el.scrollTop / max;
+    this.current = { max, percent };
+  }
+
   showBarAndGrid(): void {
     this.renderer.setStyle(this.grid, 'background', this.options.gridBackground);
     this.renderer.setStyle(this.bar, 'background', this.options.barBackground);
@@ -450,7 +462,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     this.renderer.setStyle(this.bar, 'background', 'transparent');
   }
 
-  preventDefaultEvent = (e: MouseEvent) => {
+  preventDefaultEvent(e: MouseEvent): void {
     e.preventDefault();
     e.stopPropagation();
   }
@@ -484,8 +496,10 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
     wrapper.parentNode.replaceChild(docFrag, wrapper);
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize($event: any) {
-    this.getBarHeight();
+  @HostListener('window:resize', []) onResize() {
+    const { percent } = { ...this.current };
+    this.destroy();
+    this.setup();
+    this.scrollTo(Math.round((this.el.scrollHeight - this.el.clientHeight) * percent), null, null);
   }
 }
