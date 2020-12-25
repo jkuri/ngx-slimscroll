@@ -1,9 +1,4 @@
-import {
-  async,
-  fakeAsync,
-  TestBed,
-  ComponentFixture,
-} from '@angular/core/testing';
+import { fakeAsync, TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { AppComponent } from './app.component';
@@ -15,7 +10,7 @@ describe(`Slimscroll Directive`, () => {
   let de: DebugElement;
   let dir: SlimScrollDirective;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [AppComponent, SlimScrollDirective]
     }).compileComponents();
