@@ -87,6 +87,11 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
         this.destroy();
       }
     }
+
+    if (changes.options) {
+      this.destroy();
+      this.setup();
+    }
   }
 
   ngOnDestroy() {
