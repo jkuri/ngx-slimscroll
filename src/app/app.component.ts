@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { ISlimScrollOptions, SlimScrollState, ISlimScrollState, SlimScrollEvent } from 'ngx-slimscroll';
+import { SlimScrollOptions, SlimScrollState, ISlimScrollState, SlimScrollEvent } from 'ngx-slimscroll';
 
 @Component({
   selector: 'app-root',
@@ -7,14 +7,13 @@ import { ISlimScrollOptions, SlimScrollState, ISlimScrollState, SlimScrollEvent 
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent implements OnInit {
-  options: ISlimScrollOptions;
-  secondOptions: ISlimScrollOptions;
+  options: SlimScrollOptions;
   enableScroll = true;
   slimScrollState = new SlimScrollState();
   slimscrollEvents = new EventEmitter<SlimScrollEvent>();
 
   constructor() {
-    this.options = {
+    this.options = new SlimScrollOptions({
       barBackground: '#3E3F42',
       gridBackground: '#EFF1F5',
       barBorderRadius: '10',
@@ -22,7 +21,7 @@ export class AppComponent implements OnInit {
       gridWidth: '4',
       gridMargin: '0 1px',
       alwaysVisible: true
-    };
+    });
   }
 
   ngOnInit(): void {

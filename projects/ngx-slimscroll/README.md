@@ -21,7 +21,7 @@ npm start
 ## Installation:
 
 ```bash
-npm install ngx-slimscroll
+yarn add ngx-slimscroll # or npm install ngx-slimscroll
 ```
 
 ## Use Example:
@@ -58,19 +58,19 @@ export class AppModule { }
 
 // app.component.ts
 import { AppComponent, OnInit, EventEmitter } from '@angular/core';
-import { ISlimScrollOptions, SlimScrollEvent } from 'ngx-slimscroll';
+import { SlimScrollOptions, SlimScrollEvent } from 'ngx-slimscroll';
 
 @Component({
   selector: 'app-root',
   template: `<div slimScroll [options]="opts" [scrollEvents]="scrollEvents"></div>`
 })
 export class AppComponent implements OnInit {
-  opts: ISlimScrollOptions;
+  opts: SlimScrollOptions;
   scrollEvents: EventEmitter<SlimScrollEvent>;
 
   ngOnInit() {
     this.scrollEvents = new EventEmitter<SlimScrollEvent>();
-    this.opts = {
+    this.opts = new SlimScrollOptions({
       position?: 'left' | 'right';
       barBackground?: string; // #C9C9C9
       barOpacity?: string; // 0.8
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
       visibleTimeout?: number; // 1000
       scrollSensitivity?: number; // 1
       alwaysPreventDefaultScroll?: boolean; // true
-    }
+    });
 
     this.play();
   }
