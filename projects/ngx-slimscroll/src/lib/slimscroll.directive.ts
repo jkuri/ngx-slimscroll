@@ -65,7 +65,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
     @Inject(Renderer2) private renderer: Renderer2,
-    @Inject(DOCUMENT) private document: any,
+    @Inject(DOCUMENT) private document: Document,
     @Inject(SLIMSCROLL_DEFAULTS) @Optional() private optionsDefaults: ISlimScrollOptions
   ) {
     this.el = this.viewContainer.element.nativeElement;
@@ -154,7 +154,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
         this.scrollTo(y, e.duration, e.easing);
       }
     } else if (e.type === 'recalculate') {
-      this.getBarHeight();
+      setTimeout(() => this.getBarHeight());
     }
   }
 
