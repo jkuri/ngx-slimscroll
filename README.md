@@ -231,7 +231,7 @@ export class AppModule { }
 
 ```ts
 export interface ISlimScrollEvent {
-  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo' | 'recalculate';
+  type: 'scrollToBottom' | 'scrollToTop' | 'scrollToPercent' | 'scrollTo' | 'recalculate' | 'lock' | 'unlock';
   y?: number;
   duration?: number;
   easing?: 'linear' | 'inQuad' | 'outQuad' | 'inOutQuad' | 'inCubic' | 'outCubic' | 'inOutCubic' |

@@ -15,7 +15,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { fromEvent, merge, Subscription } from 'rxjs';
-import { map, mergeMap, takeUntil } from 'rxjs/operators';
+import { filter, map, mergeMap, takeUntil } from 'rxjs/operators';
 import { ISlimScrollEvent, SlimScrollEvent } from './slimscroll-event.class';
 import { ISlimScrollOptions, SlimScrollOptions, SLIMSCROLL_DEFAULTS } from './slimscroll-options.class';
 import { ISlimScrollState, SlimScrollState } from './slimscroll-state.class';
@@ -61,6 +61,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   visibleTimeout: any;
   interactionSubscriptions: Subscription;
   current: { max: number; percent: number };
+  locked = false;
 
   constructor(
     @Inject(ViewContainerRef) private viewContainer: ViewContainerRef,
@@ -155,6 +156,10 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
       }
     } else if (e.type === 'recalculate') {
       setTimeout(() => this.getBarHeight());
+    } else if (e.type === 'lock') {
+      this.locked = true;
+    } else if (e.type === 'unlock') {
+      this.locked = false;
     }
   }
 
@@ -243,6 +248,10 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   }
 
   scrollTo(y: number, duration: number, easingFunc: string): void {
+    if (this.locked) {
+      return;
+    }
+
     const start = Date.now();
     const from = this.el.scrollTop;
     const paddingTop = parseInt(this.el.style.paddingTop, 10) || 0;
@@ -291,6 +300,10 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
   }
 
   scrollContent(y: number, isWheel: boolean, isJump: boolean): null | number {
+    if (this.locked) {
+      return;
+    }
+
     let delta = y;
     const maxTop = this.el.offsetHeight - this.bar.offsetHeight;
     const hiddenContent = this.el.scrollHeight - this.el.offsetHeight;
@@ -382,6 +395,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
         this.top = parseFloat(getComputedStyle(bar).top);
 
         return mousemove.pipe(
+          filter(() => !this.locked),
           map((emove: MouseEvent) => {
             emove.preventDefault();
             return this.top + emove.pageY - this.pageY;
@@ -397,6 +411,7 @@ export class SlimScrollDirective implements OnInit, OnChanges, OnDestroy {
         this.top = -parseFloat(getComputedStyle(bar).top);
 
         return touchmove.pipe(
+          filter(() => !this.locked),
           map((tmove: TouchEvent) => {
             return -(this.top + tmove.targetTouches[0].pageY - this.pageY);
           }),

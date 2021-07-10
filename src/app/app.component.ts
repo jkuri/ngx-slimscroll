@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
   enableScroll = true;
   slimScrollState = new SlimScrollState();
   slimscrollEvents = new EventEmitter<SlimScrollEvent>();
+  locked = false;
 
   constructor() {
     this.options = new SlimScrollOptions({
@@ -40,6 +41,11 @@ export class AppComponent implements OnInit {
 
   scrollChanged($event: ISlimScrollState) {
     this.slimScrollState = $event;
+  }
+
+  toggleLock(): void {
+    this.locked = !this.locked;
+    this.slimscrollEvents.emit(new SlimScrollEvent({ type: this.locked ? 'lock' : 'unlock' }));
   }
 
   timeout(ms: number): Promise<void> {
