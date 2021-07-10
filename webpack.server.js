@@ -1,6 +1,5 @@
 const path = require('path');
 const root = path.resolve(__dirname);
-const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
@@ -17,22 +16,28 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.ts$/, loaders: ['ts-loader?silent=true&configFile=tsconfig.server.json'] },
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        options: {
+          silent: true,
+          configFile: 'tsconfig.server.json'
+        }
+      }
     ]
   },
   optimization: {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        cache: true,
         terserOptions: {
           output: {
-            comments: false,
-          },
+            comments: false
+          }
         },
-        extractComments: false,
-      }),
-    ],
+        extractComments: false
+      })
+    ]
   },
   stats: {
     assets: false,
@@ -47,10 +52,7 @@ module.exports = {
     warnings: false
   },
   node: {
-    console: false,
     global: false,
-    process: false,
-    Buffer: false,
     __filename: false,
     __dirname: false
   }
