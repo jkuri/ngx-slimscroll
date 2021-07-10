@@ -1,3 +1,20 @@
+# [12.2.0](https://github.com/jkuri/ngx-slimscroll/compare/v5.2.2...v12.2.0) (2021-07-10)
+
+
+### Bug Fixes
+
+* **state:** update scroll on window resize ([3579b7e](https://github.com/jkuri/ngx-slimscroll/commit/3579b7e12aa5451de3aa7454193d6410b3202bf2))
+* update bar on content mutation ([fe85f4c](https://github.com/jkuri/ngx-slimscroll/commit/fe85f4cc4bf685de1e9fe89900dd78d0a129832f))
+* **scrollTo:** fix bar top calc when calling scrollTo ([bf12d4b](https://github.com/jkuri/ngx-slimscroll/commit/bf12d4b7ea20703c014497e9b132a163fd04d16e))
+* grid opacity default option (closes [#110](https://github.com/jkuri/ngx-slimscroll/issues/110)) ([749768c](https://github.com/jkuri/ngx-slimscroll/commit/749768cec2fa87905f393f5039f55ced2a775666))
+
+
+### Features
+
+* **lock:** implement lock and unlock scroll (closes [#144](https://github.com/jkuri/ngx-slimscroll/issues/144)) ([16e4a17](https://github.com/jkuri/ngx-slimscroll/commit/16e4a17b92717a391e32c831f5c69ffa2e2530b2))
+
+
+
 # [9.1.0](https://github.com/jkuri/ngx-slimscroll/compare/v5.2.2...v9.1.0) (2020-06-02)
 
 
