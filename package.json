@@ -13,6 +13,10 @@
     "e2e": "ng e2e",
     "changelog": "standard-changelog --save standard-changelog"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jkuri/ngx-slimscroll.git"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~12.1.0",
