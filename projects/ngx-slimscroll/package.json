@@ -5,6 +5,11 @@
     "@angular/common": ">= 12.0.0",
     "@angular/core": ">= 12.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jkuri/ngx-slimscroll.git",
+    "directory": "projects/ngx-slimscroll"
+  },
   "dependencies": {
     "tslib": "^2.2.0"
   }
